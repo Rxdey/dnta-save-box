@@ -1,0 +1,47 @@
+{
+  "name": "dnta-save-box-plasmo",
+  "displayName": "dnta save box ctx plasmo",
+  "version": "0.0.1",
+  "description": "A basic Plasmo extension.",
+  "author": "rxdey",
+  "scripts": {
+    "dev": "plasmo dev",
+    "build": "plasmo build",
+    "package": "plasmo package"
+  },
+  "dependencies": {
+    "@emotion/cache": "^11.11.0",
+    "@emotion/react": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.11.16",
+    "@mui/material": "^5.13.3",
+    "@plasmohq/messaging": "^0.3.3",
+    "@plasmohq/storage": "^1.6.1",
+    "axios": "^1.4.0",
+    "notistack": "^3.0.1",
+    "plasmo": "0.74.2",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@plasmohq/prettier-plugin-sort-imports": "3.6.4",
+    "@types/chrome": "0.0.237",
+    "@types/node": "20.2.4",
+    "@types/react": "18.2.7",
+    "@types/react-dom": "18.2.4",
+    "prettier": "2.8.8",
+    "typescript": "5.0.4"
+  },
+  "manifest": {
+    "permissions": [
+      "storage",
+      "tabs",
+      "contextMenus"
+    ],
+    "host_permissions": [
+      "https://*/*",
+      "http://*/*",
+      "http://10.255.74.163:7888/*"
+    ]
+  }
+}

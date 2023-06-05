@@ -36,7 +36,7 @@ export default defineConfig({
   },
   // 服务配置
   server: {
-    port: 7888,
+    port: 7889,
     host: '0.0.0.0',
   }
 });

@@ -50,7 +50,7 @@ const form = ref({
 });
 
 const onLogin = async () => {
-  if (!form.userName || !form.password) {
+  if (!form.value.userName || !form.value.password) {
     ElMessage.error('请输入账号和密码');
     return;
   }

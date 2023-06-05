@@ -1,7 +1,7 @@
 import type { PlasmoCSConfig } from "plasmo"
 
 export const config: PlasmoCSConfig = {
-    matches: ["http://10.255.74.163:7888/*"],
+    matches: ["<all_urls>"],
 }
 
 window.addEventListener('message', function (event) {

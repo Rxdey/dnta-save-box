@@ -11,7 +11,7 @@ chrome.runtime.onMessage.addListener((message, sender) => {
 
 chrome.contextMenus.create({
     id: "worldpack-collector",
-    title: "收藏到WorldPack",
+    title: "收藏到DNTA",
     contexts: ["all"],
     type: "normal",
     documentUrlPatterns: ["<all_urls>"]

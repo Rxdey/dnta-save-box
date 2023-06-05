@@ -38,7 +38,7 @@ import type { TagAllResponse } from "~service/model/tag"
 // import { getColor } from "~util"
 
 export const config: PlasmoCSConfig = {
-    matches: ["http://10.255.74.163:7888/*"],
+    matches: ["<all_urls>"],
     all_frames: true
 }
 
@@ -212,6 +212,8 @@ function Collection() {
                         params.title = value.srcUrl
                         params.content = value.srcUrl
                     }
+                    // console.log(window.location.href);
+                    if (window.location.href !== value.pageUrl) return;
                     setForm(params)
                     setShowPage(true)
                     setIsDel(false)

@@ -24,6 +24,7 @@ import AsideMenu from './container/AsideMenu.vue';
 import FavoriteWrap from './components/FavoriteCard/FavoriteWrap.vue';
 import FavoriteCard from './components/FavoriteCard/FavoriteCard.vue';
 import * as Server from '@/service/model/api';
+import { BASE_URL } from '@/service/api.config'
 
 const router = useRouter();
 const tagList = ref([]);
@@ -60,7 +61,12 @@ const getFavorite = async () => {
     return;
   }
   finished.value = data.list.length < pageSize.value;
-  favoriteList.value = favoriteList.value.concat(...data.list);
+  favoriteList.value = favoriteList.value.concat(...data.list.map(item => {
+    return {
+      ...item,
+      path: BASE_URL + item.path.replace('./download', '')
+    }
+  }));
   page.value += 1;
 };
 

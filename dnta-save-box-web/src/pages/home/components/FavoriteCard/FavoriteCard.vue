@@ -1,9 +1,9 @@
 <template>
-    <div class="favorite-card" :class="{drag: drag}" draggable="true" @dragstart="dragstart" @dragend="dragend">
+    <div class="favorite-card" :class="{ drag: drag }" draggable="true" @dragstart="dragstart" @dragend="dragend">
         <div class="drag-title ov-1">{{ props.data.title }}</div>
         <div class="favorite-card--preview">
             <!-- <img v-if="props.data.type === 'img'" v-lazy="data.content"> -->
-            <el-image v-if="props.data.type === 'img'" :src="data.content" :zoom-rate="1.2" :preview-src-list="imageList" :initial-index="index" fit="cover" preview-teleported hide-on-click-modal lazy style="width: 100%; height: 100%;" draggable="false"/>
+            <el-image v-if="props.data.type === 'img'" :src="data.content" :zoom-rate="1.2" :preview-src-list="imageList" :initial-index="index" fit="cover" preview-teleported hide-on-click-modal lazy style="width: 100%; height: 100%;" draggable="false" />
             <div class="text" v-if="props.data.type === 'text'">{{ data.content }}</div>
             <div class="url" v-if="props.data.type === 'url'">{{ data.title }}</div>
         </div>
@@ -44,10 +44,15 @@ const imageList = computed(() => tempList.value.map(item => item.content));
 
 const dragstart = (e) => {
     drag.value = true;
-}
+    const { offsetX, offsetY, target } = e;
+    setTimeout(() => {
+        const element = document.querySelector('.favorite-card[dragging]');
+        element.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+    }, 0);
+
+};
 const dragend = (e) => {
     drag.value = false;
-    // console.log(e);
 }
 
 </script>

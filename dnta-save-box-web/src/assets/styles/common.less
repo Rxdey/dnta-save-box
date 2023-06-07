@@ -41,3 +41,32 @@ body {
 .font-xl {
   font-size: var(--font-xl);
 }
+
+.ov-1 {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.flex-center {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+}
+
+img[lazy='loaded'] {
+  animation-name: fadeIn;
+  animation-duration: 0.3s;
+  animation-fill-mode: ease-in-out;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

@@ -3,7 +3,7 @@
     <div class="login-modal">
       <div class="logo">
         <img src="/32.png" alt="">
-        WORLD PACK
+        DNTA BOX
       </div>
       <div class="login-form">
 

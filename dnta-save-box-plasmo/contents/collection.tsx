@@ -186,6 +186,15 @@ function Collection() {
         }))
     }
 
+    const resetContent = () => {
+        setActive(0);
+        setForm({
+            title: "",
+            desc_txt: ""
+        });
+        setShowPage(false)
+    }
+
     useEffect(() => {
         chrome.runtime.onMessage.addListener(
             (message: { action: string; value: ContentData }) => {
@@ -217,10 +226,11 @@ function Collection() {
                     setForm(params)
                     setShowPage(true)
                     setIsDel(false)
+
+                    // st = setTimeout(resetContent, 3000);
+
                     getTags(params).then(() => {
-                        st = setTimeout(() => {
-                            setShowPage(false)
-                        }, 3000);
+                        st = setTimeout(resetContent, 3000);
                     })
                 }
             }
@@ -228,11 +238,9 @@ function Collection() {
     }, [])
 
     useEffect(() => {
-        // console.log('foucs', foucs);
+        // console.log('foucs', showPage && !foucs);
         if (showPage && !foucs) {
-            st = setTimeout(() => {
-                setShowPage(false)
-            }, 3000);
+            st = setTimeout(resetContent, 3000);
         } else {
             clearTimeout(st)
         }

@@ -1,0 +1,34 @@
+.tag {
+    cursor: pointer;
+    padding: 12px 32px;
+    border-top-right-radius: 50px;
+    border-bottom-right-radius: 50px;
+    * {
+        pointer-events: none;
+    }
+    &[over] {
+        outline: 3px solid slateblue;
+    }
+    .icon {
+        margin-right: 8px;
+    }
+    .tag-label {
+        flex: 1;
+        min-width: 1px;
+    }
+    .edit {
+        display: none;
+    }
+    &:hover, &.active {
+        // background-color: rgba(61, 75, 247, 0.04);
+        background-color: rgba(247, 38, 23, 0.048);
+        .icon {
+            color: var(--color-orange);
+        }
+    }
+    &:hover {
+        .edit {
+            display: inherit;
+        }
+    }
+  }

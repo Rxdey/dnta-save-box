@@ -152,7 +152,14 @@
   dependencies:
     "@floating-ui/core" "^1.2.6"
 
-"@iconify/types@^2.0.0":
+"@iconify-json/ep@^1.1.10":
+  version "1.1.10"
+  resolved "https://registry.npmmirror.com/@iconify-json/ep/-/ep-1.1.10.tgz#2e390de8bc209b91f0fc217642ad7cd3e24e2d0f"
+  integrity sha512-1N3H28hbulsw3UNZjAZ1c7BhK9mLiw8VrngQc58xNQ7dnzaUgtKN81aqkrZ9ffDXcfJGL3Rk9Yc3/QrSSI24sg==
+  dependencies:
+    "@iconify/types" "*"
+
+"@iconify/types@*", "@iconify/types@^2.0.0":
   version "2.0.0"
   resolved "https://registry.npmmirror.com/@iconify/types/-/types-2.0.0.tgz#ab0e9ea681d6c8a1214f30cd741fe3a20cc57f57"
   integrity sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==
@@ -485,6 +492,11 @@ delayed-stream@~1.0.0:
   version "1.0.0"
   resolved "https://registry.npmmirror.com/delayed-stream/-/delayed-stream-1.0.0.tgz#df3ae199acadfb7d440aaae0b29e2272b24ec619"
   integrity sha512-ZySD7Nf91aLB0RxL4KGrKHBXl7Eds1DAmEdcoVawXnLD7SDhpNgtuII2aAkg7a7QS41jxPSZ17p4VdGnMHk3MQ==
+
+draggable-polyfill@^1.2.4:
+  version "1.2.4"
+  resolved "https://registry.npmmirror.com/draggable-polyfill/-/draggable-polyfill-1.2.4.tgz#ff1e3f1c66d7e5e55b26e39693b8c095ffaa5b8e"
+  integrity sha512-JqhOoxMWI74TUL1zjFwUfHDS/CcAS53V4g1aiMDKG+38KWCBedrM52d7zBGmXDxiz0lLskWyN+RqeLk/9P0L+g==
 
 element-plus@^2.3.5:
   version "2.3.5"
@@ -1248,6 +1260,11 @@ vue-demi@*, vue-demi@>=0.14.5:
   version "0.14.5"
   resolved "https://registry.npmmirror.com/vue-demi/-/vue-demi-0.14.5.tgz#676d0463d1a1266d5ab5cba932e043d8f5f2fbd9"
   integrity sha512-o9NUVpl/YlsGJ7t+xuqJKx8EBGf1quRhCiT6D/J0pfwmk9zUwYkC7yrF4SZCe6fETvSM3UNL2edcbYrSyc4QHA==
+
+vue-lazyload@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.npmmirror.com/vue-lazyload/-/vue-lazyload-3.0.0.tgz#37529064da6ba774e969cc9d86b5418e230b16d4"
+  integrity sha512-h2keL/Rj550dLgesgOtXJS9qOiSMmuJNeVlfNAYV1/IYwOQYaWk5mFJlwRxmZDK9YC5gECcFLYYj7z1lKSf9ug==
 
 vue-router@^4.2.1:
   version "4.2.1"

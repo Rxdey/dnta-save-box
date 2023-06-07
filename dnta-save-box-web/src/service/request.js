@@ -9,7 +9,7 @@ const BASE_CONFIG = {
   responseType: 'json',
   withCredentials: false,
   headers: {
-    'Content-Type': 'application/x-www-form-urlencoded',
+    'Content-Type': 'application/json',
   },
 };
 

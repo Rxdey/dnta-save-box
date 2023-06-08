@@ -66,7 +66,7 @@ const onLogin = async () => {
     msg && ElMessage.error(msg);
     return;
   }
-  jsCookie.set('token', token);
+  jsCookie.set('token', token, { expires: 365 });
   customStorage.setItem('userInfo', data);
   ElNotification({
     title: '登录成功',

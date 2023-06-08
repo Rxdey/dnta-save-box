@@ -61,10 +61,6 @@ const dragenter = (e) => {
     e.preventDefault();
     isCurrent.value = store.dragData?.tid === props.id;
     if (!props.drag || isCurrent.value) return;
-    // const lastOver = document.querySelector('.tag[over]');
-    // if (lastOver) {
-    //     lastOver.toggleAttribute('over', false);
-    // }
     e.target.toggleAttribute('over', true);
 };
 const dragleave = (e) => {
@@ -74,14 +70,14 @@ const dragleave = (e) => {
 };
 const onDrop = async (e) => {
     e.preventDefault();
-    if (!props.drag || isCurrent.value) return;
+    e.target.toggleAttribute('over', false);
+    if (!props.drag || isCurrent.value || !store.dragData) return;
     const temp = JSON.parse(JSON.stringify(store.dragData));
     const params = {
         id: temp.id,
         tid: props.id,
         // type: temp.type
-    };
-    e.target.toggleAttribute('over', false);
+    };    
     // TODO => 修改分类列表
     const res = await Server.FavoriteUpdateUsePOST(params);
     const { success, msg } = res;

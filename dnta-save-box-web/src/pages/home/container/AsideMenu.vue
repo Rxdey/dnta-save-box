@@ -25,6 +25,11 @@
                 <EpManagement />
             </Tag>
         </div>
+        <div class="aside-wrap">
+            <Tag label="视频" @click="onSelect(-3)" :active="active === -3">
+                <EpManagement />
+            </Tag>
+        </div>
     </el-aside>
 </template>
 

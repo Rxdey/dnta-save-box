@@ -1,13 +1,16 @@
 <template>
-    <div class="favorite-card" :class="{ drag: drag }" draggable="true" @dragstart="dragstart" @dragend="dragend">
+    <div class="favorite-card" :class="{ drag: drag, 'video-card': props.data.type === 'video' }" :draggable="props.data.type !== 'video'" @dragstart="dragstart" @dragend="dragend">
         <div class="drag-title ov-1">{{ props.data.title }}</div>
         <div class="favorite-card--preview" @click="onPreviewClick">
             <!-- <img v-if="props.data.type === 'img'" v-lazy="data.content"> -->
-            <el-image v-if="props.data.type === 'img'" :src="data.path" :zoom-rate="1.2" :preview-src-list="imageList" :initial-index="index" fit="cover" preview-teleported hide-on-click-modal lazy style="width: 100%; height: 100%" draggable="false" />
+            <el-image v-if="props.data.type === 'img'" :src="props.data.path" :zoom-rate="1.2" :preview-src-list="imageList" :initial-index="index" fit="cover" preview-teleported hide-on-click-modal lazy style="width: 100%; height: 100%" draggable="false" />
             <div class="text" v-if="props.data.type === 'text'">
                 <div class="text-inner">{{ data.content }}</div>
             </div>
             <div class="url" v-if="props.data.type === 'url'">{{ data.title }}</div>
+            <div class="video" v-if="props.data.type === 'video'">
+                <video :src="props.data.path" controls loop></video>
+            </div>
         </div>
         <div class="favorite-card--body">
             <!-- <div class="favorite-card__title">
@@ -15,7 +18,7 @@
             </div> -->
             <div class="favorite-card--desc">
                 <p>{{ getTimeAgo(props.data.update_date) }}</p>
-                <div class="favorite-card--footer">
+                <div class="favorite-card--footer" v-if="props.data.type !== 'video'">
                     <div class="flex-center" v-if="domain">
                         <el-image class="favicon" :src="domain.origin + '/favicon.ico'" lazy fit="cover" draggable="false">
                             <template #error>
@@ -64,6 +67,7 @@ const index = computed(() => tempList.value.findIndex(item => item.id === props.
 const imageList = computed(() => tempList.value.map(item => item.path));
 
 const dragstart = e => {
+    if (props.data.type === 'video') return;
     drag.value = true;
     const { offsetX, offsetY } = e;
     // e.dataTransfer.setData('Text', '666');
@@ -74,7 +78,7 @@ const dragstart = e => {
     }, 0);
 };
 const dragend = e => {
-    e.preventDefault();
+    if (props.data.type === 'video') return;
     drag.value = false;
     store.UPDATE_DRAG_DATA(null);
 };
@@ -95,7 +99,6 @@ const onPreviewClick = () => {
             }).catch(() => { });
         }
     };
-    console.log(props.data.type);
     if (action[props.data.type]) action[props.data.type]();
 };
 

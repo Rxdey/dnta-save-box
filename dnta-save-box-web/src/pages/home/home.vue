@@ -7,8 +7,8 @@
         <FavoriteWrap v-if="favoriteList.length">
           <FavoriteCard v-for="favorite in favoriteList" :key="favorite.id" :data="favorite" />
         </FavoriteWrap>
-        <p class="tip" v-show="loading">loading...</p>
-        <p class="tip" v-show="finished">没有更多了</p>
+        <p class="tip" v-show="loading">加载中...</p>
+        <p class="tip" v-show="finished && !loading">没有更多了</p>
       </el-main>
     </el-container>
   </el-container>
@@ -34,6 +34,7 @@ const page = ref(1);
 const pageSize = ref(30);
 const loading = ref(false);
 const finished = ref(false);
+const isVideo = ref(false);
 
 const favoriteList = computed(() => store.favoriteList);
 const favParams = ref({
@@ -49,8 +50,29 @@ const getTag = async () => {
   }
   tagList.value = data;
 };
+const getVideo = async () => {
+  finished.value = true;
+  loading.value = true;
+  const res = await Server.VideoUseGet();
+  loading.value = false;
+  const { data, success, msg } = res;
+  if (!success) {
+    ElMessage.error(msg);
+    return;
+  }
+  store.UPDATE_FAVORITE_LIST(data.map(item => {
+    return {
+      ...item,
+      path: item.path ? item.path.replace('./download', BASE_URL) : ''
+    };
+  }));
+};
 
 const getFavorite = async () => {
+  if (isVideo.value) {
+    getVideo();
+    return;
+  }
   if (finished.value) return;
   const params = {
     ...favParams.value,
@@ -78,8 +100,9 @@ const getFavorite = async () => {
 
 
 const onChange = (index, tag) => {
+  // video
+  isVideo.value = index === -3;
   page.value = 1;
-  // tid.value = tag?.id || null;
   favParams.value = {
     tid: tag?.id || null,
     is_show: index === -2 ? 0 : 1

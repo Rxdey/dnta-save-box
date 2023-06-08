@@ -61,3 +61,11 @@ export const FavoriteUpdateUsePOST = (params) => request({
     url: '/favorite/update',
     method: 'POST'
 }, params);
+
+/**
+ * 获取视频
+ */
+export const VideoUseGet = (params) => request({
+    url: '/video/get',
+    method: 'GET'
+}, params);

@@ -104,6 +104,11 @@ const handleDel = () => {
         confirmButtonText: '删除',
         cancelButtonText: '取消'
     }).then(async () => {
+        // 回收站的直接移除
+        // if (props.is_show === 0) {
+        // } else {
+
+        // }
         const res = await Server.FavoriteUpdateUsePOST({
             id: props.data.id,
             is_show: 0

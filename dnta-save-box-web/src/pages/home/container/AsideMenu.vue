@@ -1,21 +1,28 @@
 <template>
     <el-aside class="aside">
-        <div class="aside-container">
-            <Tag label="我的收藏" @click="onSelect(-1)" :active="active === -1">
-                <EpManagement />
-            </Tag>
-            <Tag v-for="(tag, i) in props.tagList" :key="tag.id" @click="onSelect(i, tag)" :label="tag.name" :active="active === i" edit @onEdit="onEdit(tag)" :id="tag.id" drag>
-                <IcBaselineFavoriteBorder />
-            </Tag>
+        <div class="aside-wrap">
+            <div class="aside-container">
+                <Tag label="我的收藏" @click="onSelect(-1)" :active="active === -1">
+                    <EpManagement />
+                </Tag>
+                <Tag v-for="(tag, i) in props.tagList" :key="tag.id" @click="onSelect(i, tag)" :label="tag.name" :active="active === i" edit @onEdit="onEdit(tag)" :id="tag.id" drag>
+                    <IcBaselineFavoriteBorder />
+                </Tag>
+            </div>
+            <div class="aside-add">
+                <Tag @onLeftClick="onAddTag">
+                    <EpPlus />
+                    <template #label>
+                        <div class="add-input">
+                            <input class="add-input-inner" type="text" placeholder="输入收藏夹名字" v-model="tanName" />
+                        </div>
+                    </template>
+                </Tag>
+            </div>
         </div>
-        <div class="aside-add">
-            <Tag @onLeftClick="onAddTag">
-                <EpPlus />
-                <template #label>
-                    <div class="add-input">
-                        <input class="add-input-inner" type="text" placeholder="输入收藏夹名字" v-model="tanName"/>
-                    </div>
-                </template>
+        <div class="aside-wrap">
+            <Tag label="回收站" @click="onSelect(-2)" :active="active === -2">
+                <EpManagement />
             </Tag>
         </div>
     </el-aside>
@@ -50,7 +57,7 @@ const onAddTag = () => {
     if (!tanName.value || !tanName.value.trim()) return;
     emit('add', tanName.value, () => {
         tanName.value = '';
-    })
+    });
 };
 
 const onSelect = (index, tag) => {

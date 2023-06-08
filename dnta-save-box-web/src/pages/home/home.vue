@@ -2,7 +2,7 @@
   <el-container direction="vertical" class="home">
     <HeaderWap />
     <el-container style="min-height: 1px;">
-      <AsideMenu :tagList="tagList" @change="onChange" @add="onAddTag"/>
+      <AsideMenu :tagList="tagList" @change="onChange" @add="onAddTag" />
       <el-main class="main" v-infinite-scroll="getFavorite" :infinite-scroll-disabled="finished || loading" :infinite-scroll-distance="20">
         <FavoriteWrap v-if="favoriteList.length">
           <FavoriteCard v-for="favorite in favoriteList" :key="favorite.id" :data="favorite" />
@@ -36,7 +36,9 @@ const loading = ref(false);
 const finished = ref(false);
 
 const favoriteList = computed(() => store.favoriteList);
-const tid = ref(null);
+const favParams = ref({
+  tid: null
+});
 
 const getTag = async () => {
   const res = await Server.TagAllUseGET();
@@ -51,7 +53,7 @@ const getTag = async () => {
 const getFavorite = async () => {
   if (finished.value) return;
   const params = {
-    tid: tid.value,
+    ...favParams.value,
     pageSize: pageSize.value,
     page: page.value
   };
@@ -77,30 +79,34 @@ const getFavorite = async () => {
 
 const onChange = (index, tag) => {
   page.value = 1;
-  tid.value = tag?.id || null;
+  // tid.value = tag?.id || null;
+  favParams.value = {
+    tid: tag?.id || null,
+    is_show: index === -2 ? 0 : 1
+  };
   store.UPDATE_FAVORITE_LIST([]);
   finished.value = false;
 };
 // TODO => 新增标签
-const onAddTag = async (tanName, next = () => {}) => {
-    const res = await Server.TagAddUsePOST({
-        name: tanName.trim()
-    })
-    const { success, msg, data } = res;
-    if (!success) {
-        ElMessage.error(msg);
-        return;
-    }
-    ElNotification({
-        title: 'Success',
-        message: '已添加',
-        type: 'success',
-    });
-    tagList.value.push({
-      id: data,
-      name: tanName
-    });
-    next();
+const onAddTag = async (tanName, next = () => { }) => {
+  const res = await Server.TagAddUsePOST({
+    name: tanName.trim()
+  });
+  const { success, msg, data } = res;
+  if (!success) {
+    ElMessage.error(msg);
+    return;
+  }
+  ElNotification({
+    title: 'Success',
+    message: '已添加',
+    type: 'success',
+  });
+  tagList.value.push({
+    id: data,
+    name: tanName
+  });
+  next();
 };
 
 onMounted(async () => {

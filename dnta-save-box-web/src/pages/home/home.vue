@@ -2,7 +2,7 @@
   <el-container direction="vertical" class="home">
     <HeaderWap />
     <el-container style="min-height: 1px;">
-      <AsideMenu :tagList="tagList" @change="onChange" />
+      <AsideMenu :tagList="tagList" @change="onChange" @add="onAddTag"/>
       <el-main class="main" v-infinite-scroll="getFavorite" :infinite-scroll-disabled="finished || loading" :infinite-scroll-distance="20">
         <FavoriteWrap v-if="favoriteList.length">
           <FavoriteCard v-for="favorite in favoriteList" :key="favorite.id" :data="favorite" />
@@ -80,6 +80,27 @@ const onChange = (index, tag) => {
   tid.value = tag?.id || null;
   store.UPDATE_FAVORITE_LIST([]);
   finished.value = false;
+};
+// TODO => 新增标签
+const onAddTag = async (tanName, next = () => {}) => {
+    const res = await Server.TagAddUsePOST({
+        name: tanName.trim()
+    })
+    const { success, msg, data } = res;
+    if (!success) {
+        ElMessage.error(msg);
+        return;
+    }
+    ElNotification({
+        title: 'Success',
+        message: '已添加',
+        type: 'success',
+    });
+    tagList.value.push({
+      id: data,
+      name: tanName
+    });
+    next();
 };
 
 onMounted(async () => {

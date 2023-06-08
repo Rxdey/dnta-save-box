@@ -13,7 +13,7 @@
                 <EpPlus />
                 <template #label>
                     <div class="add-input">
-                        <input class="add-input-inner" type="text" placeholder="输入收藏夹名字" />
+                        <input class="add-input-inner" type="text" placeholder="输入收藏夹名字" v-model="tanName"/>
                     </div>
                 </template>
             </Tag>
@@ -27,6 +27,7 @@ import { useRouter, useRoute } from 'vue-router';
 import Tag from '../components/Tag/Tag.vue';
 import { IcBaselineFavoriteBorder } from '@/components/Icon';
 import useDragStore from '@/store/modules/useDragStore';
+// import * as Server from '@/service/model/api';
 
 const props = defineProps({
     tagList: {
@@ -36,15 +37,20 @@ const props = defineProps({
 });
 
 const store = useDragStore();
-const emit = defineEmits(['change']);
+const emit = defineEmits(['change', 'add']);
 // const active = ref(-1);
 const active = computed(() => store.active);
+const tanName = ref('');
 
-const onAddTag = () => {
-    console.log('add');
-};
+
 const onEdit = () => {
     console.log('edit');
+};
+const onAddTag = () => {
+    if (!tanName.value || !tanName.value.trim()) return;
+    emit('add', tanName.value, () => {
+        tanName.value = '';
+    })
 };
 
 const onSelect = (index, tag) => {

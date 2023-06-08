@@ -1,6 +1,6 @@
 <template>
     <div class="tag" :class="{ active: props.active }" @dragenter="dragenter" @dragleave="dragleave" @drop="onDrop">
-        <div class="tag-item flex-center">
+        <div class="tag-item flex-center" :class="{ 'no-events': drag }">
             <el-icon :size="20" class="icon" @click.stop="onLeftClick">
                 <slot></slot>
             </el-icon>
@@ -8,10 +8,10 @@
                 {{ props.label }}
                 <slot name="label"></slot>
             </span>
-            <el-icon :size="18" v-if="props.edit" class="edit" @click.stop="onEdit">
-                <PhPenThin />
-            </el-icon>
         </div>
+        <el-icon :size="18" v-if="props.edit" class="edit" @click.stop="onEdit">
+            <PhPenThin />
+        </el-icon>
     </div>
 </template>
 

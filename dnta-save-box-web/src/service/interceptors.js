@@ -1,6 +1,6 @@
 import axios from 'axios';
 import jsCookie from 'js-cookie';
-// import { ElMessage } from 'element-plus'
+
 
 axios.defaults.withCredentials = true;
 
@@ -24,6 +24,7 @@ const defaultInstance = (config) => {
     // if (action[code]) {
     //   ElMessage.error(message || action[code]);
     // }
+
     return response;
   }, (error) => {
     const status = error.request ? error.request.status : 0;
@@ -35,7 +36,7 @@ const defaultInstance = (config) => {
       401: '登录认证过期或失败，请重新登录'
     };
     console.log({ message: `ERROR: ${status} - ${action[status] || '系统异常'} >_<` });
-    console.error(`接口:${error.config.url}  异常 --- ${error.message}`);
+    // console.error(`接口:${error.config.url}  异常 --- ${error.message}`);
     ElMessage.error(`ERROR: ${status} - ${action[status] || '系统异常'} >_<`);
     if (status === 401) {
       setTimeout(() => {

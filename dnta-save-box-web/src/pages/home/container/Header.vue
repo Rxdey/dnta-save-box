@@ -6,8 +6,8 @@
         </div>
         <div class="header-center"></div>
         <div class="header-right">
-            <div class="user">
-                <img :src="userInfo.avatar" class="avatar" :title="userInfo.nick_name">
+            <div class="user" @click="toggleNsfw">
+                <img :nsfw="!!nsfw" :src="userInfo.avatar" class="avatar" :title="userInfo.nick_name">
             </div>
         </div>
     </el-header>
@@ -17,9 +17,15 @@
 import { ref, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { customStorage } from '@/utils';
+import useDragStore from '@/store/modules/useDragStore';
 
+const store = useDragStore();
+const nsfw = computed(() => store.nsfw);
 const userInfo = computed(() => customStorage.getItem('userInfo') || {});
 
+const toggleNsfw = () => {
+    store.UPDATE_NSFW(nsfw.value ? 0 : 1);
+};
 
 </script>
 

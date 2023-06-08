@@ -1,5 +1,6 @@
 import defaultInstance from './interceptors';
 import { BASE_URL } from "./api.config";
+import useDragStore from '@/store/modules/useDragStore';
 
 const BASE_CONFIG = {
   method: 'get',
@@ -19,11 +20,13 @@ const BASE_CONFIG = {
  * @param {Object} data 参数
  */
 const request = async (config, data) => {
+  // 登录状态失效不进行请求
+
   const setting = { ...BASE_CONFIG, ...config };
   const headers = { ...BASE_CONFIG.headers, ...config.headers };
   setting.headers = headers;
   const { type, url, method } = config;
-  if (!url) return { code: '-1' };
+  if (!url) return { success: false };
   if (method && method.toUpperCase() === 'GET') {
     setting.params = data;
   } else {
@@ -32,11 +35,11 @@ const request = async (config, data) => {
   const instance = defaultInstance(setting);
   try {
     const res = await instance(setting);
-    return res.data || { code: '-1' };
+    return res.data || { success: false };
   } catch (error) {
     // 此处把异常处理掉
     console.error(error);
-    return { code: '-1' };
+    return { success: false };
   }
 };
 

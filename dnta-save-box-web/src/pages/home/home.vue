@@ -3,7 +3,7 @@
     <HeaderWap />
     <el-container style="min-height: 1px;">
       <AsideMenu :tagList="tagList" @change="onChange" @add="onAddTag" />
-      <el-main class="main" v-infinite-scroll="getFavorite" :infinite-scroll-disabled="finished || loading" :infinite-scroll-distance="20">
+      <el-main class="main" v-infinite-scroll="getFavorite" :infinite-scroll-disabled="finished || loading" :infinite-scroll-distance="20" v-if="loginStatus">
         <FavoriteWrap v-if="favoriteList.length">
           <FavoriteCard v-for="favorite in favoriteList" :key="favorite.id" :data="favorite" />
         </FavoriteWrap>
@@ -35,6 +35,7 @@ const pageSize = ref(30);
 const loading = ref(false);
 const finished = ref(false);
 const isVideo = ref(false);
+const loginStatus = ref(false);
 
 const favoriteList = computed(() => store.favoriteList);
 const favParams = ref({
@@ -53,11 +54,14 @@ const getTag = async () => {
 const getVideo = async () => {
   finished.value = true;
   loading.value = true;
-  const res = await Server.VideoUseGet();
+  const res = await Server.VideoUseGet({
+    nsfw: store.nsfw
+  });
   loading.value = false;
   const { data, success, msg } = res;
   if (!success) {
     ElMessage.error(msg);
+    finished.value = true;
     return;
   }
   store.UPDATE_FAVORITE_LIST(data.map(item => {
@@ -77,7 +81,8 @@ const getFavorite = async () => {
   const params = {
     ...favParams.value,
     pageSize: pageSize.value,
-    page: page.value
+    page: page.value,
+    nsfw: store.nsfw
   };
   loading.value = true;
   const res = await Server.FavoriteGetUseGET(params);
@@ -85,6 +90,7 @@ const getFavorite = async () => {
   const { data, success, msg } = res;
   if (!success) {
     ElMessage.error(msg);
+    finished.value = true;
     return;
   }
   finished.value = data.list.length < pageSize.value;
@@ -134,7 +140,13 @@ const onAddTag = async (tanName, next = () => { }) => {
 
 onMounted(async () => {
   const token = jsCookie.get('token');
-  if (!token) {
+  loginStatus.value = !!token;
+  if (!loginStatus.value) {
+    ElNotification({
+      title: '请先登录',
+      message: '',
+      type: 'warning',
+    });
     router.push('/login');
     return;
   }

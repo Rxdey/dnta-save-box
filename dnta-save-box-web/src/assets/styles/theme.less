@@ -8,3 +8,36 @@
 
     --shadow-dark: var(--color-gray1);
 }
+
+.el-overlay-message-box .el-message-box {
+    --el-messagebox-border-radius: 12px;
+    --el-messagebox-width: 600px;
+    --el-messagebox-padding-primary: 24px;
+    --el-color-info: #000;
+    --el-messagebox-content-color: #000;
+    padding-bottom: 24px
+}
+
+button.el-button {
+    --el-border-radius-base: 100px;
+    --el-button-text-color: #000;
+    --el-button-border-color: var(--color-red);
+    --el-button-hover-text-color: var(--color-white);;
+    --el-button-active-border-color: var(--color-red);
+    --el-button-hover-border-color: var(--color-red);
+    --el-button-active-bg-color: var(--color-red);
+    --el-button-hover-bg-color: var(--color-red);
+    min-width: 120px;
+    padding: 18px!important;
+    font-family: 'tjl';
+}
+button.el-button--primary {
+    --el-button-bg-color: var(--color-red);
+    --el-button-text-color: var(--color-white);
+    --el-button-border-color: var(--color-red);
+    outline: none!important;
+}
+button.el-button--primary:hover {
+    background-color: #fa1b1b;
+    color: #fff;
+}

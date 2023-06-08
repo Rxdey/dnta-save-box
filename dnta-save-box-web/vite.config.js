@@ -6,6 +6,7 @@ import Components from 'unplugin-vue-components/vite';
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 import Icons from 'unplugin-icons/vite'; // icon相关
 import IconsResolver from 'unplugin-icons/resolver'; // icon相关
+import ElementPlus from 'unplugin-element-plus/vite'
 
 export default defineConfig({
   plugins: [
@@ -13,6 +14,9 @@ export default defineConfig({
     // vueJsx()
     AutoImport({
       resolvers: [ElementPlusResolver()],
+    }),
+    ElementPlus({
+      // options
     }),
     Components({
       resolvers: [

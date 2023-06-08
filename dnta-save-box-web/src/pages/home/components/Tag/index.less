@@ -3,9 +3,6 @@
     padding: 12px 32px;
     border-top-right-radius: 50px;
     border-bottom-right-radius: 50px;
-    * {
-        pointer-events: none;
-    }
     &[over] {
         outline: 3px solid slateblue;
     }
@@ -29,6 +26,11 @@
     &:hover {
         .edit {
             display: inherit;
+        }
+    }
+    .no-events {
+        * {
+            pointer-events: none;
         }
     }
   }

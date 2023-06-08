@@ -8,9 +8,9 @@
 .favorite-card {
     background-color: #fff;
     border-radius: 8px;
-    padding: 16px;
-    width: 240px;
-    height: 300px;
+    overflow: hidden;
+    width: 300px;
+    height: 280px;
     margin-bottom: 16px;
     margin-right: 16px;
     word-wrap: break-word;
@@ -37,8 +37,12 @@
     &:hover {
         box-shadow: 0 0 16px var(--shadow-dark);
         transform: translateY(-8px);
+        .edit {
+            display: inherit;
+        }
     }
     .drag-title  {
+        padding: 16px;
         display: none;
     }
     &--preview {
@@ -50,19 +54,28 @@
             object-fit: cover;
             display: block;
         }
+        .url,.text {
+           padding: 16px;
+        }
         .text {
             font-family: Microsoft YaHei, sans-serif;
-            padding: 8px;
             width: 100%;
             height: 100%;
-            background-color: var(--color-gray3);
+            background-color: #fff;
+            .text-inner {
+                background-color: var(--color-gray3);
+                width: 100%;
+                height: 100%;
+                padding: 8px;
+                border-radius: 8px;
+            }
         }
     }
     &--body {
-        padding: 8px 0;
-        font-size: 14px;
+        padding: 8px 16px;
+        font-size: 12px;
     }
-    &__desc {
+    &--desc {
         overflow: hidden;
         // display: flex;
         // flex-flow: row nowrap;
@@ -70,9 +83,34 @@
         font-size: 12px;
         p {
             font-size: 12px;
+            margin-bottom: 8px;
         }
         a {
-            margin-top: 8px;
+            display: block;
+            text-decoration: none;
+            color: var(--color-gray);
+        }
+        .favicon {
+            width: 18px;
+            height: 18px;
+            margin-right: 6px;
+        }
+    }
+    &--footer {
+        display: flex;
+        flex-flow: row;
+        justify-content: space-between;
+    }
+    .tool-bar {
+        display: flex;
+        flex-flow: row;
+    }
+    .edit {
+        display: none;
+        color: #000;
+        margin-left: 8px;
+        &:hover {
+            color: var(--color-pink);
         }
     }
 }

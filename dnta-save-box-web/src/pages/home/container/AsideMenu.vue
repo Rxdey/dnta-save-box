@@ -4,7 +4,7 @@
             <Tag label="我的收藏" @click="onSelect(-1)" :active="active === -1">
                 <EpManagement />
             </Tag>
-            <Tag v-for="(tag, i) in props.tagList" :key="tag.id" @click="onSelect(i, tag)" :label="tag.name" :active="active === i" edit @onEdit="onEdit(tag)" drag>
+            <Tag v-for="(tag, i) in props.tagList" :key="tag.id" @click="onSelect(i, tag)" :label="tag.name" :active="active === i" edit @onEdit="onEdit(tag)" :id="tag.id" drag>
                 <IcBaselineFavoriteBorder />
             </Tag>
         </div>
@@ -22,10 +22,11 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import Tag from '../components/Tag/Tag.vue';
 import { IcBaselineFavoriteBorder } from '@/components/Icon';
+import useDragStore from '@/store/modules/useDragStore';
 
 const props = defineProps({
     tagList: {
@@ -33,23 +34,27 @@ const props = defineProps({
         default: () => []
     }
 });
-const emit = defineEmits(['change']);
 
-const active = ref(-1);
+const store = useDragStore();
+const emit = defineEmits(['change']);
+// const active = ref(-1);
+const active = computed(() => store.active);
 
 const onAddTag = () => {
-    console.log('add')
+    console.log('add');
 };
 const onEdit = () => {
-    console.log('edit')
+    console.log('edit');
 };
 
 const onSelect = (index, tag) => {
     if (active.value === index) return;
-    active.value = index;
+    store.UPDATE_ACTIVE(index);
     emit('change', index, tag);
-}
-
+};
+// watch(() => active.value, () => {
+//     store.UPDATE_ACTIVE(active.value)
+// })
 </script>
 
 <style lang="less" scoped>

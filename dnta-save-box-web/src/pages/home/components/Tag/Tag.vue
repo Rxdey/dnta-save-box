@@ -1,5 +1,5 @@
 <template>
-    <div class="tag" :class="{ active: props.active }" @dragenter="dragenter" @dragleave="dragleave">
+    <div class="tag" :class="{ active: props.active }" @dragenter="dragenter" @dragleave="dragleave" @drop="onDrop">
         <div class="tag-item flex-center">
             <el-icon :size="20" class="icon" @click.stop="onLeftClick">
                 <slot></slot>
@@ -19,6 +19,8 @@
 import { ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { PhPenThin } from '@/components/Icon';
+import useDragStore from '@/store/modules/useDragStore';
+import * as Server from '@/service/model/api';
 
 const props = defineProps({
     label: {
@@ -36,11 +38,18 @@ const props = defineProps({
     drag: {
         type: Boolean,
         default: false
+    },
+    id: {
+        type: [Number, String],
+        default: ''
     }
 });
-const isCurrent = ref(false);
-const emit = defineEmits(['onLeftClick', 'onEdit']);
 
+const store = useDragStore();
+// 当前目录判断
+const isCurrent = ref(false);
+
+const emit = defineEmits(['onLeftClick', 'onEdit']);
 const onLeftClick = () => {
     emit('onLeftClick');
 };
@@ -49,12 +58,46 @@ const onEdit = () => {
 };
 
 const dragenter = (e) => {
-    if (!props.drag) return;
-    e.target.toggleAttribute('over',true);
-}
+    e.preventDefault();
+    isCurrent.value = store.dragData?.tid === props.id;
+    if (!props.drag || isCurrent.value) return;
+    // const lastOver = document.querySelector('.tag[over]');
+    // if (lastOver) {
+    //     lastOver.toggleAttribute('over', false);
+    // }
+    e.target.toggleAttribute('over', true);
+};
 const dragleave = (e) => {
-    if (!props.drag) return;
-    e.target.toggleAttribute('over',false);
+    e.preventDefault();
+    if (!props.drag || isCurrent.value) return;
+    e.target.toggleAttribute('over', false);
+};
+const onDrop = async (e) => {
+    e.preventDefault();
+    if (!props.drag || isCurrent.value) return;
+    const temp = JSON.parse(JSON.stringify(store.dragData));
+    const params = {
+        id: temp.id,
+        tid: props.id,
+        // type: temp.type
+    };
+    e.target.toggleAttribute('over', false);
+    // TODO => 修改分类列表
+    const res = await Server.FavoriteUpdateUsePOST(params);
+    const { success, msg } = res;
+    if (!success) {
+        ElMessage.error(msg);
+        return;
+    }
+    ElNotification({
+        title: 'Success',
+        message: `已移动到 ${props.label}`,
+        type: 'success',
+    });
+    // 更新列表
+    store.UPDATE_DRAG_DATA(null);
+    // 全部标签下拖拽不移除原数组
+    if (store.active !== -1) store.UPDATE_FAVORITE_LIST(store.favoriteList.filter(item => item.id !== params.id));
 }
 
 </script>

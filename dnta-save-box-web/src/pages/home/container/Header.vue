@@ -2,7 +2,7 @@
     <el-header class="header">
         <div class="header-left">
             <img src="/logo.png" alt="logo" />
-            DNTA SAVE
+            DNTA BOX
         </div>
         <div class="header-center"></div>
         <div class="header-right">

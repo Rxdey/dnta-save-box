@@ -63,12 +63,16 @@ export const getTimeAgo = (date = '') => {
 };
 
 export const extractDomain = (url) => {
-    let domain = '';
+    let parsedURL = {};
     try {
-        const parsedURL = new window.URL(url);
-        domain = parsedURL.hostname;
+        parsedURL = new window.URL(url);
     } catch (error) {
         console.error('Invalid URL:', error);
     }
-    return domain;
+    return parsedURL;
 };
+
+
+export const uniqueArray = (array = []) => Array.from(new Set(array.map(obj => obj.id))).map(id => {
+    return array.find(obj => obj.id === id);
+});

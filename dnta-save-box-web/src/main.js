@@ -7,7 +7,7 @@ import App from './App.vue';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn'; // 导入本地化语言
 import defaultImg from '@/assets/img/default.png';
-import 'draggable-polyfill';
+import '@/utils/draggable-polyfill';
 
 dayjs.locale('zh-cn'); // 使用本地化语言
 

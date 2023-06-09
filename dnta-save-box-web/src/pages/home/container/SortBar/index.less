@@ -35,14 +35,17 @@
 }
 .order {
     margin-left: 64px;
-    .order-icon {
-        cursor: pointer;
-        transition: all .3s;
-        &:hover {
-            color: var(--color-main);
-        }
-        &.desc {
-            transform: rotate(-180deg);
-        }
+}
+.order-icon {
+    cursor: pointer;
+    transition: all .3s;
+    &:hover {
+        color: var(--color-main);
+    }
+    &.desc {
+        transform: rotate(-180deg);
+    }
+    &.success {
+        color: var(--color-green);
     }
 }

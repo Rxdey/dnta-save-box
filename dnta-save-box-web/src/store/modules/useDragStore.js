@@ -6,7 +6,7 @@ const useDragStore = defineStore('drag', {
         dragData: null,
         favoriteList: [], // 当前收藏列表，不做缓存
         active: -1, // 当前激活的分组，用于校验拖拽时是否移除
-        nsfw: 0,
+        nsfw: sessionStorage.getItem('nsfw') || 0,
         type: '',
         sort: 'DESC'
     }),
@@ -18,6 +18,7 @@ const useDragStore = defineStore('drag', {
             this.type = data;
         },
         async UPDATE_NSFW(data) {
+            sessionStorage.setItem('nsfw', data ? 1 : 0)
             this.nsfw = data ? 1 : 0;
         },
         async UPDATE_DRAG_DATA(data) {

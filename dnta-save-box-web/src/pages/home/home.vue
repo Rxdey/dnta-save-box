@@ -2,7 +2,7 @@
   <el-container direction="vertical" class="home">
     <HeaderWap />
     <el-container style="min-height: 1px;">
-      <AsideMenu :tagList="tagList" @change="onChange" @add="onAddTag" />
+      <AsideMenu :tagList="tagList" @change="onChange" @add="onAddTag" @del="onDelTag"/>
       <el-main class="main">
         <SortBar @typeChange="onTypeChange" @sort="onSort"/>
         <FavoriteWrap v-if="loginStatus" v-infinite-scroll="getFavorite" :infinite-scroll-disabled="finished || loading" :infinite-scroll-distance="20">
@@ -86,8 +86,12 @@ const onTypeChange = ({ key }) => {
 };
 const onChange = (index, tag) => {
   isVideo.value = index === -3;
+  const idMap = {
+    '-4': 0
+  };
+  const tid = idMap[index] || idMap[index] === 0 ? idMap[index] : tag?.id;
   favParams.value = {
-    tid: tag?.id || null,
+    tid,
     is_show: index === -2 ? 0 : 1
   };
   reload();
@@ -113,7 +117,10 @@ const onAddTag = async (tanName, next = () => { }) => {
   });
   next();
 };
-
+// 删除标签
+const onDelTag = (id) => {
+  tagList.value = tagList.value.filter(item => item.id !== id);
+};
 onMounted(async () => {
   const token = jsCookie.get('token');
   loginStatus.value = !!token;

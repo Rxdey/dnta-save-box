@@ -28,7 +28,8 @@ export default function useFetchScroll() {
         const list = store.favoriteList.concat(...data.list.map(item => {
             return {
                 ...item,
-                path: item.path ? item.path.replace('./download', BASE_URL) : ''
+                path: item.path ? item.path.replace('./download/', BASE_URL) : '',
+                cover: item.cover ? item.cover.replace('./download/', BASE_URL) : '',
             };
         }));
         store.UPDATE_FAVORITE_LIST(list);

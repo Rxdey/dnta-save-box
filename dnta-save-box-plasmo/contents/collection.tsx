@@ -31,6 +31,7 @@ import type { TagAllResponse } from "~service/model/tag"
 
 // import { getColor } from "~util"
 
+const dely = 3000;
 export const config: PlasmoCSConfig = {
     matches: ["<all_urls>"],
     all_frames: true
@@ -152,7 +153,7 @@ function Collection() {
         setIsDel(true)
         setTimeout(() => {
             setShowPage(false)
-        }, 2000)
+        }, dely)
     }
     // 增加标签
     const onAddTag = async () => {
@@ -218,11 +219,8 @@ function Collection() {
                     setForm(params)
                     setShowPage(true)
                     setIsDel(false)
-
-                    // st = setTimeout(resetContent, 3000);
-
                     getTags(params).then(() => {
-                        st = setTimeout(resetContent, 3000);
+                        st = setTimeout(resetContent, dely);
                     })
                 }
             }
@@ -232,7 +230,7 @@ function Collection() {
     useEffect(() => {
         // console.log('foucs', showPage && !foucs);
         if (showPage && !foucs) {
-            st = setTimeout(resetContent, 3000);
+            st = setTimeout(resetContent, dely);
         } else {
             clearTimeout(st)
         }

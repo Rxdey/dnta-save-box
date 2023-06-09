@@ -63,6 +63,22 @@ export const FavoriteUpdateUsePOST = (params) => request({
 }, params);
 
 /**
+ * 彻底删除收藏
+ */
+export const FavoriteDelUsePOST = (params) => request({
+    url: '/favorite/del',
+    method: 'POST'
+}, params);
+/**
+ * 彻底删除收藏夹
+ */
+export const TagDelUsePOST = (params) => request({
+    url: '/tag/del',
+    method: 'POST'
+}, params);
+
+
+/**
  * 获取视频
  */
 export const VideoUseGet = (params) => request({
@@ -71,9 +87,9 @@ export const VideoUseGet = (params) => request({
 }, params);
 
 /**
- * 彻底删除
+ * 拉取视频封面
  */
-export const FavoriteDelUsePOST = (params) => request({
-    url: '/favorite/del',
-    method: 'POST'
+export const VideoGetCoverUseGet = (params) => request({
+    url: '/video/getCover',
+    method: 'GET'
 }, params);

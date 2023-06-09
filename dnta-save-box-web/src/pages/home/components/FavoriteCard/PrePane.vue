@@ -1,6 +1,6 @@
 <template>
     <div class="PrePane" @click="onPreviewClick">
-        <div class="nswf">
+        <div class="nswf" v-if="data.type !== 'video'">
             <el-switch 
                 v-model="isNsfw" 
                 :inactive-value="1" 
@@ -13,9 +13,8 @@
                 @change="onNsfwChange" 
                 />
         </div>
-        <div class="flex-center" style="width: 100%;height: 100%;justify-content: center;">
+        <div class="flex-center" style="width: 100%;height: 100%;justify-content: center;" v-if="data.type === 'img'" >
             <el-image 
-                v-if="data.type === 'img'" 
                 :src="data.path" 
                 :zoom-rate="1.2" 
                 :preview-src-list="imageList" 
@@ -35,7 +34,7 @@
             {{ data.title }}
         </div>
         <div class="video" v-if="data.type === 'video'">
-            <video :src="data.path" controls loop muted preload="none"></video>
+            <video :src="data.path" controls loop muted preload="none" :poster="data.cover"></video>
         </div>
     </div>
 </template>

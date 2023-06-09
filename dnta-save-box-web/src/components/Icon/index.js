@@ -7,6 +7,7 @@ import IcOutlineAutoDelete from './IcOutlineAutoDelete.vue';
 import IcRoundVideoCameraBack from './IcRoundVideoCameraBack.vue';
 import IcRoundFolderSpecial from './IcRoundFolderSpecial.vue';
 import MdiSortAscending from './MdiSortAscending.vue';
+import TagOutline from './TagOutline.vue';
 
 export {
     IcBaselineFavoriteBorder,
@@ -18,4 +19,5 @@ export {
     IcRoundVideoCameraBack,
     IcRoundFolderSpecial,
     MdiSortAscending,
+    TagOutline,
 }

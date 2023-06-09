@@ -52,6 +52,12 @@ export const Container = styled(BorderStyle)`
     font-size: 14px;
     color: #fff;
     z-index: 99999999;
+    svg {
+        font-size: inherit!important;
+    }
+    .MuiButtonBase-root {
+        font-size: inherit!important;
+    }
     `.withComponent('main')
 
 export const LoadingMask = styled.div`
@@ -147,6 +153,13 @@ export const CustomTextField = styled(TextField)`
         }
         .MuiInput-root:before, .MuiInputBase-root:hover:not(.Mui-disabled, .Mui-error):before {
             border-bottom-color: #f101eb!important;
+        }
+        .MuiButtonBase-root, svg {
+            font-size: inherit!important;
+        }
+        svg {
+            width: 20px!important;
+            height: 20px!important;
         }
     }
 `

@@ -1,14 +1,16 @@
 .favorite-wrap {
-  display: flex;
-  flex-flow: row wrap;
   padding: 16px;
+  .card-wrap {
+    display: flex;
+    flex-flow: row wrap;
+  }
 }
 
 .favorite-card {
   background-color: #fff;
   border-radius: 8px;
   overflow: hidden;
-  width: 300px;
+  width: 240px;
   height: 280px;
   margin-bottom: 16px;
   margin-right: 16px;
@@ -26,7 +28,7 @@
   &.video-card {
     width: 40%;
     height: 600px;
-    min-width: 300px;
+    min-width: 280px;
   }
   &[dragging] {
     opacity: 1;

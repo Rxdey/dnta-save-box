@@ -1,21 +1,26 @@
 .sort-bar {
-    padding: 32px 16px 8px 16px;
+    padding: 32px 64px 8px 16px;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: flex-end;
 }
 
 .tabs {
     display: flex;
     flex-flow: row;
     .tab-item {
+        --item-padding: 16px;
         font-size: 12px;
         position: relative;
         color: var(--color-gray);
         cursor: pointer;
         &+.tab-item {
-            padding-left: 8px;
+            padding-left: var(--item-padding);
             &::after {
                 content: '';
                 position: absolute;
-                left: 4px;
+                left: calc(var(--item-padding) / 2);
                 top: 50%;
                 transform: translateY(-50%);
                 height: 60%;
@@ -24,7 +29,20 @@
             }
         }
         &:hover,&.active {
-            color: var(--color-dark3);
+            color: var(--color-main);
+        }
+    }
+}
+.order {
+    margin-left: 64px;
+    .order-icon {
+        cursor: pointer;
+        transition: all .3s;
+        &:hover {
+            color: var(--color-main);
+        }
+        &.desc {
+            transform: rotate(-180deg);
         }
     }
 }

@@ -4,11 +4,13 @@
     <el-container style="min-height: 1px;">
       <AsideMenu :tagList="tagList" @change="onChange" @add="onAddTag" />
       <el-main class="main">
-        <SortBar />
+        <SortBar @typeChange="onTypeChange" @sort="onSort"/>
         <FavoriteWrap v-if="loginStatus" v-infinite-scroll="getFavorite" :infinite-scroll-disabled="finished || loading" :infinite-scroll-distance="20">
-          <FavoriteCard v-for="favorite in favoriteList" :key="favorite.id" :data="favorite" />
+          <div class="card-wrap">
+            <FavoriteCard v-for="favorite in favoriteList" :key="favorite.id" :data="favorite" />
+          </div>
           <p class="tip" v-show="loading">加载中...</p>
-          <p class="tip" v-show="finished && !loading">没有更多了</p>
+          <p class="tip" v-show="finished && !loading">没有了</p>
         </FavoriteWrap>
       </el-main>
     </el-container>
@@ -25,10 +27,8 @@ import AsideMenu from './container/AsideMenu/AsideMenu.vue';
 import SortBar from './container/SortBar/SortBar.vue';
 import FavoriteWrap from './components/FavoriteCard/FavoriteWrap.vue';
 import FavoriteCard from './components/FavoriteCard/FavoriteCard.vue';
-
 import * as Server from '@/service/model/api';
 import useDragStore from '@/store/modules/useDragStore';
-
 import useFetchScroll from './composables/useFetchScroll';
 
 const store = useDragStore();
@@ -38,6 +38,8 @@ const isVideo = ref(false);
 const loginStatus = ref(false);
 
 const favoriteList = computed(() => store.favoriteList);
+const type = computed(() => store.type);
+const sort = computed(() => store.sort);
 const { fetchData, loading, finished, page, pageSize } = useFetchScroll();
 
 const favParams = ref({
@@ -61,22 +63,34 @@ const getFavorite = async () => {
     ...favParams.value,
     pageSize: pageSize.value,
     page: page.value,
-    nsfw: store.nsfw
+    nsfw: store.nsfw,
+    type: type.value,
+    sort: sort.value
   };
   fetchData(api, params);
   if (isVideo.value) finished.value = true;
 };
 
-const onChange = (index, tag) => {
-  // video
-  isVideo.value = index === -3;
+const reload = () => {
   page.value = 1;
+  store.UPDATE_FAVORITE_LIST([]);
+  finished.value = false;
+};
+const onSort = (val) => {
+  store.UPDATE_SORT(val);
+  reload();
+};
+const onTypeChange = ({ key }) => {
+  store.UPDATE_TYPE(key);
+  reload();
+};
+const onChange = (index, tag) => {
+  isVideo.value = index === -3;
   favParams.value = {
     tid: tag?.id || null,
     is_show: index === -2 ? 0 : 1
   };
-  store.UPDATE_FAVORITE_LIST([]);
-  finished.value = false;
+  reload();
 };
 // TODO => 新增标签
 const onAddTag = async (tanName, next = () => { }) => {

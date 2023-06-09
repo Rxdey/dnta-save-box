@@ -4,9 +4,13 @@
     --theme-color: var(--color-white);
     --main-font-color: var(--color-dark3);
     --border-color: var(--color-gray1);
-    --shadow-color: var(--color-red);
-
+    --shadow-color: var(--button-color);
     --shadow-dark: var(--color-gray1);
+
+    --color-main: var(--color-deeppurple60);
+    --button-color: var(--color-deeppurple60);
+    --button-hover-color: var(--color-deeppurple30);
+    --hover-color: rgba(170, 31, 250, 0.048);
 }
 
 .el-overlay-message-box .el-message-box {
@@ -21,23 +25,24 @@
 button.el-button {
     --el-border-radius-base: 100px;
     --el-button-text-color: #000;
-    --el-button-border-color: var(--color-red);
+    --el-button-border-color: var(--button-color);
     --el-button-hover-text-color: var(--color-white);;
-    --el-button-active-border-color: var(--color-red);
-    --el-button-hover-border-color: var(--color-red);
-    --el-button-active-bg-color: var(--color-red);
-    --el-button-hover-bg-color: var(--color-red);
+    --el-button-active-border-color: var(--button-color);
+    --el-button-hover-border-color: var(--button-color);
+    --el-button-active-bg-color: var(--button-color);
+    --el-button-hover-bg-color: var(--button-color);
     min-width: 120px;
     padding: 18px!important;
     font-family: 'tjl';
+    transition: all .3s;
 }
 button.el-button--primary {
-    --el-button-bg-color: var(--color-red);
+    --el-button-bg-color: var(--button-color);
     --el-button-text-color: var(--color-white);
-    --el-button-border-color: var(--color-red);
+    --el-button-border-color: var(--button-color);
     outline: none!important;
 }
 button.el-button--primary:hover {
-    background-color: #fa1b1b;
+    background-color: var(--button-hover-color);
     color: #fff;
 }

@@ -7,8 +7,16 @@ const useDragStore = defineStore('drag', {
         favoriteList: [], // 当前收藏列表，不做缓存
         active: -1, // 当前激活的分组，用于校验拖拽时是否移除
         nsfw: 0,
+        type: '',
+        sort: 'DESC'
     }),
     actions: {
+        async UPDATE_SORT(data) {
+            this.sort = data ? 'ASC' : 'DESC';
+        },
+        async UPDATE_TYPE(data) {
+            this.type = data;
+        },
         async UPDATE_NSFW(data) {
             this.nsfw = data ? 1 : 0;
         },

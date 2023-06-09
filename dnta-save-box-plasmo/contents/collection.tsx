@@ -8,20 +8,14 @@ import HighlightOffIcon from "@mui/icons-material/HighlightOff"
 import {
     Button,
     CircularProgress,
-    IconButton,
-    InputAdornment
 } from "@mui/material"
-import { SnackbarProvider, useSnackbar } from "notistack"
 import type { PlasmoCSConfig } from "plasmo"
-import { useEffect, useRef, useState } from "react"
-
-import { Storage } from "@plasmohq/storage"
+import { useEffect, useState } from "react"
 
 import {
     AddTagWrap,
     ButtonWrap,
     Container,
-    CustomTextField,
     IconBtnWrap,
     LoadingMask,
     StatusBar,
@@ -41,8 +35,6 @@ export const config: PlasmoCSConfig = {
     matches: ["<all_urls>"],
     all_frames: true
 }
-
-const storage = new Storage()
 
 const styleElement = document.createElement("style")
 const styleCache = createCache({
@@ -262,7 +254,6 @@ function Collection() {
 
     return (
         <CacheProvider value={styleCache}>
-            <SnackbarProvider maxSnack={3}>
                 {showPage ? (
                     <Container
                         onMouseOver={(e) => {
@@ -358,7 +349,6 @@ function Collection() {
                         )}
                     </Container>
                 ) : null}
-            </SnackbarProvider>
         </CacheProvider>
     )
 }

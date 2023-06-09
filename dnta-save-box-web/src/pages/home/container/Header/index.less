@@ -1,0 +1,41 @@
+.header {
+  --header-title-color: var(--color-brown);
+  width: 100%;
+  background-color: #fff;
+  box-shadow: 0 0 8px var(--shadow-dark);
+  padding: 8px 16px;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+
+  .header-left {
+    padding: 0 16px;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    cursor: pointer;
+    img {
+      width: 30px;
+      height: 30px;
+      display: inline-block;
+      margin-right: 8px;
+    }
+  }
+  .header-center {
+    flex: 1;
+    min-width: 1px;
+  }
+  .user {
+    img {
+      width: 40px;
+      height: 40px;
+      border-radius: 20px;
+      object-fit: cover;
+      cursor: pointer;
+      &:hover, &[nsfw=true] {
+        box-shadow: 0 0 0 2px var(--color-orange);
+      }
+    }
+  }
+}
+

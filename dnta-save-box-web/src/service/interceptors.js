@@ -12,21 +12,7 @@ const defaultInstance = (config) => {
     return request;
   });
 
-  instance.interceptors.response.use((response) => {
-    // const { code, message } = response.data || {};
-    // if (!code) return response;
-    // const action = {
-    //   // '0000': '',
-    //   // '9997': '',
-    //   '9998': '系统异常',
-    //   '9999': '身份验证失败'
-    // };
-    // if (action[code]) {
-    //   ElMessage.error(message || action[code]);
-    // }
-
-    return response;
-  }, (error) => {
+  instance.interceptors.response.use((response) => response, (error) => {
     const status = error.request ? error.request.status : 0;
     const action = {
       405: '登录信息获取失败', // 这里没token返回的是405
@@ -35,15 +21,17 @@ const defaultInstance = (config) => {
       504: '请求超时，请检查网络环境并重试',
       401: '登录认证过期或失败，请重新登录'
     };
-    console.log({ message: `ERROR: ${status} - ${action[status] || '系统异常'} >_<` });
+    // console.log({ msg: `ERROR: ${status} - ${action[status] || '系统异常'} >_<` });
     // console.error(`接口:${error.config.url}  异常 --- ${error.message}`);
-    ElMessage.error(`ERROR: ${status} - ${action[status] || '系统异常'} >_<`);
+    // ElMessage.error(`ERROR: ${status} - ${action[status] || '系统异常'} >_<`);
+    // 封装一层错误消息返回
+    const errResponse = { data: { msg: `ERROR: ${status} - ${action[status] || '系统异常'} >_<`, success: false } };
     if (status === 401) {
       setTimeout(() => {
         window.location.href = '/login';
       }, 2000);
     }
-    return error;
+    return errResponse;
   });
   return instance;
 };

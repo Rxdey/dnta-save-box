@@ -69,3 +69,11 @@ export const VideoUseGet = (params) => request({
     url: '/video/get',
     method: 'GET'
 }, params);
+
+/**
+ * 彻底删除
+ */
+export const FavoriteDelUsePOST = (params) => request({
+    url: '/favorite/del',
+    method: 'POST'
+}, params);

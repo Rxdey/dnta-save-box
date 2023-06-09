@@ -1,7 +1,7 @@
 .favorite-wrap {
   display: flex;
   flex-flow: row wrap;
-  // justify-content: space-around;
+  padding: 16px;
 }
 
 .favorite-card {
@@ -28,7 +28,6 @@
     height: 600px;
     min-width: 300px;
   }
-
   &[dragging] {
     opacity: 1;
     box-shadow: 0 0 16px var(--shadow-dark);
@@ -53,17 +52,18 @@
     display: none;
   }
   &--preview {
-    // height: 220px;
     flex: 1;
     min-height: 1px;
     position: relative;
-    // overflow-y: auto;
+    font-family: Microsoft YaHei, sans-serif;
+    overflow: hidden;
     .nswf {
       position: absolute;
       top: 4px;
       right: 4px;
       display: none;
       z-index: 99;
+      // box-shadow: 0 0 12px var(--shadow-dark);
     }
     &:hover {
       .nswf {
@@ -71,8 +71,8 @@
       }
     }
     img {
-      width: 100%;
-      height: 100%;
+      max-width: 100%;
+      // height: 100%;
       object-fit: cover;
       display: block;
     }
@@ -94,27 +94,21 @@
       }
     }
     .video {
-        height: 100%;
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        background-color: #000;
+      height: 100%;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      background-color: #000;
       video {
         max-width: 100%;
         max-height: 100%;
-        margin:  0 auto;
+        margin: 0 auto;
       }
     }
   }
-  &--body {
-    padding: 8px 16px;
-    font-size: 12px;
-  }
   &--desc {
     overflow: hidden;
-    // display: flex;
-    // flex-flow: row nowrap;
-    // justify-content: space-between;
+    padding: 8px 16px;
     font-size: 12px;
     p {
       font-size: 12px;
@@ -130,22 +124,22 @@
       height: 18px;
       margin-right: 6px;
     }
-  }
-  &--footer {
-    display: flex;
-    flex-flow: row;
-    justify-content: space-between;
-  }
-  .tool-bar {
-    display: flex;
-    flex-flow: row;
-  }
-  .edit {
-    display: none;
-    color: #000;
-    margin-left: 8px;
-    &:hover {
-      color: var(--color-pink);
+    .footer {
+      display: flex;
+      flex-flow: row;
+      justify-content: space-between;
+    }
+    .tool-bar {
+      display: flex;
+      flex-flow: row;
+    }
+    .edit {
+      display: none;
+      color: #000;
+      margin-left: 8px;
+      &:hover {
+        color: var(--color-pink);
+      }
     }
   }
 }

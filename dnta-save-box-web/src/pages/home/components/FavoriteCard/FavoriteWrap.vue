@@ -10,6 +10,6 @@ import { useRouter, useRoute } from 'vue-router';
 
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 @import url('./index.less');
 </style>

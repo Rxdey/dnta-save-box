@@ -11,4 +11,7 @@ html,body, #app {
   height: 100%;
   overflow-x: hidden;
 }
+.el-popup-parent--hidden #app, body[style="overflow: hidden;"] #app{
+  filter: blur(1px);
+}
 </style>

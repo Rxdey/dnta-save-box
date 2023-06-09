@@ -3,12 +3,13 @@
     <HeaderWap />
     <el-container style="min-height: 1px;">
       <AsideMenu :tagList="tagList" @change="onChange" @add="onAddTag" />
-      <el-main class="main" v-infinite-scroll="getFavorite" :infinite-scroll-disabled="finished || loading" :infinite-scroll-distance="20" v-if="loginStatus">
-        <FavoriteWrap v-if="favoriteList.length">
+      <el-main class="main">
+        <SortBar />
+        <FavoriteWrap v-if="loginStatus" v-infinite-scroll="getFavorite" :infinite-scroll-disabled="finished || loading" :infinite-scroll-distance="20">
           <FavoriteCard v-for="favorite in favoriteList" :key="favorite.id" :data="favorite" />
+          <p class="tip" v-show="loading">加载中...</p>
+          <p class="tip" v-show="finished && !loading">没有更多了</p>
         </FavoriteWrap>
-        <p class="tip" v-show="loading">加载中...</p>
-        <p class="tip" v-show="finished && !loading">没有更多了</p>
       </el-main>
     </el-container>
   </el-container>
@@ -19,28 +20,30 @@ import { ref, onMounted, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import jsCookie from 'js-cookie';
 
-import HeaderWap from './container/Header.vue';
-import AsideMenu from './container/AsideMenu.vue';
+import HeaderWap from './container/Header/Header.vue';
+import AsideMenu from './container/AsideMenu/AsideMenu.vue';
+import SortBar from './container/SortBar/SortBar.vue';
 import FavoriteWrap from './components/FavoriteCard/FavoriteWrap.vue';
 import FavoriteCard from './components/FavoriteCard/FavoriteCard.vue';
+
 import * as Server from '@/service/model/api';
-import { BASE_URL } from '@/service/api.config';
 import useDragStore from '@/store/modules/useDragStore';
+
+import useFetchScroll from './composables/useFetchScroll';
 
 const store = useDragStore();
 const router = useRouter();
 const tagList = ref([]);
-const page = ref(1);
-const pageSize = ref(30);
-const loading = ref(false);
-const finished = ref(false);
 const isVideo = ref(false);
 const loginStatus = ref(false);
 
 const favoriteList = computed(() => store.favoriteList);
+const { fetchData, loading, finished, page, pageSize } = useFetchScroll();
+
 const favParams = ref({
   tid: null
 });
+
 
 const getTag = async () => {
   const res = await Server.TagAllUseGET();
@@ -51,59 +54,18 @@ const getTag = async () => {
   }
   tagList.value = data;
 };
-const getVideo = async () => {
-  finished.value = true;
-  loading.value = true;
-  const res = await Server.VideoUseGet({
-    nsfw: store.nsfw
-  });
-  loading.value = false;
-  const { data, success, msg } = res;
-  if (!success) {
-    ElMessage.error(msg);
-    finished.value = true;
-    return;
-  }
-  store.UPDATE_FAVORITE_LIST(data.map(item => {
-    return {
-      ...item,
-      path: item.path ? item.path.replace('./download', BASE_URL) : ''
-    };
-  }));
-};
 
 const getFavorite = async () => {
-  if (isVideo.value) {
-    getVideo();
-    return;
-  }
-  if (finished.value) return;
+  const api = isVideo.value ? Server.VideoUseGet : Server.FavoriteGetUseGET;
   const params = {
     ...favParams.value,
     pageSize: pageSize.value,
     page: page.value,
     nsfw: store.nsfw
   };
-  loading.value = true;
-  const res = await Server.FavoriteGetUseGET(params);
-  loading.value = false;
-  const { data, success, msg } = res;
-  if (!success) {
-    ElMessage.error(msg);
-    finished.value = true;
-    return;
-  }
-  finished.value = data.list.length < pageSize.value;
-  const list = favoriteList.value.concat(...data.list.map(item => {
-    return {
-      ...item,
-      path: item.path ? item.path.replace('./download', BASE_URL) : ''
-    };
-  }));
-  store.UPDATE_FAVORITE_LIST(list);
-  page.value += 1;
+  fetchData(api, params);
+  if (isVideo.value) finished.value = true;
 };
-
 
 const onChange = (index, tag) => {
   // video

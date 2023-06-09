@@ -1,9 +1,19 @@
 import IcBaselineFavoriteBorder from './IcBaselineFavoriteBorder.vue';
 import PhPenThin from './PhPenThin.vue';
 import MdiWeb from './MdiWeb.vue';
+import MdiDeleteForeverOutline from './MdiDeleteForeverOutline.vue';
+import IcRoundRestorePage from './IcRoundRestorePage.vue';
+import IcOutlineAutoDelete from './IcOutlineAutoDelete.vue';
+import IcRoundVideoCameraBack from './IcRoundVideoCameraBack.vue';
+import IcRoundFolderSpecial from './IcRoundFolderSpecial.vue';
 
 export {
     IcBaselineFavoriteBorder,
     PhPenThin,
     MdiWeb,
+    MdiDeleteForeverOutline,
+    IcRoundRestorePage,
+    IcOutlineAutoDelete,
+    IcRoundVideoCameraBack,
+    IcRoundFolderSpecial,
 }

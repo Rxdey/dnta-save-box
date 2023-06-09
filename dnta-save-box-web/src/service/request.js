@@ -35,11 +35,11 @@ const request = async (config, data) => {
   const instance = defaultInstance(setting);
   try {
     const res = await instance(setting);
-    return res.data || { success: false };
+    return res.data || { success: false, msg: '系统异常' };
   } catch (error) {
     // 此处把异常处理掉
     console.error(error);
-    return { success: false };
+    return error;
   }
 };
 

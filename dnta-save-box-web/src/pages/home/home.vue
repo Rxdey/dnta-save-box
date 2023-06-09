@@ -5,7 +5,7 @@
       <AsideMenu :tagList="tagList" @change="onChange" @add="onAddTag" @del="onDelTag"/>
       <el-main class="main">
         <SortBar @typeChange="onTypeChange" @sort="onSort"/>
-        <FavoriteWrap v-if="loginStatus" v-infinite-scroll="getFavorite" :infinite-scroll-disabled="finished || loading" :infinite-scroll-distance="20">
+        <FavoriteWrap v-if="loginStatus" v-infinite-scroll="getFavorite" :infinite-scroll-disabled="finished || loading" :infinite-scroll-distance="0">
           <div class="card-wrap">
             <FavoriteCard v-for="favorite in favoriteList" :key="favorite.id" :data="favorite" />
           </div>
@@ -75,6 +75,7 @@ const reload = () => {
   page.value = 1;
   store.UPDATE_FAVORITE_LIST([]);
   finished.value = false;
+  getFavorite();
 };
 const onSort = (val) => {
   store.UPDATE_SORT(val);

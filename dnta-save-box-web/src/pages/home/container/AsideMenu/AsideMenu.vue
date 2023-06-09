@@ -73,12 +73,13 @@ const tanName = ref('');
 const dialogVisible = ref(false);
 const loading = ref(false);
 const selectTag = ref(null);
+const lastName = ref('');
 
 
 const onEdit = (data) => {
-    selectTag.value = { ...data, lastName: data.name };
+    selectTag.value = data;
+    lastName.value = data.name;
     dialogVisible.value = true;
-
 };
 // 更新
 const onUpdateTag = async () => {
@@ -90,10 +91,11 @@ const onUpdateTag = async () => {
     loading.value = false;
     const { success, msg } = res;
     if (!success) {
-        selectTag.value.name = selectTag.value.lastName;
+        selectTag.value.name = lastName.value;
         ElMessage.error(msg);
         return;
     }
+    lastName.value = '';
     dialogVisible.value = false;
     ElNotification({
         title: 'Success',
@@ -143,6 +145,7 @@ const onSelect = (index, tag) => {
 };
 
 const handleClose = (done) => {
+    if(selectTag.value && lastName.value) selectTag.value.name = lastName.value;
     done();
 };
 

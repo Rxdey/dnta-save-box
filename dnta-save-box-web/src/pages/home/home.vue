@@ -108,7 +108,7 @@ const onAddTag = async (tanName, next = () => { }) => {
     return;
   }
   ElNotification({
-    title: 'Success',
+    title: '操作成功',
     message: '已添加',
     type: 'success',
   });

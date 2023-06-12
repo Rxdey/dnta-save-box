@@ -8,10 +8,13 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn'; // 导入本地化语言
 import defaultImg from '@/assets/img/default.png';
 import '@/utils/draggable-polyfill';
+import '@/assets/styles/common.less';
+import '@/assets/styles/theme.less';
 
 dayjs.locale('zh-cn'); // 使用本地化语言
 
 const app = createApp(App);
+// app.config.unwrapInjectedRef = true
 app.use(router);
 app.use(pinia);
 app.use(VueLazyload, {

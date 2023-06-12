@@ -76,3 +76,8 @@ export const extractDomain = (url) => {
 export const uniqueArray = (array = []) => Array.from(new Set(array.map(obj => obj.id))).map(id => {
     return array.find(obj => obj.id === id);
 });
+
+
+export function hasClass(element, classname) {
+    return new RegExp('(^| )' + classname + '( |$)', 'gi').test(element.className);
+}

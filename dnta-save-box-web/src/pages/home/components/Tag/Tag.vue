@@ -86,7 +86,7 @@ const onDrop = async (e) => {
         return;
     }
     ElNotification({
-        title: 'Success',
+        title: '操作成功',
         message: `已移动到 ${props.label}`,
         type: 'success',
     });

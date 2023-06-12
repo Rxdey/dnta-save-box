@@ -1,31 +1,14 @@
 <template>
     <div class="PrePane" @click="onPreviewClick">
         <div class="nswf" v-if="data.type !== 'video'">
-            <el-switch 
-                v-model="isNsfw" 
-                :inactive-value="1" 
-                size="small" 
-                style="--el-switch-on-color: #5dca91; --el-switch-off-color: #ff4242" 
-                :active-value="0" 
-                inline-prompt 
-                active-text="SFW" 
-                inactive-text="NSFW" 
-                @change="onNsfwChange" 
-                />
+            <el-switch v-model="isNsfw" :inactive-value="1" size="small" style="--el-switch-on-color: #5dca91; --el-switch-off-color: #ff4242" :active-value="0" inline-prompt active-text="SFW" inactive-text="NSFW" @change="onNsfwChange" />
         </div>
-        <div class="flex-center" style="width: 100%;height: 100%;justify-content: center;" v-if="data.type === 'img'" >
-            <el-image 
-                :src="data.path" 
-                :zoom-rate="1.2" 
-                :preview-src-list="imageList" 
-                :initial-index="index" 
-                fit="cover" 
-                preview-teleported 
-                hide-on-click-modal 
-                lazy 
-                
-                draggable="false" 
-                />
+        <div class="flex-center image-wrap" style="width: 100%;height: 100%;justify-content: center;" v-if="data.type === 'img'">
+            <el-image :src="data.path" :zoom-rate="1.2" :preview-src-list="imageList" :initial-index="index" fit="cover" preview-teleported hide-on-click-modal lazy draggable="false" class="my-image">
+                <template #placeholder>
+                    <div class="img-loading">loading...</div>
+                </template>
+            </el-image>
         </div>
         <div class="text" v-if="data.type === 'text'">
             <div class="text-inner">{{ data.content }}</div>
@@ -50,47 +33,46 @@ const store = useDragStore();
 const data = inject('favoriteData');
 const isNsfw = ref(0);
 const tempList = computed(() => store.favoriteList?.filter(item => item.type === 'img') || []);
-const index = computed(() => tempList.value.findIndex(item => item.id === data.id) || 0);
+const index = computed(() => tempList.value.findIndex(item => item.id === data.value.id) || 0);
 const imageList = computed(() => tempList.value.map(item => item.path));
 
 const onPreviewClick = () => {
     const action = {
         text: () => {
-            copyToClipboard(data.content, () => {
+            copyToClipboard(data.value.content, () => {
                 ElMessage.success('已复制');
             });
         },
         url: () => {
-            ElMessageBox.confirm(`是否前往${data.title}?`, '注意', {
+            ElMessageBox.confirm(`是否前往${data.value.title}?`, '注意', {
                 confirmButtonText: '立即前往',
                 cancelButtonText: '取消'
             })
                 .then(() => {
-                    window.open(data.content, '_blank');
+                    window.open(data.value.content, '_blank');
                 })
                 .catch(() => { });
         }
     };
-    if (action[data.type]) action[data.type]();
+    if (action[data.value.type]) action[data.value.type]();
 };
 
 const onNsfwChange = async val => {
     await Server.FavoriteUpdateUsePOST({
-        id: data.id,
+        id: data.value.id,
         nsfw: val
     });
 };
 
 onMounted(() => {
-    isNsfw.value = data.nsfw;
+    isNsfw.value = data.value.nsfw;
 });
 watch(
-    () => data.nsfw,
+    () => data.value.nsfw,
     val => {
         isNsfw.value = val;
     }
 );
 </script>
 
-<style lang="less">
-</style>
+<style lang="less"></style>

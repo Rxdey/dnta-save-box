@@ -7,8 +7,9 @@
 }
 
 .favorite-card {
+  --card-radius: 8px;
   background-color: #fff;
-  border-radius: 8px;
+  border-radius: var(--card-radius);
   overflow: hidden;
   width: 240px;
   height: 280px;
@@ -24,11 +25,10 @@
   flex-flow: column;
   &.drag {
     opacity: 0.3;
+    transform: translateY(0)!important;
   }
-  &.video-card {
-    width: 40%;
-    height: 600px;
-    min-width: 280px;
+  .no-events {
+    pointer-events: none;
   }
   &[dragging] {
     opacity: 1;
@@ -41,6 +41,34 @@
     .favorite-card--body {
       display: none;
     }
+  }
+  &[drag-over='left'],
+  &[drag-over='right'] {
+    overflow: visible;
+    &::after {
+      content: '';
+      position: absolute;
+      width: 3px;
+      height: 100%;
+      background-color: var(--color-purple);
+      top: 0;
+      border-radius: 10px;
+    }
+  }
+  &[drag-over='left'] {
+    &::after {
+      left: -9px;
+    }
+  }
+  &[drag-over='right'] {
+    &::after {
+      right: -9px;
+    }
+  }
+  &.video-card {
+    width: 40%;
+    height: 600px;
+    min-width: 280px;
   }
   &:hover {
     box-shadow: 0 0 16px var(--shadow-dark);
@@ -59,7 +87,14 @@
     position: relative;
     font-family: Microsoft YaHei, sans-serif;
     overflow: hidden;
-    background-color: #000;
+    background-color: #fff;
+    border-top-left-radius: var(--card-radius);
+    border-top-right-radius: var(--card-radius);
+    .image-wrap {
+      background-size: 20px 20px;
+      background-position: 0 0, 10px 10px;
+      background-image: linear-gradient(45deg, #eee 25%, transparent 0, transparent 75%, #eee 0, #eee), linear-gradient(45deg, #eee 25%, #fff 0, #fff 75%, #eee 0, #eee);
+    }
     .nswf {
       position: absolute;
       top: 4px;
@@ -72,6 +107,19 @@
       .nswf {
         display: block;
       }
+    }
+    .my-image:not(.el-image__inner) {
+      width: 100%;
+      height: 100%;
+    }
+    .img-loading {
+      background-color: var(--color-gray4);
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-gray2);
     }
     img {
       max-width: 100%;

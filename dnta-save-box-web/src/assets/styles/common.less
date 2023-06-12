@@ -71,7 +71,29 @@ img[lazy='loaded'] {
   }
 }
 
-a,a:link,a:visited,a:hover,a:active{
+a,
+a:link,
+a:visited,
+a:hover,
+a:active {
   text-decoration: none;
-  color:inherit;
+  color: inherit;
+}
+
+.edit-dialog.el-dialog {
+  --el-dialog-border-radius: 12px;
+  max-width: 600px;
+  width: 100%;
+}
+.edit-container {
+  .label {
+    margin-bottom: 8px;
+    color: var(--color-dark);
+  }
+  input {
+    width: 100%;
+  }
+  .edit-form-item {
+    margin-bottom: 32px;
+  }
 }

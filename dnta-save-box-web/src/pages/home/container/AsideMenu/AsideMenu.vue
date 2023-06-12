@@ -98,7 +98,7 @@ const onUpdateTag = async () => {
     lastName.value = '';
     dialogVisible.value = false;
     ElNotification({
-        title: 'Success',
+        title: '操作成功',
         message: '更新成功',
         type: 'success',
     });
@@ -123,7 +123,7 @@ const onDel = () => {
         if (props.tagList[active.value].id === selectTag.value.id) store.UPDATE_ACTIVE(-1);
         emit('del', selectTag.value.id);
         ElNotification({
-            title: 'Success',
+            title: '操作成功',
             message: '已删除',
             type: 'success',
         });

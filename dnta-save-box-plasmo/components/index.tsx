@@ -100,7 +100,8 @@ export const Text = styled.div((props: {
 }) => ({
     color: props.color || 'inherit',
     fontSize: props.size || '',
-    marginBottom: props.bottom || 0
+    marginBottom: props.bottom || 0,
+    textAlign: 'left'
 }))
 
 

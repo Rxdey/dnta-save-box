@@ -31,7 +31,7 @@ import type { TagAllResponse } from "~service/model/tag"
 
 // import { getColor } from "~util"
 
-const dely = 3000;
+
 export const config: PlasmoCSConfig = {
     matches: ["<all_urls>"],
     all_frames: true
@@ -68,7 +68,7 @@ type ContentData = {
 }
 
 let st = null
-
+const dely = 3000;
 function Collection() {
     const [showPage, setShowPage] = useState(false)
     const [isDel, setIsDel] = useState(false)
@@ -103,7 +103,12 @@ function Collection() {
             return
         }
         changeValue("id", params.id ? params.id : data)
-        setLoadSatus({ status: "success", msg: "已收藏！" })
+        const action = {
+            img: '图片',
+            text: '文本',
+            url: '网页'
+        };
+        setLoadSatus({ status: "success", msg: `${action[params.type]} 收藏成功！` })
     }
     // 获取标签然后存储
     const getTags = async (params: FavoriteData) => {
@@ -153,7 +158,7 @@ function Collection() {
         setIsDel(true)
         setTimeout(() => {
             setShowPage(false)
-        }, dely)
+        }, 1000)
     }
     // 增加标签
     const onAddTag = async () => {
@@ -216,6 +221,11 @@ function Collection() {
                     }
                     // console.log(window.location.href);
                     if (window.location.href !== value.pageUrl) return;
+                    // 如果上一个页面未关闭,移除计时器
+                    if (showPage) {
+                        setActive(0);
+                        clearTimeout(st);
+                    }
                     setForm(params)
                     setShowPage(true)
                     setIsDel(false)

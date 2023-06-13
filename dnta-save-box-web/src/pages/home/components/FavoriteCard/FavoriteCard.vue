@@ -1,5 +1,6 @@
 <template>
     <div class="favorite-card" :class="{ 'drag': drag, 'video-card': props.data.type === 'video' }" :draggable="props.data.type !== 'video'" @dragstart="dragstart" @dragend="dragend" @dragenter="dragenter" @dragleave="dragleave" @dragover="dragover" @drop="onDrop" :drag-over="dragPosition">
+        <CusCheckBox />
         <div class="drag-title ov-1" :class="{ 'no-events': dragIn }">{{ props.data.title }}</div>
         <PrePane class="favorite-card--preview" :class="{ 'no-events': dragIn }" />
         <ToolPane class="favorite-card--desc" :class="{ 'no-events': dragIn }" />
@@ -12,6 +13,7 @@ import { useRouter, useRoute } from 'vue-router';
 import useDragStore from '@/store/modules/useDragStore';
 import PrePane from './PrePane.vue';
 import ToolPane from './ToolPane.vue';
+import CusCheckBox from '@/components/Field/CheckBox.vue'
 import { throttle } from 'lodash';
 import { hasClass, moveObjectElement } from '@/utils';
 import * as Server from '@/service/model/api';
@@ -27,6 +29,7 @@ const props = defineProps({
 
 provide('favoriteData', computed(() => props.data));
 const store = useDragStore();
+const checked = ref(false);
 const drag = ref(false);
 const dragPosition = ref('');
 

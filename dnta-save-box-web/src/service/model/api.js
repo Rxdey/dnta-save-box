@@ -70,6 +70,14 @@ export const FavoriteSoreUsePOST = (params) => request({
 }, params);
 
 /**
+ * 重置排序-接口
+ */
+export const FavoriteUpdateSortUsePOST = (params) => request({
+    url: '/favorite/updateSort',
+    method: 'POST'
+}, params);
+
+/**
  * 彻底删除收藏
  */
 export const FavoriteDelUsePOST = (params) => request({

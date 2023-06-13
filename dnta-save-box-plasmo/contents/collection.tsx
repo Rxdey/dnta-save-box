@@ -108,7 +108,7 @@ function Collection() {
             text: '文本',
             url: '网页'
         };
-        setLoadSatus({ status: "success", msg: `${action[params.type]} 收藏成功！` })
+        setLoadSatus({ status: "success", msg: `${action[params.type] || ''} 收藏成功！` })
     }
     // 获取标签然后存储
     const getTags = async (params: FavoriteData) => {

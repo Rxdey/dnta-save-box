@@ -8,9 +8,10 @@
 
             <div class="sort-btn">
                 <el-icon :size="18" class="order-icon" :class="{ 'is-loading': loading, success: success }" @click="uploadSort">
-                    <EpMagicStick v-show="!loading && !success" />
+                    <EpMagicStick v-show="!loading && !success && !error" />
                     <EpLoading v-show="loading" />
                     <EpCheck v-show="success" />
+                    <EpClose v-show="error" />
                 </el-icon>
             </div>
 
@@ -23,9 +24,10 @@
         </template>
         <div class="get-cover sort-btn" v-if="tagActive === -3">
             <el-icon :size="18" class="order-icon" :class="{ 'is-loading': loading, success: success }" @click="onGetCover">
-                <EpDownload v-show="!loading && !success" />
+                <EpDownload v-show="!loading && !success && !error" />
                 <EpLoading v-show="loading" />
                 <EpCheck v-show="success" />
+                <EpClose v-show="error" />
             </el-icon>
         </div>
 
@@ -53,6 +55,7 @@ const sort = ref(false);
 const emit = defineEmits(['typeChange', 'sort']);
 const loading = ref(false);
 const success = ref(false);
+const error = ref(false);
 
 const onTabChange = (i, tab) => {
     active.value = i;
@@ -64,24 +67,28 @@ const onSort = () => {
 };
 
 const onGetCover = async () => {
-    if (loading.value || success.value) return;
+    if (loading.value || success.value || error.value) return;
     loading.value = true;
-    await Server.VideoGetCoverUseGet();
+    const res = await Server.VideoGetCoverUseGet();
     loading.value = false;
-    success.value = true;
+    success.value = res.success;
+    error.value = !res.success;
     setTimeout(() => {
         success.value = false;
+        error.value = false;
     }, 1000);
 };
 
 const uploadSort = async () => {
-    if (loading.value || success.value) return;
+    if (loading.value || success.value || error.value) return;
     loading.value = true;
-    await Server.FavoriteUpdateSortUsePOST();
+    const res = await Server.FavoriteUpdateSortUsePOST();
     loading.value = false;
-    success.value = true;
+    success.value = res.success;
+    error.value = !res.success;
     setTimeout(() => {
         success.value = false;
+        error.value = false;
     }, 1000);
 }
 

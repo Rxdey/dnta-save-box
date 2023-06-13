@@ -13,7 +13,8 @@ import useDragStore from '@/store/modules/useDragStore';
 import PrePane from './PrePane.vue';
 import ToolPane from './ToolPane.vue';
 import { throttle } from 'lodash';
-import { hasClass } from '@/utils';
+import { hasClass, moveObjectElement } from '@/utils';
+import * as Server from '@/service/model/api';
 
 
 const props = defineProps({
@@ -59,7 +60,7 @@ const dragend = e => {
         drag.value = false;
         clearAttr();
     }, 0);
-    
+
 };
 
 // drop
@@ -88,7 +89,22 @@ const dragleave = (e) => {
 };
 const onDrop = async (e) => {
     e.preventDefault();
-    console.log(dragPosition.value, props.data.id, dragData.value);
+    // console.log(dragPosition.value, props.data.id, dragData.value);
+    console.log(`${dragData.value.id} 放置到 ${props.data.id} ${dragPosition.value === 'left' ? '前' : '后'}`);
+    if (dragData.value.id === props.data.id) return;
+    const params = {
+        id: dragData.value.id,
+        targetId: props.data.id,
+        position: dragPosition.value === 'left' ? 1 : 0,
+        dragPosition: dragPosition.value
+    };
+    const res = await Server.FavoriteSoreUsePOST(params);
+    const { success, data } = res;
+    if (!success) {
+        return;
+    }
+    store.UPDATE_FAVORITE_LIST(moveObjectElement(store.favoriteList, params.id, params.targetId, params.dragPosition));
+
 }
 
 </script>

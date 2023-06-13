@@ -80,4 +80,34 @@ export const uniqueArray = (array = []) => Array.from(new Set(array.map(obj => o
 
 export function hasClass(element, classname) {
     return new RegExp('(^| )' + classname + '( |$)', 'gi').test(element.className);
-}
+};
+// 移动元素
+export function moveObjectElement(array, elementId, targetId, position) {
+    const elementIndex = array.findIndex(obj => obj.id === elementId);
+    const targetIndex = array.findIndex(obj => obj.id === targetId);
+    console.log(targetIndex);
+    if (elementIndex === -1 || targetIndex === -1) {
+      // 检查元素和目标是否存在于数组中
+      console.log("元素或目标不存在于数组中");
+      return array;
+    }
+  
+    const element = array[elementIndex];
+    array.splice(elementIndex, 1); // 先将元素从数组中删除
+  
+    if (position === "left") {
+      // 将元素放置到目标之前
+      const insertionIndex = elementIndex < targetIndex ? targetIndex - 1 : targetIndex;
+      array.splice(insertionIndex, 0, element);
+    } else if (position === "right") {
+      // 将元素放置到目标之后
+      const insertionIndex = elementIndex < targetIndex ? targetIndex : targetIndex + 1;
+      array.splice(insertionIndex, 0, element);
+    } else {
+      console.log("无效的位置参数");
+      return array;
+    }
+  
+    return array;
+  }
+

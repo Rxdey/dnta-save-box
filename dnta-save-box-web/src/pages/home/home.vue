@@ -2,9 +2,9 @@
   <el-container direction="vertical" class="home">
     <HeaderWap />
     <el-container style="min-height: 1px;">
-      <AsideMenu :tagList="tagList" @change="onChange" @add="onAddTag" @del="onDelTag"/>
+      <AsideMenu :tagList="tagList" @change="onChange" @add="onAddTag" @del="onDelTag" />
       <el-main class="main">
-        <SortBar @typeChange="onTypeChange" @sort="onSort"/>
+        <SortBar @typeChange="onTypeChange" @sort="onSort" />
         <FavoriteWrap v-if="loginStatus" v-infinite-scroll="getFavorite" :infinite-scroll-disabled="finished || loading" :infinite-scroll-distance="0">
           <div class="card-wrap">
             <FavoriteCard v-for="favorite in favoriteList" :key="favorite.id" :data="favorite" />
@@ -30,6 +30,7 @@ import FavoriteCard from './components/FavoriteCard/FavoriteCard.vue';
 import * as Server from '@/service/model/api';
 import useDragStore from '@/store/modules/useDragStore';
 import useFetchScroll from './composables/useFetchScroll';
+import useUpdate from './composables/useUpdate';
 
 const store = useDragStore();
 const router = useRouter();
@@ -41,6 +42,7 @@ const favoriteList = computed(() => store.favoriteList);
 const type = computed(() => store.type);
 const sort = computed(() => store.sort);
 const { fetchData, loading, finished, page, pageSize } = useFetchScroll();
+const { fetchData: fetchDataNormal } = useUpdate();
 
 const favParams = ref({
   tid: null
@@ -98,25 +100,21 @@ const onChange = (index, tag) => {
   reload();
 };
 // TODO => 新增标签
-const onAddTag = async (tanName, next = () => { }) => {
-  const res = await Server.TagAddUsePOST({
+const onAddTag = (tanName, next = () => { }) => {
+  fetchDataNormal(Server.TagAddUsePOST, {
     name: tanName.trim()
+  }, data => {
+    ElNotification({
+      title: '操作成功',
+      message: '已添加',
+      type: 'success',
+    });
+    tagList.value.push({
+      id: data,
+      name: tanName
+    });
+    next();
   });
-  const { success, msg, data } = res;
-  if (!success) {
-    ElMessage.error(msg);
-    return;
-  }
-  ElNotification({
-    title: '操作成功',
-    message: '已添加',
-    type: 'success',
-  });
-  tagList.value.push({
-    id: data,
-    name: tanName
-  });
-  next();
 };
 // 删除标签
 const onDelTag = (id) => {

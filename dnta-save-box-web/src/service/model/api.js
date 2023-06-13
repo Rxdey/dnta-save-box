@@ -61,6 +61,13 @@ export const FavoriteUpdateUsePOST = (params) => request({
     url: '/favorite/update',
     method: 'POST'
 }, params);
+/**
+ * 更新收藏排序-接口
+ */
+export const FavoriteSoreUsePOST = (params) => request({
+    url: '/favorite/sort',
+    method: 'POST'
+}, params);
 
 /**
  * 彻底删除收藏
@@ -69,6 +76,7 @@ export const FavoriteDelUsePOST = (params) => request({
     url: '/favorite/del',
     method: 'POST'
 }, params);
+
 /**
  * 彻底删除收藏夹
  */

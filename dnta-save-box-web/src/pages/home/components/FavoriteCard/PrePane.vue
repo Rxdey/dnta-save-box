@@ -13,7 +13,7 @@
         <div class="text" v-if="data.type === 'text'">
             <div class="text-inner">{{ data.content }}</div>
         </div>
-        <div class="url" v-if="data.type === 'url'">
+        <div class="url ov-1" v-if="data.type === 'url'">
             {{ data.title }}
         </div>
         <div class="video" v-if="data.type === 'video'">

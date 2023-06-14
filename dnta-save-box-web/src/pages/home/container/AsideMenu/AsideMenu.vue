@@ -39,6 +39,9 @@
                 <p class="label">收藏夹名字</p>
                 <Field placeholder="输入收藏夹名字" v-model="selectTag.name" />
             </div>
+            <div class="edit-form-item">
+                <el-switch v-model="selectTag.nsfw" :inactive-value="1" style="--el-switch-on-color: #5dca91; --el-switch-off-color: #ff4242;--el-color-primary: #f101eb;" :active-value="0" active-text="SFW" inactive-text="NSFW" @change="onNsfwChange" />
+            </div>
         </div>
         <template #footer>
             <span class="dialog-footer">
@@ -86,7 +89,8 @@ const onUpdateTag = async () => {
     loading.value = true;
     const res = await Server.TagUpdateUsePOST({
         id: selectTag.value.id,
-        name: selectTag.value.name
+        name: selectTag.value.name,
+        nsfw: selectTag.value.nsfw
     });
     loading.value = false;
     const { success, msg } = res;
@@ -145,8 +149,11 @@ const onSelect = (index, tag) => {
 };
 
 const handleClose = (done) => {
-    if(selectTag.value && lastName.value) selectTag.value.name = lastName.value;
+    if (selectTag.value && lastName.value) selectTag.value.name = lastName.value;
     done();
+};
+const onNsfwChange = () => {
+
 };
 
 watch(() => active.value, val => {

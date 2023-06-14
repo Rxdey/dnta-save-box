@@ -64,7 +64,9 @@ const favParams = ref({
 });
 // 获取收藏夹
 const getTag = async () => {
-  const res = await Server.TagAllUseGET();
+  const res = await Server.TagAllUseGET({
+    nsfw: store.nsfw
+  });
   const { data, success, msg } = res;
   if (!success) {
     ElMessage.error(msg);

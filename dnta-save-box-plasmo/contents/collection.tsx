@@ -11,7 +11,7 @@ import {
 } from "@mui/material"
 import type { PlasmoCSConfig } from "plasmo"
 import { useEffect, useState } from "react"
-
+import { PAGE } from "~service/api.config";
 import {
     AddTagWrap,
     ButtonWrap,
@@ -351,7 +351,9 @@ function Collection() {
                                         }}>
                                         删除
                                     </Button>
-                                    <Button color="secondary">查看</Button>
+                                    <Button color="secondary" onClick={() => {
+                                        window.open(PAGE, '_brank')
+                                    }}>查看</Button>
                                 </ButtonWrap>
                             </>
                         )}

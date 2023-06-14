@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { Storage } from "@plasmohq/storage"
+import { PAGE } from "~service/api.config";
 import './index.less'
 
 const storage = new Storage()
@@ -24,7 +25,10 @@ function IndexPopup() {
 
     return (
         <div className="popup">
-            状态：<span className={status ? 'color-green' : 'color-red'}>{status ? '已登录' : '未登录'}</span>
+            <p>状态：<span className={status ? 'color-green' : 'color-red'}>{status ? '已登录' : '未登录'}</span></p>
+            <p className="link" onClick={() => {
+                window.open(PAGE, '_brank')
+            }}>查看收藏</p>
         </div>
     )
 }

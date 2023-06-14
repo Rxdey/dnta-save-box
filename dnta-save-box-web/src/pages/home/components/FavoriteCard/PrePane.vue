@@ -1,6 +1,6 @@
 <template>
     <div class="PrePane" @click="onPreviewClick">
-        <div class="nswf" v-if="data.type !== 'video'">
+        <div class="nswf" v-if="data.type !== 'video'" @click.stop>
             <el-switch v-model="isNsfw" :inactive-value="1" size="small" style="--el-switch-on-color: #5dca91; --el-switch-off-color: #ff4242" :active-value="0" inline-prompt active-text="SFW" inactive-text="NSFW" @change="onNsfwChange" />
         </div>
         <div class="flex-center image-wrap" style="width: 100%;height: 100%;justify-content: center;" v-if="data.type === 'img'">

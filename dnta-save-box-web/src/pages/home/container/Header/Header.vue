@@ -7,7 +7,7 @@
         <div class="header-center"></div>
         <div class="header-right">
             <div class="user" @click="toggleNsfw">
-                <img :nsfw="!!nsfw" v-lazy :src="userInfo.avatar" class="avatar" :title="userInfo.nick_name">
+                <img :nsfw="!!nsfw" v-lazy="userInfo.avatar" class="avatar" :title="userInfo.nick_name">
             </div>
         </div>
     </el-header>

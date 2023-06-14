@@ -1,6 +1,7 @@
 <template>
-    <div class="favorite-card" :class="{ 'drag': drag, 'video-card': props.data.type === 'video' }" :draggable="props.data.type !== 'video'" @dragstart="dragstart" @dragend="dragend" @dragenter="dragenter" @dragleave="dragleave" @dragover="dragover" @drop="onDrop" :drag-over="dragPosition">
-        <CusCheckBox />
+    <div class="favorite-card" :class="{ 'drag': drag, 'video-card': props.data.type === 'video', checked, 'check-mode': checkList.length }" :draggable="props.data.type !== 'video'" @dragstart="dragstart" @dragend="dragend" @dragenter="dragenter" @dragleave="dragleave" @dragover="dragover" @drop="onDrop" :drag-over="dragPosition">
+        <CusCheckBox class="card-check" v-model="checked" />
+        <div class="check-mask" :class="{ 'no-events': dragIn }" v-if="checkList.length" @click="cardClick"></div>
         <div class="drag-title ov-1" :class="{ 'no-events': dragIn }">{{ props.data.title }}</div>
         <PrePane class="favorite-card--preview" :class="{ 'no-events': dragIn }" />
         <ToolPane class="favorite-card--desc" :class="{ 'no-events': dragIn }" />
@@ -8,16 +9,14 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, reactive, provide } from 'vue';
+import { ref, computed, watch, onMounted, provide } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import useDragStore from '@/store/modules/useDragStore';
 import PrePane from './PrePane.vue';
 import ToolPane from './ToolPane.vue';
-import CusCheckBox from '@/components/Field/CheckBox.vue'
-import { throttle } from 'lodash';
+import CusCheckBox from '@/components/Field/CheckBox.vue';
 import { hasClass, moveObjectElement } from '@/utils';
 import * as Server from '@/service/model/api';
-
 
 const props = defineProps({
     data: {
@@ -25,7 +24,6 @@ const props = defineProps({
         default: () => ({})
     }
 });
-
 
 provide('favoriteData', computed(() => props.data));
 const store = useDragStore();
@@ -35,6 +33,7 @@ const dragPosition = ref('');
 
 const dragIn = computed(() => store.dragIn);
 const dragData = computed(() => store.dragData);
+const checkList = computed(() => store.checkList);
 
 const clearAttr = () => {
     Array.from(document.querySelectorAll('div[drag-over]')).forEach(item => {
@@ -65,7 +64,6 @@ const dragend = e => {
     }, 0);
 
 };
-
 // drop
 const dragover = (e) => {
     e.preventDefault();
@@ -108,8 +106,27 @@ const onDrop = async (e) => {
     }
     store.UPDATE_FAVORITE_LIST(moveObjectElement(store.favoriteList, params.id, params.targetId, params.dragPosition));
 
-}
+};
 
+const cardClick = () => {
+    if (!checkList.value.length) return;
+    checked.value = !checked.value;
+};
+onMounted(() => {
+    checked.value = checkList.value.some(item => item.id === props.data.id);
+});
+
+watch(() => checked.value, val => {
+    if (val) {
+        if (checkList.value.every(item => item.id !== props.data.id)) store.UPDATE_CHECK_LIST([...checkList.value, props.data]);
+    } else {
+        store.UPDATE_CHECK_LIST(checkList.value.filter(item => item.id !== props.data.id));
+    }
+});
+
+watch(() => checkList.value, val => {
+    checked.value = val.some(item => item.id === props.data.id);
+});
 </script>
 
 <style lang="less"></style>

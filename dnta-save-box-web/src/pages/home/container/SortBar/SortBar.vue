@@ -7,12 +7,9 @@
 
 
             <div class="sort-btn">
-                <el-icon :size="18" class="order-icon" :class="{ 'is-loading': loading, success: success }" @click="uploadSort">
-                    <EpMagicStick v-show="!loading && !success && !error" />
-                    <EpLoading v-show="loading" />
-                    <EpCheck v-show="success" />
-                    <EpClose v-show="error" />
-                </el-icon>
+                <IconButton @click="uploadSort" v-bind="{ loading, success, error }">
+                    <EpMagicStick />
+                </IconButton>
             </div>
 
 
@@ -23,12 +20,9 @@
             </div>
         </template>
         <div class="get-cover sort-btn" v-if="tagActive === -3">
-            <el-icon :size="18" class="order-icon" :class="{ 'is-loading': loading, success: success }" @click="onGetCover">
-                <EpDownload v-show="!loading && !success && !error" />
-                <EpLoading v-show="loading" />
-                <EpCheck v-show="success" />
-                <EpClose v-show="error" />
-            </el-icon>
+            <IconButton @click="onGetCover" v-bind="{ loading, success, error }">
+                <EpDownload />
+            </IconButton>
         </div>
 
     </div>
@@ -38,6 +32,7 @@
 import { ref, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { MdiSortAscending } from '@/components/Icon';
+import IconButton from '@/components/IconButton/IconButton.vue';
 import useDragStore from '@/store/modules/useDragStore';
 import * as Server from '@/service/model/api';
 

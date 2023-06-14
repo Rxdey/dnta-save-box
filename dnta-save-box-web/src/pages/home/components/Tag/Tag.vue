@@ -73,11 +73,24 @@ const onDrop = async (e) => {
     e.target.toggleAttribute('over', false);
     if (!props.drag || isCurrent.value || !store.dragData) return;
     const temp = JSON.parse(JSON.stringify(store.dragData));
+    // 当多选的时候出发
+    if (store.checkList && store.checkList.length > 1) {
+        try {
+            await ElMessageBox.confirm(`确定要把当前选中的 ${store.checkList.length} 项全部移动到此分类吗？`, '', {
+                confirmButtonText: '移动',
+                cancelButtonText: '取消'
+            });
+        } catch (error) {
+            return;
+        }
+    };
     const params = {
-        id: temp.id,
+        ids: [temp.id],
         tid: props.id,
-        // type: temp.type
-    };    
+    };
+    if (store.checkList.length > 1) {
+        params.ids = store.checkList.map(item => item.id);
+    }
     // TODO => 修改分类列表
     const res = await Server.FavoriteUpdateUsePOST(params);
     const { success, msg } = res;
@@ -92,8 +105,11 @@ const onDrop = async (e) => {
     });
     // 更新列表
     store.UPDATE_DRAG_DATA(null);
+    store.UPDATE_CHECK_LIST([]);
     // 全部标签下拖拽不移除原数组
-    if (store.active !== -1) store.UPDATE_FAVORITE_LIST(store.favoriteList.filter(item => item.id !== params.id));
+    if (store.active !== -1) {
+        store.UPDATE_FAVORITE_LIST(store.favoriteList.filter(item => !params.ids.includes(item.id) ));
+    }
 }
 
 </script>

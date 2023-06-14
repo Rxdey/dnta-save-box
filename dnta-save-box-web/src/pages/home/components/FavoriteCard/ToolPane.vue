@@ -58,7 +58,7 @@ const handleRestore = async () => {
 };
 // 删除
 const handleDel = () => {
-    ElMessageBox.confirm(`${data.value.is_show === 0 ? '删除后不可恢复,' : ''}确定要删除吗`, '', {
+    ElMessageBox.confirm(`${data.value.is_show === 0 ? '删除后不可恢复,' : ''}确定要删除吗?`, '', {
         confirmButtonText: '删除',
         cancelButtonText: '取消'
     })

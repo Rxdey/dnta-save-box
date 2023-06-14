@@ -84,6 +84,13 @@ export const FavoriteDelUsePOST = (params) => request({
     url: '/favorite/del',
     method: 'POST'
 }, params);
+/**
+ * 批量删除收藏
+ */
+export const FavoriteBatchDelUsePOST = (params) => request({
+    url: '/favorite/batchDel',
+    method: 'POST'
+}, params);
 
 /**
  * 彻底删除收藏夹

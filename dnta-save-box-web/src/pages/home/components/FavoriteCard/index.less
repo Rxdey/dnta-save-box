@@ -1,32 +1,45 @@
 .favorite-wrap {
-  padding: 16px;
+  padding: 16px 8px;
   .card-wrap {
     display: flex;
     flex-flow: row wrap;
+    padding: 16px 8px;
   }
 }
 
 .favorite-card {
   --card-radius: 8px;
+  --card-grap: 24px;
   position: relative;
   background-color: #fff;
   border-radius: var(--card-radius);
-  overflow: hidden;
+  // overflow: hidden;
   width: 240px;
   height: 280px;
-  margin-bottom: 16px;
-  margin-right: 16px;
+  margin-bottom: var(--card-grap);
+  margin-right: var(--card-grap);
   word-wrap: break-word;
   cursor: pointer;
-  transform: translateY(0);
+  // transform: translateY(0);
   transition: all 0.3s;
   box-shadow: 0 0 0 var(--shadow-dark);
   visibility: visible !important;
   display: flex;
   flex-flow: column;
+  &.checked {
+    border: 2px solid var(--color-fade-main);
+    animation: shake 0.3s infinite;
+    .card-check {
+      opacity: 1;
+    }
+  }
+  &.check-mode {
+    .tool-bar,.nswf {
+      display: none!important;
+    }
+  }
   &.drag {
     opacity: 0.3;
-    transform: translateY(0)!important;
   }
   .no-events {
     pointer-events: none;
@@ -42,6 +55,9 @@
     .favorite-card--body {
       display: none;
     }
+    &.checked {
+      animation: none;
+    }
   }
   &[drag-over='left'],
   &[drag-over='right'] {
@@ -51,19 +67,20 @@
       position: absolute;
       width: 3px;
       height: 100%;
-      background-color: var(--color-purple);
+      background-color: var(--color-fade-main);
       top: 0;
       border-radius: 10px;
     }
   }
   &[drag-over='left'] {
     &::after {
-      left: -9px;
+      // (16 / 2) + 1
+      left: calc(0px - var(--card-grap) / 2 - 1px);
     }
   }
   &[drag-over='right'] {
     &::after {
-      right: -9px;
+      right: calc(0px - var(--card-grap) / 2 - 1px);
     }
   }
   &.video-card {
@@ -76,6 +93,9 @@
     transform: translateY(-8px);
     .edit {
       display: inherit;
+    }
+    .card-check {
+      opacity: 1;
     }
   }
   .drag-title {
@@ -194,4 +214,34 @@
       }
     }
   }
+}
+
+.card-check {
+  position: absolute;
+  top: calc(0px - var(--check-box-size) / 3);
+  left: calc(0px - var(--check-box-size) / 3);
+  box-shadow: 0 0 4px var(--shadow-dark);
+  z-index: 10;
+  opacity: 0;
+  transition: all .3s;
+}
+.check-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: transparent;
+  z-index: 5;
+}
+
+@keyframes shake {
+  0%,100% {
+    transform: rotate(-1deg);
+  }
+  50% {
+    transform: rotate(1deg);
+  }
+  
 }

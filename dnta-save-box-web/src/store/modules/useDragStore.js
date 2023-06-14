@@ -3,19 +3,23 @@ import { uniqueArray } from '@/utils';
 
 const useDragStore = defineStore('drag', {
     state: () => ({
-        dragData: null,
+        dragData: null, // 拖拽的数据
         favoriteList: [], // 当前收藏列表，不做缓存
-        active: -1, // 当前激活的分组，用于校验拖拽时是否移除
+        active: -1, // 当前激活的分组，用于校验拖拽时是否移除 -1：全部 -2：回收站 -3：视频 -4： 未分类
         nsfw: sessionStorage.getItem('nsfw') == 1 ? 1 : 0,
         type: '',
-        sort: 'DESC',
-        editShow: false,
+        sort: 'DESC', // 排序
+        editShow: false, // 编辑弹窗公用
         selectEdit: null,
-        dragIn: false // 是否有开始拖拽，用于禁止子元素事件
+        dragIn: false, // 是否有开始拖拽，用于禁止子元素事件
+        checkList: [], // 选择列表
     }),
     actions: {
         async UPDATE_EDIT_SHOW(data) {
             this.editShow = data;
+        },
+        async UPDATE_CHECK_LIST(data) {
+            this.checkList = data;
         },
         async UPDATE_SELECT_EDIT(data) {
             this.selectEdit = data;

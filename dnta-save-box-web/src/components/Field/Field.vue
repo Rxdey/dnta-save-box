@@ -38,7 +38,7 @@ watch(() => value.value, (val) => {
         outline: none;
         background-color: transparent;
         padding: 8px 0;
-        color: var(--color-main);
+        color: var(--color-fade-main);
     }
 
     &::after,
@@ -61,7 +61,7 @@ watch(() => value.value, (val) => {
         &::before {
             z-index: 1;
             width: 100%;
-            background-color: var(--color-purple);
+            background-color: var(--color-main);
         }
     }
 }

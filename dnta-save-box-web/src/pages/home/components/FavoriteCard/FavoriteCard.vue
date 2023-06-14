@@ -90,7 +90,6 @@ const dragleave = (e) => {
 };
 const onDrop = async (e) => {
     e.preventDefault();
-    // console.log(dragPosition.value, props.data.id, dragData.value);
     console.log(`${dragData.value.id} 放置到 ${props.data.id} ${dragPosition.value === 'left' ? '前' : '后'}`);
     if (dragData.value.id === props.data.id) return;
     const params = {

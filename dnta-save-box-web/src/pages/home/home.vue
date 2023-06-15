@@ -64,6 +64,7 @@ const favParams = ref({
 });
 // 获取收藏夹
 const getTag = async () => {
+  loading.value = true;
   const res = await Server.TagAllUseGET({
     nsfw: store.nsfw
   });
@@ -73,6 +74,7 @@ const getTag = async () => {
     return;
   }
   tagList.value = data;
+  loading.value = false;
 };
 // 获取收藏
 const getFavorite = async () => {

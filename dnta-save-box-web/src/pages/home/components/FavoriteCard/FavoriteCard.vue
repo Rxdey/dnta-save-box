@@ -1,5 +1,5 @@
 <template>
-    <div class="favorite-card" :class="{ 'drag': drag, 'video-card': props.data.type === 'video', checked, 'check-mode': checkList.length }" :draggable="props.data.type !== 'video'" @dragstart="dragstart" @dragend="dragend" @dragenter="dragenter" @dragleave="dragleave" @dragover="dragover" @drop="onDrop" :drag-over="dragPosition">
+    <div class="favorite-card" :class="{ 'drag': drag, 'video-card': props.data.type === 'video', checked, 'check-mode': checkList.length }" :draggable="props.data.type !== 'video'" @dragstart="dragstart" @dragend="dragend" @dragenter="dragenter" @dragleave="dragleave" @dragover="dragover" @drop="onDrop" :drag-over="dragPosition" @click.stop>
         <CusCheckBox class="card-check" v-model="checked" v-if="props.data.type !== 'video'"/>
         <div class="check-mask" :class="{ 'no-events': dragIn }" v-if="checkList.length" @click="cardClick"></div>
         <div class="drag-title ov-1" :class="{ 'no-events': dragIn }">{{ props.data.title }}</div>

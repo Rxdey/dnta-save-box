@@ -16,13 +16,13 @@
     </el-container>
     <teleport to="body">
       <transition name="slide">
-        <div class="popup" v-if="drawer">
+        <div class="popup" v-if="drawer" @click.stop>
           <div class="check-tip">已选择 {{ checkList.length }} 项, 当前页共加载 {{ favoriteList.length }} 项</div>
-          <div>
-            <span class="check-all" @click="onCheckAll">全选</span>
-            <span class="check-all" @click="onCheckAll(false)">取消</span>
+          <span class="check-all" @click.stop="onCheckAll">全选</span>
+          <span class="check-all" @click.stop="onCheckAll(false)">取消</span>
+          <div class="popup-right">
                 <span v-if="active === -2" class="check-all restore" @click="onDeleteAll(false)">恢复</span>
-                <span class="check-all del" @click="onDeleteAll">删除</span>
+                <span class="check-all del" @click.stop="onDeleteAll">删除</span>
           </div>
         </div>
       </transition>
@@ -179,6 +179,11 @@ onMounted(async () => {
     return;
   }
   await getTag();
+  document.body.addEventListener('click', () => {
+    if (checkList.value) {
+      store.UPDATE_CHECK_LIST([]);
+    }
+  });
 });
 
 watch(() => checkList.value, val => {

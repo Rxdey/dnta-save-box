@@ -1,33 +1,23 @@
-This is a [Plasmo extension](https://docs.plasmo.com/) project bootstrapped with [`plasmo init`](https://www.npmjs.com/package/plasmo).
+# DNTA BOX 插件
+## 简介
 
-## Getting Started
+* 🍯 收藏图片会下载到本地(🍬emmm 因为其它的工具只存地址然后图片可能会失效还有被防外链所以才做的这个🍭)
+* 🍮 使用 [plasmoHQ](https://github.com/PlasmoHQ/plasmo) 开发
+* 🍔 只调试了`Chrome`浏览器
+* 🍟 引入了MUI导致打包出来有点大😢😢😢，但是不想再改了
+* 🌭 ~~略显诡异的画风(bushi~~
 
-First, run the development server:
+## 使用
 
-```bash
-pnpm dev
-# or
-npm run dev
-```
+1. 进入`dnta-save-box-plasmo`目录打包插件
 
-Open your browser and load the appropriate development build. For example, if you are developing for the chrome browser, using manifest v3, use: `build/chrome-mv3-dev`.
-
-You can start editing the popup by modifying `popup.tsx`. It should auto-update as you make changes. To add an options page, simply add a `options.tsx` file to the root of the project, with a react component default exported. Likewise to add a content page, add a `content.ts` file to the root of the project, importing some module and do some logic, then reload the extension on your browser.
-
-For further guidance, [visit our Documentation](https://docs.plasmo.com/)
-
-## Making production build
-
-Run the following:
-
-```bash
-pnpm build
-# or
-npm run build
-```
-
-This should create a production bundle for your extension, ready to be zipped and published to the stores.
-
-## Submit to the webstores
-
-The easiest way to deploy your Plasmo extension is to use the built-in [bpp](https://bpp.browser.market) GitHub action. Prior to using this action however, make sure to build your extension and upload the first version to the store to establish the basic credentials. Then, simply follow [this setup instruction](https://docs.plasmo.com/framework/workflows/submit) and you should be on your way for automated submission!
+    ```shell
+    cd ./dnta-save-box-plasmo
+    pnpm install
+    pnpm build
+    ```
+2. 浏览器加载已解压扩展(build目录下chrome-mv3-prod)
+3. 在页面右键，就能看到收藏选项
+4. 目前选择文本会收藏为文本，图片元素上会收藏图片(如果图片被禁止事件需要单独打开图片才行)，其它的会收藏为网页
+5. 插件需要页面加载完才会运行
+🍮🍯🥛🧃

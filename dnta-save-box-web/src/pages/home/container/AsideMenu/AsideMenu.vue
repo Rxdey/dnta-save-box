@@ -1,55 +1,59 @@
 <template>
-    <el-aside class="aside">
-        <div class="aside-wrap">
-            <Tag label="我的收藏" @click="onSelect(-1)" :active="active === -1">
-                <IcRoundFolderSpecial />
-            </Tag>
-            <div class="aside-container">
-                <Tag v-for="(tag, i) in props.tagList" :key="tag.id" @click="onSelect(i, tag)" :label="tag.name" :active="active === i" edit @onEdit="onEdit(tag)" :id="tag.id" drag>
-                    <IcBaselineFavoriteBorder />
-                </Tag>
-                <Tag label="未分类" @click="onSelect(-4)" :active="active === -4">
-                    <TagOutline />
-                </Tag>
+    <transition name="aside">
+        <el-aside class="aside" v-show="!hide">
+            <div v-show="!hide">
+                <div class="aside-wrap">
+                    <Tag label="我的收藏" @click="onSelect(-1)" :active="active === -1">
+                        <IcRoundFolderSpecial />
+                    </Tag>
+                    <div class="aside-container">
+                        <Tag v-for="(tag, i) in props.tagList" :key="tag.id" @click="onSelect(i, tag)" :label="tag.name" :active="active === i" edit @onEdit="onEdit(tag)" :id="tag.id" drag>
+                            <IcBaselineFavoriteBorder />
+                        </Tag>
+                        <Tag label="未分类" @click="onSelect(-4)" :active="active === -4">
+                            <TagOutline />
+                        </Tag>
 
+                    </div>
+                </div>
+                <div class="aside-wrap">
+                    <Tag @onLeftClick="onAddTag">
+                        <EpPlus />
+                        <template #label>
+                            <Field v-model="tanName" placeholder="输入收藏夹名字" @enter="onAddTag" />
+                        </template>
+                    </Tag>
+                </div>
+                <div class="aside-wrap">
+                    <Tag label="回收站" @click="onSelect(-2)" :active="active === -2">
+                        <IcOutlineAutoDelete />
+                    </Tag>
+                </div>
+                <div class="aside-wrap">
+                    <Tag label="视频" @click="onSelect(-3)" :active="active === -3">
+                        <IcRoundVideoCameraBack />
+                    </Tag>
+                </div>
             </div>
-        </div>
-        <div class="aside-wrap">
-            <Tag @onLeftClick="onAddTag">
-                <EpPlus />
-                <template #label>
-                    <Field v-model="tanName" placeholder="输入收藏夹名字" @enter="onAddTag" />
+            <el-dialog v-model="dialogVisible" title="编辑收藏夹" :before-close="handleClose" append-to-body class="edit-dialog" draggable destroy-on-close>
+                <div class="edit-container">
+                    <div class="edit-form-item">
+                        <p class="label">收藏夹名字</p>
+                        <Field placeholder="输入收藏夹名字" v-model="selectTag.name" />
+                    </div>
+                    <div class="edit-form-item">
+                        <el-switch v-model="selectTag.nsfw" :inactive-value="1" style="--el-switch-on-color: #5dca91; --el-switch-off-color: #ff4242;--el-color-primary: #f101eb;" :active-value="0" active-text="SFW" inactive-text="NSFW" @change="onNsfwChange" />
+                    </div>
+                </div>
+                <template #footer>
+                    <span class="dialog-footer">
+                        <el-button type="primary" @click="onDel" :loading="loading">删除收藏夹</el-button>
+                        <el-button @click="onUpdateTag" :loading="loading">更新</el-button>
+                    </span>
                 </template>
-            </Tag>
-        </div>
-        <div class="aside-wrap">
-            <Tag label="回收站" @click="onSelect(-2)" :active="active === -2">
-                <IcOutlineAutoDelete />
-            </Tag>
-        </div>
-        <div class="aside-wrap">
-            <Tag label="视频" @click="onSelect(-3)" :active="active === -3">
-                <IcRoundVideoCameraBack />
-            </Tag>
-        </div>
-    </el-aside>
-    <el-dialog v-model="dialogVisible" title="编辑收藏夹" :before-close="handleClose" append-to-body class="edit-dialog" draggable destroy-on-close>
-        <div class="edit-container">
-            <div class="edit-form-item">
-                <p class="label">收藏夹名字</p>
-                <Field placeholder="输入收藏夹名字" v-model="selectTag.name" />
-            </div>
-            <div class="edit-form-item">
-                <el-switch v-model="selectTag.nsfw" :inactive-value="1" style="--el-switch-on-color: #5dca91; --el-switch-off-color: #ff4242;--el-color-primary: #f101eb;" :active-value="0" active-text="SFW" inactive-text="NSFW" @change="onNsfwChange" />
-            </div>
-        </div>
-        <template #footer>
-            <span class="dialog-footer">
-                <el-button type="primary" @click="onDel" :loading="loading">删除收藏夹</el-button>
-                <el-button @click="onUpdateTag" :loading="loading">更新</el-button>
-            </span>
-        </template>
-    </el-dialog>
+            </el-dialog>
+        </el-aside>
+    </transition>
 </template>
 
 <script setup>
@@ -66,6 +70,10 @@ const props = defineProps({
     tagList: {
         type: Array,
         default: () => []
+    },
+    hide: {
+        type: Boolean,
+        default: false
     }
 });
 

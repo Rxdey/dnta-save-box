@@ -8,6 +8,8 @@ import IcRoundVideoCameraBack from './IcRoundVideoCameraBack.vue';
 import IcRoundFolderSpecial from './IcRoundFolderSpecial.vue';
 import MdiSortAscending from './MdiSortAscending.vue';
 import TagOutline from './TagOutline.vue';
+import MdiPlayCircle from './MdiPlayCircle.vue';
+import MdiPauseCircle from './MdiPauseCircle.vue';
 
 export {
     IcBaselineFavoriteBorder,
@@ -20,4 +22,6 @@ export {
     IcRoundFolderSpecial,
     MdiSortAscending,
     TagOutline,
+    MdiPlayCircle,
+    MdiPauseCircle,
 }

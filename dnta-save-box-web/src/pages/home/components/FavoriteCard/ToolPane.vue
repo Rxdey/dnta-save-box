@@ -1,6 +1,6 @@
 <template>
     <div class="ToolPane">
-        <p>{{ getTimeAgo(data.update_date) }}</p>
+        <p class="ago">{{ getTimeAgo(data.update_date) }}</p>
         <div class="footer" v-if="data.type !== 'video'">
             <div class="flex-center" v-if="domain">
                 <el-image class="favicon" :src="domain.origin + '/favicon.ico'" lazy fit="cover" draggable="false">

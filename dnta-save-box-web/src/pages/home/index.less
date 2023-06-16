@@ -3,11 +3,18 @@
 .home {
   height: 100%;
   overflow: hidden;
+  &.hideMenu {
+    .card-wrap {
+      justify-content: center;
+    }
+  }
 }
 .main {
   display: flex;
   flex-flow: column;
   padding: 0;
+  transition: all .3s;
+  flex: 1;
   .favorite-wrap {
     flex: 1;
     min-height: 1px;
@@ -64,21 +71,3 @@
 .slide-leave-active{
   transition: all .3s ease;
 }
-
-// .slide-enter-active,
-// .slide-leave-active {
-//   transform: translateY(0%);
-// }
-// .slide-enter,
-// .slide-leave-to {
-//   transform: translateY(100%);
-// }
-
-// @keyframes slideUp {
-//   0% {
-//     transform: translateY(100%);
-//   }
-//   100% {
-//     transform: translateY(0);
-//   }
-// }

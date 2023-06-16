@@ -1,8 +1,8 @@
 <template>
-  <el-container direction="vertical" class="home">
-    <HeaderWap />
-    <el-container style="min-height: 1px;">
-      <AsideMenu :tagList="tagList" @change="onChange" @add="onAddTag" @del="onDelTag" />
+  <el-container direction="vertical" class="home" :class="{hideMenu}">
+    <HeaderWap @hideMenu="hideMenu = !hideMenu"/>
+    <el-container style="min-height: 1px;flex-wrap: nowrap;">
+      <AsideMenu :tagList="tagList" @change="onChange" @add="onAddTag" @del="onDelTag" :hide="hideMenu"/>
       <el-main class="main">
         <SortBar @typeChange="onTypeChange" @sort="onSort" />
         <FavoriteWrap v-if="loginStatus" v-infinite-scroll="getFavorite" :infinite-scroll-disabled="finished || loading" :infinite-scroll-distance="0">
@@ -51,6 +51,7 @@ const tagList = ref([]);
 const isVideo = ref(false);
 const loginStatus = ref(false);
 const drawer = ref(false);
+const hideMenu = ref(false);
 
 const favoriteList = computed(() => store.favoriteList);
 const type = computed(() => store.type);

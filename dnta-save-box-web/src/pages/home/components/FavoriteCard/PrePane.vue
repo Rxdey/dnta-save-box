@@ -17,7 +17,13 @@
             {{ data.title }}
         </div>
         <div class="video" v-if="data.type === 'video'">
-            <video :src="data.path" controls loop muted preload="none" :poster="data.cover"></video>
+            <div class="play-btn" @click="onPlay" v-if="!videoLoad">
+                <el-icon class="play-icon" :size="60" color="#fff">
+                    <MdiPlayCircle/>
+                </el-icon>
+            </div>
+            <img v-if="!videoLoad" v-lazy="data.cover">
+            <video v-else :src="data.path" controls loop muted :poster="data.cover" autoplay></video>
         </div>
     </div>
 </template>
@@ -28,10 +34,13 @@ import { useRouter, useRoute } from 'vue-router';
 import { copyToClipboard } from '@/utils';
 import * as Server from '@/service/model/api';
 import useDragStore from '@/store/modules/useDragStore';
+import { MdiPlayCircle, MdiPauseCircle } from '@/components/Icon';
 
 const store = useDragStore();
 const data = inject('favoriteData');
 const isNsfw = ref(0);
+const videoLoad = ref(false);
+
 const tempList = computed(() => store.favoriteList?.filter(item => item.type === 'img') || []);
 const index = computed(() => tempList.value.findIndex(item => item.id === data.value.id) || 0);
 const imageList = computed(() => tempList.value.map(item => item.path));
@@ -63,6 +72,12 @@ const onNsfwChange = async val => {
         nsfw: val
     });
 };
+
+const onPlay = () => {
+    if (!videoLoad.value) {
+        videoLoad.value = true;
+    }
+}
 
 onMounted(() => {
     isNsfw.value = data.value.nsfw;

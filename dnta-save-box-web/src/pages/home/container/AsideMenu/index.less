@@ -9,3 +9,17 @@
   }
 
 }
+
+.aside-enter-from,
+.aside-leave-to {
+  transform: translateX(-100%);
+  width: 0;
+}
+.aside-enter-to,
+.aside-leave-from {
+  transform: translateX(0%);
+}
+.aside-enter-active,
+.aside-leave-active{
+  transition: all .3s linear;
+}

@@ -7,7 +7,7 @@
                         <IcRoundFolderSpecial />
                     </Tag>
                     <div class="aside-container">
-                        <Tag v-for="(tag, i) in props.tagList" :key="tag.id" @click="onSelect(i, tag)" :label="tag.name" :active="active === i" edit @onEdit="onEdit(tag)" :id="tag.id" drag>
+                        <Tag v-for="(tag, i) in props.tagList" :key="tag.id" @click="onSelect(i, tag)" :label="tag.name" :active="active === i" edit @onEdit="onEdit(tag)" :id="tag.id" drag :count="tag.favorite_count">
                             <IcBaselineFavoriteBorder />
                         </Tag>
                         <Tag label="未分类" @click="onSelect(-4)" :active="active === -4">

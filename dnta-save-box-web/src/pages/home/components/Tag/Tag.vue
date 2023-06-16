@@ -7,6 +7,7 @@
             <span class="tag-label">
                 {{ props.label }}
                 <slot name="label"></slot>
+                <span class="count">{{ props.count }}</span>
             </span>
         </div>
         <el-icon :size="18" v-if="props.edit" class="edit" @click.stop="onEdit">
@@ -40,6 +41,10 @@ const props = defineProps({
         default: false
     },
     id: {
+        type: [Number, String],
+        default: ''
+    },
+    count: {
         type: [Number, String],
         default: ''
     }

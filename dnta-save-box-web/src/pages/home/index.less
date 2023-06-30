@@ -4,17 +4,31 @@
   height: 100%;
   overflow: hidden;
   &.hideMenu {
-    .card-wrap {
-      justify-content: center;
+    .main {
+      padding-left: 48px;
     }
+  }
+}
+.custom-container {
+  display: block;
+  position: relative;
+  height: 100%;
+  .aside {
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+  .main {
+    padding-left: 320px;
+    height: 100%;
   }
 }
 .main {
   display: flex;
   flex-flow: column;
   padding: 0;
-  transition: all .3s;
-  flex: 1;
+  transition: all .3s linear;
   .favorite-wrap {
     flex: 1;
     min-height: 1px;

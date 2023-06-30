@@ -1,8 +1,8 @@
 <template>
   <el-container direction="vertical" class="home" :class="{hideMenu}">
     <HeaderWap @hideMenu="hideMenu = !hideMenu"/>
-    <el-container style="min-height: 1px;flex-wrap: nowrap;">
-      <AsideMenu :tagList="tagList" @change="onChange" @add="onAddTag" @del="onDelTag" :hide="hideMenu" @reload="reload"/>
+    <el-container class="custom-container" style="min-height: 1px;flex-wrap: nowrap;">
+      <AsideMenu :tagList="tagList" @change="onChange" @add="onAddTag" @del="onDelTag" :hide="hideMenu"/>
       <el-main class="main">
         <SortBar @typeChange="onTypeChange" @sort="onSort" />
         <FavoriteWrap v-if="loginStatus" v-infinite-scroll="getFavorite" :infinite-scroll-disabled="finished || loading" :infinite-scroll-distance="0">
@@ -34,7 +34,7 @@
 import { ref, onMounted, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import jsCookie from 'js-cookie';
-
+import _ from 'lodash';
 import HeaderWap from './container/Header/Header.vue';
 import AsideMenu from './container/AsideMenu/AsideMenu.vue';
 import SortBar from './container/SortBar/SortBar.vue';
@@ -155,7 +155,8 @@ const onDeleteAll = (type = true) => {
     const ids = checkList.value.map(item => item.id);
     const res = await fetchDataNormal(Server.FavoriteBatchDelUsePOST, {
       ids,
-      is_show: type ? 0 : 1
+      is_show: type ? 0 : 1,
+      del: active.value === -2 && type ? 1 : 0
     });
     if (!res) return;
     ElNotification({
@@ -170,6 +171,14 @@ const onDeleteAll = (type = true) => {
 };
 
 onMounted(async () => {
+  window.addEventListener('resize', _.throttle(() => {
+    if (!hideMenu.value && window.innerWidth < 1200) {
+      hideMenu.value = true;
+    }
+    if (window.innerWidth > 1200) {
+      hideMenu.value = false;
+    }
+  }, 200),)
   const token = jsCookie.get('token');
   loginStatus.value = !!token;
   if (!loginStatus.value) {

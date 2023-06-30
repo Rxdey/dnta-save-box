@@ -155,7 +155,8 @@ const onDeleteAll = (type = true) => {
     const ids = checkList.value.map(item => item.id);
     const res = await fetchDataNormal(Server.FavoriteBatchDelUsePOST, {
       ids,
-      is_show: type ? 0 : 1
+      is_show: type ? 0 : 1,
+      del: active.value === -2 && type ? 1 : 0
     });
     if (!res) return;
     ElNotification({

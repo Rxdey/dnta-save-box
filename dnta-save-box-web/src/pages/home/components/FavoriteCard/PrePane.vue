@@ -4,7 +4,7 @@
             <el-switch v-model="isNsfw" :inactive-value="1" size="small" style="--el-switch-on-color: #5dca91; --el-switch-off-color: #ff4242" :active-value="0" inline-prompt active-text="SFW" inactive-text="NSFW" @change="onNsfwChange" />
         </div>
         <div class="flex-center image-wrap" style="width: 100%;height: 100%;justify-content: center;" v-if="data.type === 'img'">
-            <el-image :src="data.path" :zoom-rate="1.2" :preview-src-list="imageList" :initial-index="index" fit="cover" preview-teleported hide-on-click-modal lazy draggable="false" class="my-image">
+            <el-image :src="data.thumbnailUrl" :zoom-rate="1.2" :preview-src-list="imageList" :initial-index="index" fit="cover" preview-teleported hide-on-click-modal lazy draggable="false" class="my-image">
                 <template #placeholder>
                     <div class="img-loading">loading...</div>
                 </template>
@@ -23,7 +23,7 @@
                 </el-icon>
             </div>
             <img v-if="!videoLoad" v-lazy="data.cover">
-            <video v-else :src="data.path" controls loop muted :poster="data.cover" autoplay></video>
+            <video v-else :src="data.videoPath" controls loop muted :poster="data.cover" autoplay></video>
         </div>
     </div>
 </template>
@@ -43,7 +43,7 @@ const videoLoad = ref(false);
 
 const tempList = computed(() => store.favoriteList?.filter(item => item.type === 'img') || []);
 const index = computed(() => tempList.value.findIndex(item => item.id === data.value.id) || 0);
-const imageList = computed(() => tempList.value.map(item => item.path));
+const imageList = computed(() => tempList.value.map(item => item.displayUrl));
 
 const onPreviewClick = () => {
     const action = {

@@ -78,7 +78,7 @@ const props = defineProps({
 });
 
 const store = useDragStore();
-const emit = defineEmits(['change', 'add', 'del']);
+const emit = defineEmits(['change', 'add', 'del', 'reload']);
 const active = computed(() => store.active);
 const tanName = ref('');
 const dialogVisible = ref(false);
@@ -152,7 +152,10 @@ const onAddTag = () => {
 };
 
 const onSelect = (index, tag) => {
-    if (active.value === index) return;
+    if (active.value === index) {
+        emit('reload');
+        return;
+    }
     store.UPDATE_ACTIVE(index);
 };
 

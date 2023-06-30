@@ -2,6 +2,9 @@ import { ref, onMounted, computed } from 'vue';
 import useDragStore from '@/store/modules/useDragStore';
 import { BASE_URL } from '@/service/api.config';
 
+const extname = (path = '') => {
+    return path.split('.')[path.split('.').length - 1];
+}
 /**
  * 加载无限滚动列表
  * @returns 
@@ -28,8 +31,9 @@ export default function useFetchScroll() {
         const list = store.favoriteList.concat(...data.list.map(item => {
             return {
                 ...item,
-                path: item.path ? item.path.replace('./download/', BASE_URL) : '',
+                videoPath: item.path ? item.path.replace('./download/', BASE_URL) : '',
                 cover: item.cover ? item.cover.replace('./download/', BASE_URL) : '',
+                // thumb: (item.path && extname(item.path) !== 'webp') ? `${BASE_URL}view?url=${item.path}` : ''
             };
         }));
         store.UPDATE_FAVORITE_LIST(list);

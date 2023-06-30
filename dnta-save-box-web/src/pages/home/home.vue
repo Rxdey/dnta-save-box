@@ -2,7 +2,7 @@
   <el-container direction="vertical" class="home" :class="{hideMenu}">
     <HeaderWap @hideMenu="hideMenu = !hideMenu"/>
     <el-container style="min-height: 1px;flex-wrap: nowrap;">
-      <AsideMenu :tagList="tagList" @change="onChange" @add="onAddTag" @del="onDelTag" :hide="hideMenu"/>
+      <AsideMenu :tagList="tagList" @change="onChange" @add="onAddTag" @del="onDelTag" :hide="hideMenu" @reload="reload"/>
       <el-main class="main">
         <SortBar @typeChange="onTypeChange" @sort="onSort" />
         <FavoriteWrap v-if="loginStatus" v-infinite-scroll="getFavorite" :infinite-scroll-disabled="finished || loading" :infinite-scroll-distance="0">

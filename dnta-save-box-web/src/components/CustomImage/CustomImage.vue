@@ -35,6 +35,8 @@ const initViewer = () => {
     // console.log(imageList)
     const viewer = new Viewer(container, {
         initialViewIndex: props.initialIndex,
+        minZoomRatio: 0.2,
+        navbar: false
         // inline: true,
     });
     viewer.show();

@@ -4,11 +4,12 @@
             <el-switch v-model="isNsfw" :inactive-value="1" size="small" style="--el-switch-on-color: #5dca91; --el-switch-off-color: #ff4242" :active-value="0" inline-prompt active-text="SFW" inactive-text="NSFW" @change="onNsfwChange" />
         </div>
         <div class="flex-center image-wrap" style="width: 100%;height: 100%;justify-content: center;" v-if="data.type === 'img'">
-            <el-image :src="data.thumbnailUrl" :zoom-rate="1.2" :preview-src-list="imageList" :initial-index="index" fit="cover" preview-teleported hide-on-click-modal lazy draggable="false" class="my-image">
+            <!-- <el-image :src="data.path" :zoom-rate="1.2" :preview-src-list="imageList" :initial-index="index" fit="cover" preview-teleported hide-on-click-modal lazy draggable="false" class="my-image">
                 <template #placeholder>
                     <div class="img-loading">loading...</div>
                 </template>
-            </el-image>
+            </el-image> -->
+            <CustomImage :src="data.thumbnailUrl" :preview="imageList" :initial-index="index"/>
         </div>
         <div class="text" v-if="data.type === 'text'">
             <div class="text-inner">{{ data.content }}</div>
@@ -35,6 +36,7 @@ import { copyToClipboard } from '@/utils';
 import * as Server from '@/service/model/api';
 import useDragStore from '@/store/modules/useDragStore';
 import { MdiPlayCircle, MdiPauseCircle } from '@/components/Icon';
+import CustomImage from '@/components/CustomImage/CustomImage.vue';
 
 const store = useDragStore();
 const data = inject('favoriteData');

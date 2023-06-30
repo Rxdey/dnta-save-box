@@ -11,6 +11,8 @@ import '@/utils/draggable-polyfill';
 import '@/assets/styles/common.less';
 import '@/assets/styles/theme.less';
 
+import 'viewerjs/dist/viewer.css';
+
 dayjs.locale('zh-cn'); // 使用本地化语言
 
 const app = createApp(App);

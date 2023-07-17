@@ -27,6 +27,18 @@ export const customStorage = {
             val = window.localStorage.getItem(key);
         }
         return val;
+    },
+    remove(key) {
+        if (typeof key === 'string') {
+            window.localStorage.removeItem(key);
+            return;
+        }
+        if (Object.prototype.toString.call(key) === '[object Array]') {
+            key.forEach(item => {
+                window.localStorage.removeItem(item);
+            });
+        }
+
     }
 };
 
@@ -87,27 +99,27 @@ export function moveObjectElement(array, elementId, targetId, position) {
     const targetIndex = array.findIndex(obj => obj.id === targetId);
     console.log(targetIndex);
     if (elementIndex === -1 || targetIndex === -1) {
-      // 检查元素和目标是否存在于数组中
-      console.log("元素或目标不存在于数组中");
-      return array;
+        // 检查元素和目标是否存在于数组中
+        console.log("元素或目标不存在于数组中");
+        return array;
     }
-  
+
     const element = array[elementIndex];
     array.splice(elementIndex, 1); // 先将元素从数组中删除
-  
+
     if (position === "left") {
-      // 将元素放置到目标之前
-      const insertionIndex = elementIndex < targetIndex ? targetIndex - 1 : targetIndex;
-      array.splice(insertionIndex, 0, element);
+        // 将元素放置到目标之前
+        const insertionIndex = elementIndex < targetIndex ? targetIndex - 1 : targetIndex;
+        array.splice(insertionIndex, 0, element);
     } else if (position === "right") {
-      // 将元素放置到目标之后
-      const insertionIndex = elementIndex < targetIndex ? targetIndex : targetIndex + 1;
-      array.splice(insertionIndex, 0, element);
+        // 将元素放置到目标之后
+        const insertionIndex = elementIndex < targetIndex ? targetIndex : targetIndex + 1;
+        array.splice(insertionIndex, 0, element);
     } else {
-      console.log("无效的位置参数");
-      return array;
+        console.log("无效的位置参数");
+        return array;
     }
-  
+
     return array;
-  }
+}
 

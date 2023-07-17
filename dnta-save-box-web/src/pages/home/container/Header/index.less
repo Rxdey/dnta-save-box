@@ -3,7 +3,7 @@
   width: 100%;
   background-color: #fff;
   box-shadow: 0 0 8px var(--shadow-dark);
-  padding: 8px 16px;
+  padding: 8px 48px 8px 16px;
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
@@ -33,11 +33,12 @@
       border-radius: 20px;
       object-fit: cover;
       cursor: pointer;
-      &:hover, &[nsfw=true] {
+      &[nsfw=true] {
         box-shadow: 0 0 0 2px var(--color-main);
       }
     }
   }
+  :focus {outline: 0;}
 }
 .menu {
   cursor: pointer;

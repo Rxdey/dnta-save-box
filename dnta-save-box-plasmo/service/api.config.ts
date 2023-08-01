@@ -4,5 +4,5 @@
 export const PAGE = '//dnta.rxdey.top';
 export const API_HOST = `${PAGE}/apis`;
 
-export const LOGIN_PAGE = `${PAGE}/login`;
+export const LOGIN_PAGE = `https:${PAGE}/login`;
 export const BASE_URL = `${API_HOST}`;

@@ -1,6 +1,6 @@
 <template>
     <div class="CustomImage" @click="initViewer">
-        <img v-lazy="src" draggable="false">
+        <img v-lazy="src" draggable="false" @load="onLoad" @error="onLoad">
     </div>
 </template>
 
@@ -22,7 +22,7 @@ const props = defineProps({
         default: 0
     }
 });
-
+const emit = defineEmits(['load']);
 const initViewer = () => {
     if (!props.preview.length) return;
     const container = document.createElement('div'); // 创建一个容器元素
@@ -41,13 +41,15 @@ const initViewer = () => {
     });
     viewer.show();
 };
-
+const onLoad = () => {
+    emit('load')
+}
 onMounted(() => {
 });
 
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .CustomImage {
     width: 100%;
     height: 100%;

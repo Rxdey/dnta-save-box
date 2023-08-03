@@ -1,14 +1,21 @@
 <template>
-  <el-container direction="vertical" class="home" :class="{hideMenu}">
-    <HeaderWap @hideMenu="hideMenu = !hideMenu"/>
+  <el-container direction="vertical" class="home" :class="{ hideMenu }">
+    <HeaderWap @hideMenu="hideMenu = !hideMenu" />
     <el-container class="custom-container" style="min-height: 1px;flex-wrap: nowrap;">
-      <AsideMenu :tagList="tagList" @change="onChange" @add="onAddTag" @del="onDelTag" :hide="hideMenu"/>
+      <AsideMenu :tagList="tagList" @change="onChange" @add="onAddTag" @del="onDelTag" :hide="hideMenu" />
       <el-main class="main">
         <SortBar @typeChange="onTypeChange" @sort="onSort" />
         <FavoriteWrap v-if="loginStatus" v-infinite-scroll="getFavorite" :infinite-scroll-disabled="finished || loading" :infinite-scroll-distance="0">
-          <div class="card-wrap">
-            <FavoriteCard v-for="favorite in favoriteList" :key="favorite.id" :data="favorite" />
-          </div>
+          <template v-if="waterfall">
+            <div class="card-wrap waterfall" v-masonry transition-duration="0.25s" item-selector=".favorite-card">
+              <FavoriteCard v-for="favorite in favoriteList" :key="favorite.id" :data="favorite" v-masonry-tile />
+            </div>
+          </template>
+          <template v-else>
+            <div class="card-wrap">
+              <FavoriteCard v-for="favorite in favoriteList" :key="favorite.id" :data="favorite" />
+            </div>
+          </template>
           <p class="tip" v-show="loading">加载中...</p>
           <p class="tip" v-show="finished && !loading">没有了</p>
         </FavoriteWrap>
@@ -21,8 +28,8 @@
           <span class="check-all" @click.stop="onCheckAll">全选</span>
           <span class="check-all" @click.stop="onCheckAll(false)">取消</span>
           <div class="popup-right">
-                <span v-if="active === -2" class="check-all restore" @click="onDeleteAll(false)">恢复</span>
-                <span class="check-all del" @click.stop="onDeleteAll">删除</span>
+            <span v-if="active === -2" class="check-all restore" @click="onDeleteAll(false)">恢复</span>
+            <span class="check-all del" @click.stop="onDeleteAll">删除</span>
           </div>
         </div>
       </transition>
@@ -58,6 +65,7 @@ const type = computed(() => store.type);
 const sort = computed(() => store.sort);
 const active = computed(() => store.active);
 const checkList = computed(() => store.checkList);
+const waterfall = computed(() => store.waterfall);
 const { fetchData, loading, finished, page, pageSize } = useFetchScroll();
 const { fetchData: fetchDataNormal } = useUpdate();
 const favParams = ref({
@@ -178,7 +186,7 @@ onMounted(async () => {
     if (window.innerWidth > 1200) {
       hideMenu.value = false;
     }
-  }, 200),)
+  }, 200),);
   const token = jsCookie.get('token');
   loginStatus.value = !!token;
   if (!loginStatus.value) {

@@ -1,6 +1,7 @@
 import { createApp } from 'vue';
 import VueLazyload from 'vue-lazyload';
 import 'reset.css';
+import { VueMasonryPlugin } from 'vue-masonry';
 import pinia from '@/store';
 import router from '@/router';
 import App from './App.vue';
@@ -19,6 +20,7 @@ const app = createApp(App);
 // app.config.unwrapInjectedRef = true
 app.use(router);
 app.use(pinia);
+app.use(VueMasonryPlugin);
 app.use(VueLazyload, {
     preLoad: 1.3,
     error: defaultImg,

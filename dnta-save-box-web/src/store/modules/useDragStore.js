@@ -13,8 +13,12 @@ const useDragStore = defineStore('drag', {
         selectEdit: null,
         dragIn: false, // 是否有开始拖拽，用于禁止子元素事件
         checkList: [], // 选择列表
+        waterfall: false, // 瀑布流
     }),
     actions: {
+        async UPDATE_WATERFALL(data) {
+            this.waterfall = data;
+        },
         async UPDATE_EDIT_SHOW(data) {
             this.editShow = data;
         },

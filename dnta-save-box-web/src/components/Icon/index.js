@@ -10,6 +10,7 @@ import MdiSortAscending from './MdiSortAscending.vue';
 import TagOutline from './TagOutline.vue';
 import MdiPlayCircle from './MdiPlayCircle.vue';
 import MdiPauseCircle from './MdiPauseCircle.vue';
+import MdiViewDashboardVariant from './MdiViewDashboardVariant.vue';
 
 export {
     IcBaselineFavoriteBorder,
@@ -24,4 +25,5 @@ export {
     TagOutline,
     MdiPlayCircle,
     MdiPauseCircle,
+    MdiViewDashboardVariant,
 }

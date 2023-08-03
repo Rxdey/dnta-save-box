@@ -27,7 +27,7 @@ function IndexPopup() {
         <div className="popup">
             <p>状态：<span className={status ? 'color-green' : 'color-red'}>{status ? '已登录' : '未登录'}</span></p>
             <p className="link" onClick={() => {
-                window.open(PAGE, '_brank')
+                window.open(`https:${PAGE}`, '_brank')
             }}>查看收藏</p>
         </div>
     )

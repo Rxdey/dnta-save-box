@@ -1,0 +1,27 @@
+.aside {
+    width: 320px;
+    padding: 16px 0;
+    font-size: 13px;
+    font-family: Microsoft YaHei, sans-serif;
+    font-weight: bold;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    &__wrap {
+        padding: 0 8px;
+    }
+}
+
+.aside-enter-from,
+.aside-leave-to {
+    transform: translateX(-100%);
+}
+.aside-enter-to,
+.aside-leave-from {
+    transform: translateX(0%);
+}
+.aside-enter-active,
+.aside-leave-active {
+    transition: all 0.3s linear;
+}

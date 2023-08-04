@@ -6,9 +6,21 @@ const routes = [
         redirect: '/home'
     },
     {
+        path: '/index',
+        name: 'index',
+        component: () => import('@/pages/home/home.vue'),
+    },
+    {
         path: '/home',
         name: 'home',
-        component: () => import('@/pages/home/home.vue'),
+        component: () => import('@/pages/index/index.vue'),
+        children: [
+            {
+                path: 'collect/:tid?/:type?',
+                name: 'collect',
+                component: () => import('@/pages/collect/collect.vue'),
+            },
+        ]
     },
     {
         path: '/login',

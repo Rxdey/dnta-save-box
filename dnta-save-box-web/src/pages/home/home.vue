@@ -14,7 +14,7 @@
 import { ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import HeaderCom from './container/Header/header.vue';
-import AsideCom from './container/Aside/Aside.vue';
+import AsideCom from './container/Aside/aside.vue';
 
 const route = useRoute();
 

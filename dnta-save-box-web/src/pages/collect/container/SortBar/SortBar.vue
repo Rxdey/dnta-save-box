@@ -14,7 +14,7 @@
             </div>
             <div class="sort-btn">
                 <el-icon :size="18" class="order-icon" :class="{ desc: sort }" @click="onSort">
-                    <MdiSortAscending />
+                    <v-icon icon="humbleicons:exchange-horizontal" />
                 </el-icon>
             </div>
         </template>
@@ -30,7 +30,6 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { MdiSortAscending, MdiViewDashboardVariant } from '@/components/Icon';
 import IconButton from '@/components/IconButton/IconButton.vue';
 import useDragStore from '@/store/modules/useDragStore';
 import * as Server from '@/service/model/api';
@@ -38,7 +37,7 @@ import * as Server from '@/service/model/api';
 const store = useDragStore();
 const route = useRoute();
 
-const isVideo = computed(() => route.params.key === 'video');
+const isVideo = computed(() => route.params.type === 'video');
 
 const active = ref(0);
 const sort = ref(false);

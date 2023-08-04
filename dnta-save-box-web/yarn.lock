@@ -152,10 +152,10 @@
   dependencies:
     "@floating-ui/core" "^1.2.6"
 
-"@iconify-json/ep@^1.1.10":
-  version "1.1.10"
-  resolved "https://registry.npmmirror.com/@iconify-json/ep/-/ep-1.1.10.tgz#2e390de8bc209b91f0fc217642ad7cd3e24e2d0f"
-  integrity sha512-1N3H28hbulsw3UNZjAZ1c7BhK9mLiw8VrngQc58xNQ7dnzaUgtKN81aqkrZ9ffDXcfJGL3Rk9Yc3/QrSSI24sg==
+"@iconify-json/ep@^1.1.11":
+  version "1.1.11"
+  resolved "https://registry.npmmirror.com/@iconify-json/ep/-/ep-1.1.11.tgz#d23465dea8c715a3e10c4361c9164be28690565e"
+  integrity sha512-g08CJ1qod1FyqJk33sTH+PjcdBjukzBMscc+V0LjKi6jYg8EQSrJMolay/cgjWoqlHt6HP26fckQ+Efl8GlW1g==
   dependencies:
     "@iconify/types" "*"
 
@@ -175,6 +175,13 @@
     debug "^4.3.4"
     kolorist "^1.7.0"
     local-pkg "^0.4.3"
+
+"@iconify/vue@^4.1.1":
+  version "4.1.1"
+  resolved "https://registry.npmmirror.com/@iconify/vue/-/vue-4.1.1.tgz#c143c2973a4990ba2b47b766f80a9bca97937305"
+  integrity sha512-RL85Bm/DAe8y6rT6pux7D2FJSiUEM/TPfyK7GrbAOfTSwrhvwJW+S5yijdGcmtXouA8MtuH9C7l4hiSE4mLMjg==
+  dependencies:
+    "@iconify/types" "^2.0.0"
 
 "@jridgewell/sourcemap-codec@^1.4.13":
   version "1.4.15"

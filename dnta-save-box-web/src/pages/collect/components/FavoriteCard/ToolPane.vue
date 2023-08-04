@@ -6,7 +6,7 @@
                 <el-image class="favicon" :src="domain.origin + '/favicon.ico'" lazy fit="cover" draggable="false">
                     <template #error>
                         <el-icon :size="18" color="slateblue">
-                            <MdiWeb />
+                            <v-icon icon="ic:baseline-web"/>
                         </el-icon>
                     </template>
                 </el-image>
@@ -14,13 +14,13 @@
             </div>
             <div class="tool-bar">
                 <el-icon :size="18" class="edit" title="编辑" v-if="data.is_show === 1" @click.stop="handleEdit">
-                    <PhPenThin />
+                    <v-icon icon="mdi:pencil" />
                 </el-icon>
                 <el-icon :size="18" class="edit restore" title="还原" v-else @click.stop="handleRestore">
-                    <IcRoundRestorePage />
+                    <v-icon icon="mdi:backup-restore" />
                 </el-icon>
                 <el-icon :size="18" class="edit" title="删除" @click.stop="handleDel">
-                    <MdiDeleteForeverOutline />
+                    <v-icon icon="mdi:delete-forever" />
                 </el-icon>
             </div>
         </div>
@@ -31,7 +31,6 @@
 <script setup>
 import { ref, onMounted, inject, watch } from 'vue';
 import { getTimeAgo, extractDomain } from '@/utils';
-import { PhPenThin, MdiWeb, MdiDeleteForeverOutline, IcRoundRestorePage } from '@/components/Icon';
 import useDragStore from '@/store/modules/useDragStore';
 import * as Server from '@/service/model/api';
 import useUpdate from '@/hooks/useUpdate';

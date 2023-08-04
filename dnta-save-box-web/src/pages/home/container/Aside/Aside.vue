@@ -1,17 +1,17 @@
 <template>
     <el-aside class="aside">
-        <TagItem label="我的收藏" @click="onSelect({ key: 'all' })" icon="IcRoundFolderSpecial" edit :active="activeKey === 'all'">
+        <TagItem label="我的收藏" @click="onSelect({ key: 'all' })" edit :active="activeKey === 'all'">
             <template #edit>
-                <EpArrowDown/>
+                <EpArrowDown />
             </template>
         </TagItem>
         <div class="aside__wrap">
-            <TagItem v-for="(tag, i) in targetList" :key="i" :label="tag.name" @click="onSelect(tag)" :icon="tag.icon || 'IcBaselineFavoriteBorder'" edit @onEdit="onEdit(tag)" :id="tag.id" drag :count="tag.favorite_count" :active="activeKey == tag.type"/>
+            <TagItem v-for="(tag, i) in targetList" :key="i" :label="tag.name" @click="onSelect(tag)" :icon="tag.icon" edit @onEdit="onEdit(tag)" :id="tag.id" drag :count="tag.favorite_count" :active="activeKey == tag.type" />
 
-            <TagItem :label="defaultTab.name" @click="onSelect(defaultTab)" :icon="defaultTab.icon" :active="activeKey == defaultTab.type"/>
+            <TagItem :label="defaultTab.name" @click="onSelect(defaultTab)" :icon="defaultTab.icon" :active="activeKey == defaultTab.type" />
             <!-- 增加标签 -->
             <TagItem @onLeftClick="onAddTag">
-                <EpPlus />
+                <v-icon icon="mdi:plus"/>
                 <template #label>
                     <Field v-model="tagName" placeholder="输入收藏夹名字" @enter="onAddTag" />
                 </template>
@@ -19,7 +19,7 @@
         </div>
         <!-- 其它功能 -->
         <div class="aside__wrap">
-            <TagItem v-for="(tag, i) in othertabs" :key="i" :label="tag.name" @click="onSelect(tag)" :icon="tag.icon || 'IcBaselineFavoriteBorder'" :active="activeKey == tag.type"/>
+            <TagItem v-for="(tag, i) in othertabs" :key="i" :label="tag.name" @click="onSelect(tag)" :icon="tag.icon" :active="activeKey == tag.type" />
         </div>
     </el-aside>
     <editModal ref="edit" />
@@ -37,11 +37,11 @@ import editModal from './editModal.vue';
 
 // 其它功能
 const othertabs = [
-    { name: '回收站', type: 'recovery', id: 'recovery', icon: 'IcOutlineAutoDelete' },
-    { name: '视频', type: 'video', id: 'video', icon: 'IcRoundVideoCameraBack' },
-    { name: '上传', type: 'upload', id: 'upload', icon: 'IcRoundVideoCameraBack', url: 'upload' },
+    { name: '回收站', type: 'recovery', id: 'recovery', icon: 'mdi:delete-sweep' },
+    { name: '视频', type: 'video', id: 'video', icon: 'mdi:video-check' },
+    { name: '上传', type: 'upload', id: 'upload', icon: 'ic:round-drive-folder-upload', url: 'upload' },
 ];
-const defaultTab = { name: '未分类', type: 'uncategorized', id: 0, icon: 'TagOutline' };
+const defaultTab = { name: '未分类', type: 'uncategorized', id: 0, icon: 'mdi:tag-outline' };
 
 const route = useRoute();
 const router = useRouter();

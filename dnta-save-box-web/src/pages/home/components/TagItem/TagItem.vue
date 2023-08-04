@@ -2,8 +2,10 @@
     <div class="tag" :class="{ active: props.active }" @dragenter="dragenter" @dragleave="dragleave" @drop="onDrop">
         <div class="tag-item flex-center" :class="{ 'no-events': drag }">
             <el-icon :size="20" class="icon" @click.stop="onLeftClick">
-                <slot></slot>
-                <component :is="customIcons" v-if="props.icon" />
+                <v-icon :icon="props.icon" v-if="props.icon"/>
+                <slot v-else>
+                    <v-icon icon="mdi:tag-heart-outline"/>
+                </slot>
             </el-icon>
             <span class="tag-label">
                 {{ props.label }}
@@ -12,7 +14,9 @@
             </span>
         </div>
         <el-icon :size="18" v-if="props.edit" class="edit" @click.stop="onEdit">
-            <slot name="edit"><PhPenThin /></slot>
+            <slot name="edit">
+                <v-icon icon="mdi:pencil"/>
+            </slot>
         </el-icon>
     </div>
 </template>
@@ -20,7 +24,6 @@
 <script setup>
 import { ref, defineAsyncComponent, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { PhPenThin } from '@/components/Icon';
 import useDragStore from '@/store/modules/useDragStore';
 import * as Server from '@/service/model/api';
 
@@ -58,13 +61,6 @@ const route = useRoute();
 const store = useDragStore();
 // 当前目录判断
 const isCurrent = ref(false);
-let customIcons = null;
-// 动态加载
-if (props.icon) {
-    const globModules = import.meta.glob('@/components/Icon/*.vue');
-    const current = globModules[`/src/components/Icon/${props.icon}.vue`];
-    customIcons = defineAsyncComponent(current);
-}
 
 const emit = defineEmits(['onLeftClick', 'onEdit']);
 const onLeftClick = () => {
@@ -124,7 +120,7 @@ const onDrop = async (e) => {
     store.UPDATE_DRAG_DATA(null);
     store.UPDATE_CHECK_LIST([]);
     // 全部标签下拖拽不移除原数组
-    if (route.params.key !== 'all') {
+    if (route.params.type !== 'all') {
         store.UPDATE_FAVORITE_LIST(store.favoriteList.filter(item => !params.ids.includes(item.id)));
     }
 };

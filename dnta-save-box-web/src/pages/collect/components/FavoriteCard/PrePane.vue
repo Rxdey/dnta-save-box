@@ -15,7 +15,7 @@
         <div class="video" v-if="data.type === 'video'">
             <div class="play-btn" @click="onPlay" v-if="!videoLoad">
                 <el-icon class="play-icon" :size="60" color="#fff">
-                    <MdiPlayCircle/>
+                    <v-icon icon="mdi:check"></v-icon>
                 </el-icon>
             </div>
             <img v-if="!videoLoad" v-lazy="data.cover">
@@ -30,7 +30,6 @@ import { useRouter, useRoute } from 'vue-router';
 import { copyToClipboard } from '@/utils';
 import * as Server from '@/service/model/api';
 import useDragStore from '@/store/modules/useDragStore';
-import { MdiPlayCircle, MdiPauseCircle } from '@/components/Icon';
 import CustomImage from '@/components/CustomImage/CustomImage.vue';
 
 const $redrawVueMasonry = inject('redrawVueMasonry');

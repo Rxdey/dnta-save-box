@@ -15,6 +15,11 @@ const routes = [
                 name: 'collect',
                 component: () => import('@/pages/collect/collect.vue'),
             },
+            {
+                path: 'upload',
+                name: 'upload',
+                component: () => import('@/pages/upload/upload.vue'),
+            },
         ]
     },
     {

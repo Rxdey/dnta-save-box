@@ -38,9 +38,11 @@ import editModal from './editModal.vue';
 // 其它功能
 const othertabs = [
     { name: '回收站', type: 'recovery', id: 'recovery', icon: 'IcOutlineAutoDelete' },
-    { name: '视频', type: 'video', id: 'video', icon: 'IcRoundVideoCameraBack' }
+    { name: '视频', type: 'video', id: 'video', icon: 'IcRoundVideoCameraBack' },
+    { name: '上传', type: 'upload', id: 'upload', icon: 'IcRoundVideoCameraBack', url: 'upload' },
 ];
 const defaultTab = { name: '未分类', type: 'uncategorized', id: 0, icon: 'TagOutline' };
+
 const route = useRoute();
 const router = useRouter();
 const store = useDragStore();
@@ -72,11 +74,11 @@ const onAddTag = async () => {
     }];
 };
 
-const onSelect = ({ type, id }) => {
+const onSelect = ({ type, id, url }) => {
     let tid = id;
     if (type === 'all') tid = 'all';
     router.replace({
-        name: 'collect',
+        name: url || 'collect',
         params: {
             tid,
             type

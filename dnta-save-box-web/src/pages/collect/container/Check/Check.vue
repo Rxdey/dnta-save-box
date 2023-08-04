@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-import { ref, watch, computed } from 'vue';
+import { ref, watch, computed, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import useDragStore from '@/store/modules/useDragStore';
 import { useFetch } from '@/hooks/useFetch';
@@ -58,8 +58,15 @@ const onDeleteAll = (type = true) => {
 };
 
 watch(() => checkList.value, val => {
-    console.log(val)
+    console.log(val);
     drawer.value = !!val.length;
+});
+onMounted(() => {
+    document.body.addEventListener('click', () => {
+        if (checkList.value) {
+            store.UPDATE_CHECK_LIST([]);
+        }
+    });
 });
 </script>
 

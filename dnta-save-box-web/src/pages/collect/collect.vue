@@ -87,6 +87,7 @@ onMounted(() => {
   height: 100%;
   position: relative;
 }
+
 .tip {
   color: var(--color-gray);
   padding: 32px 0;
@@ -117,4 +118,5 @@ onMounted(() => {
       border-radius: 8px;
     }
   }
-}</style>
+}
+</style>

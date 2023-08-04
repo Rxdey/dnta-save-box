@@ -5,8 +5,9 @@
   "description": "A basic Plasmo extension.",
   "author": "rxdey",
   "scripts": {
-    "dev": "plasmo dev",
-    "build": "plasmo build --minify",
+    "dev": "plasmo dev --env=.env.development",
+    "build": "plasmo build --minify --env=.env.production",
+    "build:dev": "plasmo build --env=.env.development",
     "package": "plasmo package"
   },
   "dependencies": {

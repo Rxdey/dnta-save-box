@@ -1,12 +1,14 @@
 <template>
     <div class="sort-bar">
         <template v-if="!isVideo">
+            <div class="tabs">
+                <div class="tab-item" :class="{ active: active === i }" v-for="(tab, i) in tabs" :key="tab.label" @click="onTabChange(i, tab)">{{ tab.label }}</div>
+            </div>
             <div class="sort-btn">
                 <IconButton @click="isWaterfall">
                     <EpSetUp />
                 </IconButton>
             </div>
-
             <div class="sort-btn">
                 <IconButton @click="uploadSort" v-bind="{ loading, success, error }">
                     <EpMagicStick />
@@ -36,7 +38,12 @@ import * as Server from '@/service/model/api';
 
 const store = useDragStore();
 const route = useRoute();
-
+const tabs = [
+    { label: 'ALL', key: '' },
+    { label: 'IMG', key: 'img' },
+    { label: 'TEXT', key: 'text' },
+    { label: 'URL', key: 'url' },
+];
 const isVideo = computed(() => route.params.type === 'video');
 
 const active = ref(0);
@@ -53,7 +60,10 @@ const onSort = () => {
     sort.value = !sort.value;
     emit('sort', sort.value);
 };
-
+const onTabChange = (i, tab) => {
+    active.value = i;
+    emit('typeChange', tab);
+};
 const onGetCover = async () => {
     if (loading.value || success.value || error.value) return;
     loading.value = true;

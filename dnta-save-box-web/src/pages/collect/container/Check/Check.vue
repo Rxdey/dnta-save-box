@@ -58,7 +58,6 @@ const onDeleteAll = (type = true) => {
 };
 
 watch(() => checkList.value, val => {
-    console.log(val);
     drawer.value = !!val.length;
 });
 onMounted(() => {

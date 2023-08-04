@@ -33,7 +33,7 @@ export const useEdit = (store) => {
     };
     /** 编辑标签 */
     const onUpdateTag = async () => {
-        const res = await fetch(Server.TagUpdateUsePOSTT, {
+        const res = await fetch(Server.TagUpdateUsePOST, {
             id: selectTag.value.id,
             name: selectTag.value.name,
             nsfw: selectTag.value.nsfw
@@ -56,23 +56,6 @@ export const useEdit = (store) => {
         lastName.value = data.name;
         dialogVisible.value = true;
     };
-    /** 新增标签 */
-    const onAddTag = async () => {
-        if (!tagName.value || !tagName.value.trim()) return;
-        const res = await fetch(Server.TagAddUsePOST, {
-            name: tagName.value.trim()
-        });
-        if (!res) return;
-        ElNotification({
-            title: '操作成功',
-            message: '已添加',
-            type: 'success',
-        });
-        targetList.value = [...targetList.value, {
-            id: res,
-            name: tagName.value
-        }];
-    };
 
     const handleClose = (done) => {
         if (selectTag.value && lastName.value) selectTag.value.name = lastName.value;
@@ -82,9 +65,9 @@ export const useEdit = (store) => {
         onDel,
         onUpdateTag,
         onEdit,
-        onAddTag,
         handleClose,
         selectTag,
-        dialogVisible
+        dialogVisible,
+        loading
     };
 };

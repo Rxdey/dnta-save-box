@@ -26,7 +26,7 @@ import { ref, computed, onMounted, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import useDragStore from '@/store/modules/useDragStore';
 import * as Server from '@/service/model/api';
-import useUpdate from '../../composables/useUpdate';
+import useUpdate from '@/hooks/useUpdate';
 
 const store = useDragStore();
 const { loading, fetchData } = useUpdate();

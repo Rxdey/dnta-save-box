@@ -12,7 +12,7 @@
             </span>
         </div>
         <el-icon :size="18" v-if="props.edit" class="edit" @click.stop="onEdit">
-            <PhPenThin />
+            <slot name="edit"><PhPenThin /></slot>
         </el-icon>
     </div>
 </template>
@@ -54,7 +54,7 @@ const props = defineProps({
         default: ''
     }
 });
-
+const route = useRoute();
 const store = useDragStore();
 // 当前目录判断
 const isCurrent = ref(false);
@@ -124,7 +124,7 @@ const onDrop = async (e) => {
     store.UPDATE_DRAG_DATA(null);
     store.UPDATE_CHECK_LIST([]);
     // 全部标签下拖拽不移除原数组
-    if (store.active !== -1) {
+    if (route.params.key !== 'all') {
         store.UPDATE_FAVORITE_LIST(store.favoriteList.filter(item => !params.ids.includes(item.id)));
     }
 };

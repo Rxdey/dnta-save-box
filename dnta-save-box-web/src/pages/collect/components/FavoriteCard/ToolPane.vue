@@ -34,7 +34,7 @@ import { getTimeAgo, extractDomain } from '@/utils';
 import { PhPenThin, MdiWeb, MdiDeleteForeverOutline, IcRoundRestorePage } from '@/components/Icon';
 import useDragStore from '@/store/modules/useDragStore';
 import * as Server from '@/service/model/api';
-import useUpdate from '../../composables/useUpdate';
+import useUpdate from '@/hooks/useUpdate';
 
 const store = useDragStore();
 const data = inject('favoriteData');

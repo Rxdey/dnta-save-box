@@ -1,25 +1,24 @@
 <template>
     <div class="sort-bar">
-        <template v-if="tagActive !== -3">
-            <div class="tabs">
-                <div class="tab-item" :class="{ active: active === i }" v-for="(tab, i) in tabs" :key="tab.label" @click="onTabChange(i, tab)">{{ tab.label }}</div>
+        <template v-if="!isVideo">
+            <div class="sort-btn">
+                <IconButton @click="isWaterfall">
+                    <EpSetUp />
+                </IconButton>
             </div>
-
 
             <div class="sort-btn">
                 <IconButton @click="uploadSort" v-bind="{ loading, success, error }">
                     <EpMagicStick />
                 </IconButton>
             </div>
-
-
             <div class="sort-btn">
                 <el-icon :size="18" class="order-icon" :class="{ desc: sort }" @click="onSort">
                     <MdiSortAscending />
                 </el-icon>
             </div>
         </template>
-        <div class="get-cover sort-btn" v-if="tagActive === -3">
+        <div class="get-cover sort-btn" v-if="isVideo">
             <IconButton @click="onGetCover" v-bind="{ loading, success, error }">
                 <EpDownload />
             </IconButton>
@@ -31,20 +30,16 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { MdiSortAscending } from '@/components/Icon';
+import { MdiSortAscending, MdiViewDashboardVariant } from '@/components/Icon';
 import IconButton from '@/components/IconButton/IconButton.vue';
 import useDragStore from '@/store/modules/useDragStore';
 import * as Server from '@/service/model/api';
 
 const store = useDragStore();
+const route = useRoute();
 
-const tagActive = computed(() => store.active);
-const tabs = ref([
-    { label: 'ALL', key: '' },
-    { label: 'IMG', key: 'img' },
-    { label: 'TEXT', key: 'text' },
-    { label: 'URL', key: 'url' },
-]);
+const isVideo = computed(() => route.params.key === 'video');
+
 const active = ref(0);
 const sort = ref(false);
 const emit = defineEmits(['typeChange', 'sort']);
@@ -52,9 +47,8 @@ const loading = ref(false);
 const success = ref(false);
 const error = ref(false);
 
-const onTabChange = (i, tab) => {
-    active.value = i;
-    emit('typeChange', tab);
+const isWaterfall = () => {
+    store.UPDATE_WATERFALL(!store.waterfall);
 };
 const onSort = () => {
     sort.value = !sort.value;

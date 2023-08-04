@@ -1,214 +1,22 @@
 <template>
-  <el-container direction="vertical" class="home" :class="{ hideMenu }">
-    <HeaderWap @hideMenu="hideMenu = !hideMenu" />
-    <el-container class="custom-container" style="min-height: 1px;flex-wrap: nowrap;">
-      <AsideMenu :tagList="tagList" @change="onChange" @add="onAddTag" @del="onDelTag" :hide="hideMenu" />
-      <el-main class="main">
-        <SortBar @typeChange="onTypeChange" @sort="onSort" />
-        <FavoriteWrap v-if="loginStatus" v-infinite-scroll="getFavorite" :infinite-scroll-disabled="finished || loading" :infinite-scroll-distance="0">
-          <template v-if="waterfall">
-            <div class="card-wrap waterfall" v-masonry transition-duration="0.25s" item-selector=".favorite-card">
-              <FavoriteCard v-for="favorite in favoriteList" :key="favorite.id" :data="favorite" v-masonry-tile />
-            </div>
-          </template>
-          <template v-else>
-            <div class="card-wrap">
-              <FavoriteCard v-for="favorite in favoriteList" :key="favorite.id" :data="favorite" />
-            </div>
-          </template>
-          <p class="tip" v-show="loading">加载中...</p>
-          <p class="tip" v-show="finished && !loading">没有了</p>
-        </FavoriteWrap>
-      </el-main>
+    <el-container direction="vertical" class="home">
+        <HeaderCom />
+        <el-container class="home__container">
+            <AsideCom />
+            <el-main class="home__main">
+                <router-view :key="route.path"/>
+            </el-main>
+        </el-container>
     </el-container>
-    <teleport to="body">
-      <transition name="slide">
-        <div class="popup" v-if="drawer" @click.stop>
-          <div class="check-tip">已选择 {{ checkList.length }} 项, 当前页共加载 {{ favoriteList.length }} 项</div>
-          <span class="check-all" @click.stop="onCheckAll">全选</span>
-          <span class="check-all" @click.stop="onCheckAll(false)">取消</span>
-          <div class="popup-right">
-            <span v-if="active === -2" class="check-all restore" @click="onDeleteAll(false)">恢复</span>
-            <span class="check-all del" @click.stop="onDeleteAll">删除</span>
-          </div>
-        </div>
-      </transition>
-    </teleport>
-  </el-container>
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watch } from 'vue';
-import { useRouter } from 'vue-router';
-import jsCookie from 'js-cookie';
-import _ from 'lodash';
-import HeaderWap from './container/Header/Header.vue';
-import AsideMenu from './container/AsideMenu/AsideMenu.vue';
-import SortBar from './container/SortBar/SortBar.vue';
-import FavoriteWrap from './components/FavoriteCard/FavoriteWrap.vue';
-import FavoriteCard from './components/FavoriteCard/FavoriteCard.vue';
-import * as Server from '@/service/model/api';
-import useDragStore from '@/store/modules/useDragStore';
-import useFetchScroll from './composables/useFetchScroll';
-import useUpdate from './composables/useUpdate';
+import { ref } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import HeaderCom from './container/Header/header.vue';
+import AsideCom from './container/Aside/Aside.vue';
 
-const store = useDragStore();
-const router = useRouter();
-const tagList = ref([]);
-const isVideo = ref(false);
-const loginStatus = ref(false);
-const drawer = ref(false);
-const hideMenu = ref(false);
-
-const favoriteList = computed(() => store.favoriteList);
-const type = computed(() => store.type);
-const sort = computed(() => store.sort);
-const active = computed(() => store.active);
-const checkList = computed(() => store.checkList);
-const waterfall = computed(() => store.waterfall);
-const { fetchData, loading, finished, page, pageSize } = useFetchScroll();
-const { fetchData: fetchDataNormal } = useUpdate();
-const favParams = ref({
-  tid: null
-});
-// 获取收藏夹
-const getTag = async () => {
-  loading.value = true;
-  const res = await Server.TagAllUseGET({
-    nsfw: store.nsfw
-  });
-  const { data, success, msg } = res;
-  if (!success) {
-    ElMessage.error(msg);
-    return;
-  }
-  tagList.value = data;
-  loading.value = false;
-};
-// 获取收藏
-const getFavorite = async () => {
-  const api = isVideo.value ? Server.VideoUseGet : Server.FavoriteGetUseGET;
-  const params = {
-    ...favParams.value,
-    pageSize: pageSize.value,
-    page: page.value,
-    nsfw: store.nsfw,
-    type: type.value,
-    sort: sort.value
-  };
-  fetchData(api, params);
-  if (isVideo.value) finished.value = true;
-};
-// 重置页码
-const reload = () => {
-  page.value = 1;
-  store.UPDATE_FAVORITE_LIST([]);
-  finished.value = false;
-  getFavorite();
-};
-// 排序
-const onSort = (val) => {
-  store.UPDATE_SORT(val);
-  reload();
-};
-const onTypeChange = ({ key }) => {
-  store.UPDATE_TYPE(key);
-  reload();
-};
-// 切换收藏夹
-const onChange = (index, tag) => {
-  store.UPDATE_CHECK_LIST([]);
-  isVideo.value = index === -3;
-  const idMap = {
-    '-4': 0
-  };
-  const tid = idMap[index] || idMap[index] === 0 ? idMap[index] : tag?.id;
-  favParams.value = {
-    tid,
-    is_show: index === -2 ? 0 : 1
-  };
-  reload();
-};
-// TODO => 新增标签
-const onAddTag = (tanName, next = () => { }) => {
-  fetchDataNormal(Server.TagAddUsePOST, {
-    name: tanName.trim()
-  }, data => {
-    ElNotification({
-      title: '操作成功',
-      message: '已添加',
-      type: 'success',
-    });
-    tagList.value.push({
-      id: data,
-      name: tanName
-    });
-    next();
-  });
-};
-// 删除标签
-const onDelTag = (id) => {
-  tagList.value = tagList.value.filter(item => item.id !== id);
-};
-// 全选
-const onCheckAll = (type = true) => {
-  store.UPDATE_CHECK_LIST(type ? favoriteList.value : []);
-};
-// 批量删除
-const onDeleteAll = (type = true) => {
-  ElMessageBox.confirm(`确定要${type ? '删除' : '恢复'}吗?`, '', {
-    confirmButtonText: type ? '删除' : '恢复',
-    cancelButtonText: '取消'
-  }).then(async () => {
-    const ids = checkList.value.map(item => item.id);
-    const res = await fetchDataNormal(Server.FavoriteBatchDelUsePOST, {
-      ids,
-      is_show: type ? 0 : 1,
-      del: active.value === -2 && type ? 1 : 0
-    });
-    if (!res) return;
-    ElNotification({
-      title: '操作成功',
-      type: 'success'
-    });
-    store.UPDATE_CHECK_LIST([]);
-    store.UPDATE_FAVORITE_LIST(favoriteList.value.filter(item => !ids.includes(item.id)));
-  }).catch(() => {
-
-  });
-};
-
-onMounted(async () => {
-  window.addEventListener('resize', _.throttle(() => {
-    if (!hideMenu.value && window.innerWidth < 1200) {
-      hideMenu.value = true;
-    }
-    if (window.innerWidth > 1200) {
-      hideMenu.value = false;
-    }
-  }, 200),);
-  const token = jsCookie.get('token');
-  loginStatus.value = !!token;
-  if (!loginStatus.value) {
-    ElNotification({
-      title: '请先登录',
-      message: '',
-      type: 'warning',
-    });
-    router.push('/login');
-    return;
-  }
-  await getTag();
-  document.body.addEventListener('click', () => {
-    if (checkList.value) {
-      store.UPDATE_CHECK_LIST([]);
-    }
-  });
-});
-
-watch(() => checkList.value, val => {
-  drawer.value = !!val.length;
-});
+const route = useRoute();
 
 </script>
 

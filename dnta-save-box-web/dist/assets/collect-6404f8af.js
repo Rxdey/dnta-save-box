@@ -1,1 +1,0 @@
-import{Q as e,o as t,a as s,p as c}from"./index-b42fd8e6.js";const a={class:"collect"},p={__name:"collect",setup(n){const o=e();return t(()=>{console.log(o.params)}),(l,r)=>(s(),c("div",a))}};export{p as default};

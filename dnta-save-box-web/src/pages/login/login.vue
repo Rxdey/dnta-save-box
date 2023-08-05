@@ -75,7 +75,7 @@ const onLogin = async () => {
   });
   window.postMessage({type: 'worldpack', action: 'login', token }, '/');
   setTimeout(() => {
-    router.push('/home');
+    router.push('/home/collect/all');
   }, 1000);
 }
 

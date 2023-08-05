@@ -1,3 +1,4 @@
+import axios from 'axios';
 import defaultInstance from './interceptors';
 import { BASE_URL } from "./api.config";
 import useDragStore from '@/store/modules/useDragStore';
@@ -14,6 +15,7 @@ const BASE_CONFIG = {
   },
 };
 
+window.source = axios.CancelToken.source();
 /**
  * 请求封装
  * @param {Object} config 请求配置
@@ -32,6 +34,7 @@ const request = async (config, data) => {
   } else {
     setting.data = data;
   }
+  setting.cancelToken = source.token;
   const instance = defaultInstance(setting);
   try {
     const res = await instance(setting);

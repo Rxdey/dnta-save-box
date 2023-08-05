@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, onBeforeUnmount } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useFetchScroll } from '@/hooks/useFetch';
 import * as Server from '@/service/model/api';
@@ -76,6 +76,7 @@ const getFavorite = async () => {
 };
 
 onMounted(() => {
+  // window.source.cancel('中止');
   store.UPDATE_FAVORITE_LIST([]);
 })
 

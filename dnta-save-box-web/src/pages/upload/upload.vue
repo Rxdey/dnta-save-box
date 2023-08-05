@@ -1,6 +1,6 @@
 <template>
   <div class="upload">
-    <div class="upload__box" @drop="onDrop" @dragleave="onDragleave" @dragenter="onDragenter">
+    <div class="upload__box" @drop="onDrop" @dragleave="onDragleave" @dragenter="onDragenter" v-loading="loading">
       <div class="upload__tip">
         <el-icon :size="60">
           <v-icon icon="mdi:cloud-upload-outline" />
@@ -24,24 +24,35 @@ const { loading, fetch } = useFetch();
 const targetList = ref([]);
 const uploadList = ref([]);
 
-const uploadImage = async (file) => {
-  const formData = new FormData();
-  formData.append('file', file);
-  const res = await fetch(Server.FavoriteUploadImage, formData);
-  if (!res) return;
+const uploadImage = async (filelist) => {
+  const errorList = [];
+  for (let file of filelist) {
+    const formData = new FormData();
+    formData.append('file', file);
+    const res = await fetch(Server.FavoriteUploadImage, formData);
+    console.log(res);
+    if (!res) {
+      errorList.push(file);
+      continue;
+    }
+  }
+  console.log(errorList);
+
+  if (errorList.length < filelist.length) ElMessage.success('上传成功!');
 };
 
 const onDrop = (e) => {
   e.preventDefault();
   e.target.toggleAttribute('over', false);
+  if (loading.value) return;
   const fileList = Array.from(e.dataTransfer.files);
   if (!fileList.length) return;
   if (fileList.every(item => !/^image/.test(item.type))) {
     ElMessage.error('请不要上传非图片文件');
     return;
   }
-  console.log(fileList);
-  uploadImage(fileList[0]);
+  // console.log(fileList);
+  uploadImage(fileList);
 };
 const onDragleave = (e) => {
   e.preventDefault();
@@ -59,7 +70,7 @@ const queryData = async () => {
   targetList.value = res;
 };
 onMounted(() => {
-  // queryData();
+  queryData();
 });
 </script>
 
@@ -79,6 +90,7 @@ onMounted(() => {
     flex-flow: row nowrap;
     align-items: center;
     justify-content: center;
+    position: relative;
 
     &[over] {
       border-color: var(--color-purple);

@@ -66,7 +66,7 @@ export function useFetch() {
             return false;
         }
         callBack(data);
-        return data;
+        return data || success;
     };
     return {
         fetch,

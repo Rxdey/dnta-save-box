@@ -120,7 +120,7 @@ const onDrop = async (e) => {
     store.UPDATE_DRAG_DATA(null);
     store.UPDATE_CHECK_LIST([]);
     // 全部标签下拖拽不移除原数组
-    if (route.params.type !== 'all') {
+    if (route.params.tid !== 'all') {
         store.UPDATE_FAVORITE_LIST(store.favoriteList.filter(item => !params.ids.includes(item.id)));
     }
 };

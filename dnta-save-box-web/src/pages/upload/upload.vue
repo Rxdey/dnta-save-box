@@ -24,17 +24,24 @@ const { loading, fetch } = useFetch();
 const targetList = ref([]);
 const uploadList = ref([]);
 
+const uploadImage = async (file) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  const res = await fetch(Server.FavoriteUploadImage, formData);
+  if (!res) return;
+};
+
 const onDrop = (e) => {
   e.preventDefault();
   e.target.toggleAttribute('over', false);
   const fileList = Array.from(e.dataTransfer.files);
   if (!fileList.length) return;
-  console.log(fileList);
   if (fileList.every(item => !/^image/.test(item.type))) {
     ElMessage.error('请不要上传非图片文件');
     return;
   }
   console.log(fileList);
+  uploadImage(fileList[0]);
 };
 const onDragleave = (e) => {
   e.preventDefault();
@@ -72,6 +79,7 @@ onMounted(() => {
     flex-flow: row nowrap;
     align-items: center;
     justify-content: center;
+
     &[over] {
       border-color: var(--color-purple);
       color: var(--color-purple);

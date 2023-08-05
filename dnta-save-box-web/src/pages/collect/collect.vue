@@ -34,7 +34,7 @@ const store = useDragStore();
 const route = useRoute();
 const { fetchData, loading, finished, page, pageSize } = useFetchScroll();
 
-const isVideo = computed(() => route.params.type === 'video');
+const isVideo = computed(() => route.params.tid === 'video');
 const sort = computed(() => store.sort);
 const type = computed(() => store.type);
 const nsfw = computed(() => store.nsfw);
@@ -69,7 +69,7 @@ const getFavorite = async () => {
     type: type.value,
     sort: sort.value,
     tid: isNaN(parseInt(route.params.tid)) ? '' : route.params.tid,
-    is_show: route.params.type === 'recovery' ? 0 : 1
+    is_show: route.params.tid === 'recovery' ? 0 : 1
   };
   fetchData(api, params);
   if (isVideo.value) finished.value = true;

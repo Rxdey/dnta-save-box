@@ -44,7 +44,7 @@ const tabs = [
     { label: 'TEXT', key: 'text' },
     { label: 'URL', key: 'url' },
 ];
-const isVideo = computed(() => route.params.type === 'video');
+const isVideo = computed(() => route.params.tid === 'video');
 
 const active = ref(0);
 const sort = ref(false);

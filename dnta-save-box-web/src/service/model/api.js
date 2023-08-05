@@ -116,3 +116,14 @@ export const VideoGetCoverUseGet = (params) => request({
     url: '/video/getCover',
     method: 'GET'
 }, params);
+
+/**
+ * 拉取视频封面
+ */
+export const FavoriteUploadImage = (params) => request({
+    url: '/favorite/uploadImage',
+    headers: {
+        'content-type': 'multipart/form-data'
+    },
+    method: 'POST'
+}, params);

@@ -31,7 +31,7 @@ const store = useDragStore();
 const drawer = ref(false);
 const checkList = computed(() => store.checkList);
 const favoriteList = computed(() => store.favoriteList);
-const active = computed(() => route.params.type);
+const active = computed(() => route.params.tid);
 const check = ref(0);
 // 全选
 const onCheckAll = (type = true) => {

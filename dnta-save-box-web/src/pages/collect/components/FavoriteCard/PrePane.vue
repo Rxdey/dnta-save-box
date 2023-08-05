@@ -15,7 +15,7 @@
         <div class="video" v-if="data.type === 'video'">
             <div class="play-btn" @click="onPlay" v-if="!videoLoad">
                 <el-icon class="play-icon" :size="60" color="#fff">
-                    <v-icon icon="mdi:check"></v-icon>
+                    <v-icon icon="mdi:play"></v-icon>
                 </el-icon>
             </div>
             <img v-if="!videoLoad" v-lazy="data.cover">

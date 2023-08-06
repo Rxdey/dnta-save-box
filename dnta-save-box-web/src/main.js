@@ -8,6 +8,7 @@ import App from './App.vue';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn'; // 导入本地化语言
 import defaultImg from '@/assets/img/default.png';
+// 拖拽
 import '@/utils/draggable-polyfill';
 import '@/assets/styles/common.less';
 import '@/assets/styles/theme.less';

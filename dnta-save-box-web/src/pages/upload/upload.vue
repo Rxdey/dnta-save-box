@@ -33,9 +33,9 @@ import { ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useFetch } from '@/hooks/useFetch';
 import * as Server from '@/service/model/api';
-import useDragStore from '@/store/modules/useDragStore';
+import useMainStore from '@/store/modules/useMainStore';
 
-const store = useDragStore();
+const store = useMainStore();
 const { loading, fetch } = useFetch();
 
 const uploadLoading = ref(false);

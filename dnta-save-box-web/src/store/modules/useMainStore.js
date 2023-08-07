@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { uniqueArray } from '@/utils';
 
-const useDragStore = defineStore('drag', {
+const useMainStore = defineStore('drag', {
     state: () => ({
         dragData: null, // 拖拽的数据
         favoriteList: [], // 当前收藏列表，不做缓存
@@ -14,6 +14,7 @@ const useDragStore = defineStore('drag', {
         dragIn: false, // 是否有开始拖拽，用于禁止子元素事件
         checkList: [], // 选择列表
         waterfall: false, // 瀑布流
+        hideMenu: false, // 隐藏菜单
     }),
     actions: {
         async UPDATE_WATERFALL(data) {
@@ -54,8 +55,11 @@ const useDragStore = defineStore('drag', {
         },
         async UPDATE_ACTIVE(data) {
             this.active = data;
+        },
+        async UPDATE_HIDE_MENU(data) {
+            this.hideMenu = data;
         }
     }
 });
 
-export default useDragStore;
+export default useMainStore;

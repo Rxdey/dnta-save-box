@@ -12,6 +12,7 @@ import defaultImg from '@/assets/img/default.png';
 import '@/utils/draggable-polyfill';
 import '@/assets/styles/common.less';
 import '@/assets/styles/theme.less';
+import '@/assets/styles/media.less';
 import 'viewerjs/dist/viewer.css';
 import { Icon } from '@iconify/vue';
 

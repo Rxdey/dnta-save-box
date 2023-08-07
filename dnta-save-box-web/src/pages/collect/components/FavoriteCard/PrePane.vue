@@ -29,11 +29,11 @@ import { ref, inject, onMounted, watch, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { copyToClipboard } from '@/utils';
 import * as Server from '@/service/model/api';
-import useDragStore from '@/store/modules/useDragStore';
+import useMainStore from '@/store/modules/useMainStore';
 import CustomImage from '@/components/CustomImage/CustomImage.vue';
 
 const $redrawVueMasonry = inject('redrawVueMasonry');
-const store = useDragStore();
+const store = useMainStore();
 const data = inject('favoriteData');
 const isNsfw = ref(0);
 const videoLoad = ref(false);

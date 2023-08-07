@@ -24,7 +24,7 @@
 <script setup>
 import { ref, defineAsyncComponent, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import useDragStore from '@/store/modules/useDragStore';
+import useMainStore from '@/store/modules/useMainStore';
 import * as Server from '@/service/model/api';
 
 const props = defineProps({
@@ -58,7 +58,7 @@ const props = defineProps({
     }
 });
 const route = useRoute();
-const store = useDragStore();
+const store = useMainStore();
 // 当前目录判断
 const isCurrent = ref(false);
 

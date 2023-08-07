@@ -21,13 +21,13 @@
 <script setup>
 import { ref, watch, computed, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import useDragStore from '@/store/modules/useDragStore';
+import useMainStore from '@/store/modules/useMainStore';
 import { useFetch } from '@/hooks/useFetch';
 import * as Server from '@/service/model/api';
 
 const route = useRoute();
 const { fetch } = useFetch();
-const store = useDragStore();
+const store = useMainStore();
 const drawer = ref(false);
 const checkList = computed(() => store.checkList);
 const favoriteList = computed(() => store.favoriteList);

@@ -1,31 +1,41 @@
 .favorite-wrap {
     padding: 16px 8px;
-    .card-wrap {
-        display: flex;
-        flex-flow: row wrap;
-        padding: 0 8px 16px 8px;
-    }
 }
 
-.favorite-card {
+.card-wrap {
+    --card-width: 240px;
+    --card-height: 320px;
+    --card-video-width: 240px;
+    --card-video-height: 320px;
     --card-radius: 8px;
-    --card-grap: 18px;
+    --card-gap: 10px;
+
+    // display: flex;
+    // flex-flow: row wrap;
+    padding: 0 8px 16px 8px;
+    // justify-content: space-between;
+    display: grid;
+    justify-content: space-between;
+    grid-template-columns: repeat(auto-fill, minmax(var(--card-width),1fr));
+    gap: var(--card-gap);
+}
+.favorite-card {
+
     position: relative;
     background-color: #fff;
     border-radius: var(--card-radius);
-    // overflow: hidden;
-    width: 240px;
-    height: 320px;
-    margin-bottom: var(--card-grap);
-    margin-right: var(--card-grap);
+    width: var(--card-width);
+    height: var(--card-height);
     word-wrap: break-word;
     cursor: pointer;
-    // transform: translateY(0);
     transition: all 0.3s;
     box-shadow: 0 0 0 var(--shadow-dark);
     visibility: visible !important;
     display: flex;
     flex-flow: column;
+    &:last-child {
+        margin-right: auto;
+    }
     &.checked {
         border: 2px solid var(--color-fade-main);
         animation: shake 0.3s infinite;
@@ -85,8 +95,8 @@
         }
     }
     &.video-card {
-        width: 145px;
-        height: 260px;
+        width: var(--card-video-width);
+        height: var(--card-video-height);
         // min-width: 200px;
         .favorite-card--preview {
             border-radius: 0;
@@ -125,7 +135,7 @@
         border-top-left-radius: var(--card-radius);
         border-top-right-radius: var(--card-radius);
         // .image-wrap {
-            
+
         // }
         .nswf {
             position: absolute;
@@ -154,10 +164,10 @@
             color: var(--color-gray2);
         }
         // img {
-            // max-width: 100%;
-            // // height: 100%;
-            // object-fit: cover;
-            // display: block;
+        // max-width: 100%;
+        // // height: 100%;
+        // object-fit: cover;
+        // display: block;
         // }
         .url {
             width: 100%;
@@ -194,12 +204,11 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                background-color: rgba(0,0,0,.2);
+                background-color: rgba(0, 0, 0, 0.2);
                 position: absolute;
                 width: 100%;
                 height: 100%;
                 .play-icon {
-                  
                 }
             }
             video {

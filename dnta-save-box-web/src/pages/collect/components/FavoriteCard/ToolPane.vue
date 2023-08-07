@@ -31,11 +31,11 @@
 <script setup>
 import { ref, onMounted, inject, watch } from 'vue';
 import { getTimeAgo, extractDomain } from '@/utils';
-import useDragStore from '@/store/modules/useDragStore';
+import useMainStore from '@/store/modules/useMainStore';
 import * as Server from '@/service/model/api';
 import useUpdate from '@/hooks/useUpdate';
 
-const store = useDragStore();
+const store = useMainStore();
 const data = inject('favoriteData');
 const domain = ref(null);
 

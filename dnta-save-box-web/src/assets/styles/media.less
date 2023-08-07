@@ -1,0 +1,46 @@
+// 响应
+
+@media screen and (max-width: 1080px) {
+    #app {
+        .card-wrap {
+            --card-width: 200px;
+            --card-height: 280px;
+        }
+    }
+}
+@media screen and (max-width: 880px) {
+    #app {
+        .card-wrap {
+            --card-width: 170px;
+            --card-height: 220px;
+        }
+    }
+}
+@media screen and (max-width: 760px) {
+    #app {
+        .card-wrap {
+            --card-width: 200px;
+            --card-height: 280px;
+        }
+    }
+}
+@media screen and (max-width: 680px) {
+    #app {
+        .sort-bar {
+            justify-content: flex-start
+        }
+        .card-wrap {
+            grid-template-columns: repeat(2, 1fr);
+            --card-width: 100%;
+        }
+        .favorite-wrap {
+            padding: 10px 0;
+        }
+        .home__main {
+            padding-left: 0;
+        }
+        .aside {
+            width: 100%;
+        }
+    }
+}

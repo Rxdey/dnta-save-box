@@ -22,9 +22,9 @@
 import { ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useEdit } from './useEdit';
-import useDragStore from '@/store/modules/useDragStore';
+import useMainStore from '@/store/modules/useMainStore';
 
-const store = useDragStore();
+const store = useMainStore();
 
 /** 编辑操作 */
 const { loading, onDel, onUpdateTag, onEdit, handleClose, selectTag, dialogVisible } = useEdit(store);

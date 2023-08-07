@@ -26,11 +26,11 @@
 import { ref, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { customStorage } from '@/utils';
-import useDragStore from '@/store/modules/useDragStore';
+import useMainStore from '@/store/modules/useMainStore';
 import jsCookie from 'js-cookie';
 
 const router = useRouter();
-const store = useDragStore();
+const store = useMainStore();
 const nsfw = computed(() => store.nsfw);
 const userInfo = computed(() => customStorage.getItem('userInfo') || {});
 const emit = defineEmits(['hideMenu']);
@@ -43,7 +43,7 @@ const toggleNsfw = () => {
 };
 
 const onHideMenu = () => {
-    emit('hideMenu');
+    store.UPDATE_HIDE_MENU(!store.hideMenu);
 };
 const onLogOut = () => {
     customStorage.remove('userInfo');

@@ -11,7 +11,7 @@
 <script setup>
 import { ref, computed, watch, onMounted, provide } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import useDragStore from '@/store/modules/useDragStore';
+import useMainStore from '@/store/modules/useMainStore';
 import PrePane from './PrePane.vue';
 import ToolPane from './ToolPane.vue';
 import CusCheckBox from '@/components/Field/CheckBox.vue';
@@ -26,7 +26,7 @@ const props = defineProps({
 });
 
 provide('favoriteData', computed(() => props.data));
-const store = useDragStore();
+const store = useMainStore();
 const checked = ref(false);
 const drag = ref(false);
 const dragPosition = ref('');

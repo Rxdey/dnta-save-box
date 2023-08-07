@@ -1,7 +1,7 @@
 import axios from 'axios';
 import defaultInstance from './interceptors';
 import { BASE_URL } from "./api.config";
-import useDragStore from '@/store/modules/useDragStore';
+import useMainStore from '@/store/modules/useMainStore';
 
 const BASE_CONFIG = {
   method: 'get',

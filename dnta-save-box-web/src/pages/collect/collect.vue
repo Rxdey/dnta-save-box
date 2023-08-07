@@ -24,13 +24,13 @@ import { ref, onMounted, computed, onBeforeUnmount } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useFetchScroll } from '@/hooks/useFetch';
 import * as Server from '@/service/model/api';
-import useDragStore from '@/store/modules/useDragStore';
+import useMainStore from '@/store/modules/useMainStore';
 import FavoriteWrap from './components/FavoriteCard/FavoriteWrap.vue';
 import FavoriteCard from './components/FavoriteCard/FavoriteCard.vue';
 import SortBar from './container/SortBar/SortBar.vue';
 import Check from './container/Check/Check.vue';
 
-const store = useDragStore();
+const store = useMainStore();
 const route = useRoute();
 const { fetchData, loading, finished, page, pageSize } = useFetchScroll();
 

@@ -1,27 +1,29 @@
 <template>
-    <el-aside class="aside">
-        <TagItem :label="mainTab.name" @click="onSelect(mainTab)" :icon="mainTab.icon" :active="activeKey == mainTab.url">
-            <template #edit>
-                <EpArrowDown />
-            </template>
-        </TagItem>
-        <div class="aside__wrap">
-            <TagItem v-for="(tag, i) in targetList" :key="i" :label="tag.name" @click="onSelect(tag)" :icon="tag.icon" edit @onEdit="onEdit(tag)" :id="tag.id" drag :count="tag.favorite_count" :active="activeKey == tag.url" />
-
-            <TagItem :label="defaultTab.name" @click="onSelect(defaultTab)" :icon="defaultTab.icon" :active="activeKey == defaultTab.url" />
-            <!-- 增加标签 -->
-            <TagItem @onLeftClick="onAddTag">
-                <v-icon icon="mdi:plus" />
-                <template #label>
-                    <Field v-model="tagName" placeholder="输入收藏夹名字" @enter="onAddTag" />
+    <transition name="aside">
+        <el-aside class="aside" v-show="!hideMenu">
+            <TagItem :label="mainTab.name" @click="onSelect(mainTab)" :icon="mainTab.icon" :active="activeKey == mainTab.url">
+                <template #edit>
+                    <EpArrowDown />
                 </template>
             </TagItem>
-        </div>
-        <!-- 其它功能 -->
-        <div class="aside__wrap">
-            <TagItem v-for="(tag, i) in othertabs" :key="i" :label="tag.name" @click="onSelect(tag)" :icon="tag.icon" :active="activeKey == tag.url" />
-        </div>
-    </el-aside>
+            <div class="aside__wrap">
+                <TagItem v-for="(tag, i) in targetList" :key="i" :label="tag.name" @click="onSelect(tag)" :icon="tag.icon" edit @onEdit="onEdit(tag)" :id="tag.id" drag :count="tag.favorite_count" :active="activeKey == tag.url" />
+
+                <TagItem :label="defaultTab.name" @click="onSelect(defaultTab)" :icon="defaultTab.icon" :active="activeKey == defaultTab.url" />
+                <!-- 增加标签 -->
+                <TagItem @onLeftClick="onAddTag">
+                    <v-icon icon="mdi:plus" />
+                    <template #label>
+                        <Field v-model="tagName" placeholder="输入收藏夹名字" @enter="onAddTag" />
+                    </template>
+                </TagItem>
+            </div>
+            <!-- 其它功能 -->
+            <div class="aside__wrap">
+                <TagItem v-for="(tag, i) in othertabs" :key="i" :label="tag.name" @click="onSelect(tag)" :icon="tag.icon" :active="activeKey == tag.url" />
+            </div>
+        </el-aside>
+    </transition>
     <editModal ref="edit" />
 </template>
 
@@ -31,7 +33,7 @@ import { useRouter, useRoute } from 'vue-router';
 import TagItem from '../../components/TagItem/TagItem.vue';
 import { useFetch } from '@/hooks/useFetch';
 import * as Server from '@/service/model/api';
-import useDragStore from '@/store/modules/useDragStore';
+import useMainStore from '@/store/modules/useMainStore';
 import Field from '@/components/Field/Field.vue';
 import editModal from './editModal.vue';
 
@@ -46,12 +48,13 @@ const defaultTab = { name: '未分类', id: 0, icon: 'mdi:tag-outline', url: '/h
 
 const route = useRoute();
 const router = useRouter();
-const store = useDragStore();
+const store = useMainStore();
 const { loading, fetch } = useFetch();
 const targetList = ref([]);
 const tagName = ref('');
 const edit = ref(null);
 const activeKey = computed(() => route.path);
+const hideMenu = computed(() => store.hideMenu);
 /** 编辑弹窗 */
 const onEdit = (data) => {
     edit.value.onEdit(data);
@@ -76,9 +79,6 @@ const onAddTag = async () => {
 };
 
 const onSelect = ({ id, url }) => {
-    let tid = id;
-    // console.log(url);
-    // if (id === 'all') tid = 'all';
     router.replace({
         path: url
     });

@@ -1,5 +1,5 @@
 import { ref, onMounted, computed } from 'vue';
-import useDragStore from '@/store/modules/useDragStore';
+import useMainStore from '@/store/modules/useMainStore';
 import { BASE_URL } from '@/service/api.config';
 
 const extname = (path = '') => {
@@ -14,7 +14,7 @@ export function useFetchScroll() {
     const finished = ref(false);
     const page = ref(1);
     const pageSize = ref(30);
-    const store = useDragStore();
+    const store = useMainStore();
 
     const fetchData = async (request, params) => {
         if (finished.value) return;

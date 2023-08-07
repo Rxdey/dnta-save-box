@@ -33,10 +33,10 @@
 import { ref, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import IconButton from '@/components/IconButton/IconButton.vue';
-import useDragStore from '@/store/modules/useDragStore';
+import useMainStore from '@/store/modules/useMainStore';
 import * as Server from '@/service/model/api';
 
-const store = useDragStore();
+const store = useMainStore();
 const route = useRoute();
 const tabs = [
     { label: 'ALL', key: '' },
@@ -92,6 +92,6 @@ const uploadSort = async () => {
 
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 @import url('./index.less');
 </style>

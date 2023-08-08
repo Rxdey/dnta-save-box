@@ -1,0 +1,58 @@
+.upload {
+    padding: 32px;
+  
+    &__box {
+      width: 600px;
+      height: 300px;
+      cursor: pointer;
+      border: 5px dashed var(--color-gray1);
+      color: var(--color-gray1);
+      border-radius: 32px;
+      text-align: center;
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+  
+      &[over] {
+        border-color: var(--color-purple);
+        color: var(--color-purple);
+      }
+    }
+  
+    &__tip {
+      pointer-events: none;
+      user-select: none;
+  
+      p {
+        margin-top: 16px;
+      }
+    }
+  
+    &__status {
+      color: var(--color-gray);
+      margin-top: 30px;
+      margin-bottom: 20px;
+    }
+  
+    &__error-list {
+      max-width: 600px;
+      display: flex;
+      flex-flow: row wrap;
+  
+      .image-card {
+        width: 120px;
+        height: 80px;
+        border-radius: 16px;
+        overflow: hidden;
+        margin: 0 12px 12px 0;
+  
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+    }
+  }

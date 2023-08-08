@@ -4,23 +4,23 @@
             <div class="tabs">
                 <div class="tab-item" :class="{ active: active === i }" v-for="(tab, i) in tabs" :key="tab.label" @click="onTabChange(i, tab)">{{ tab.label }}</div>
             </div>
-            <div class="sort-btn">
+            <div class="sort-btn" title="瀑布流">
                 <IconButton @click="isWaterfall">
                     <EpSetUp />
                 </IconButton>
             </div>
-            <div class="sort-btn">
+            <div class="sort-btn"  title="重置索引">
                 <IconButton @click="uploadSort" v-bind="{ loading, success, error }">
                     <EpMagicStick />
                 </IconButton>
             </div>
-            <div class="sort-btn">
+            <div class="sort-btn" title="反向">
                 <el-icon :size="18" class="order-icon" :class="{ desc: sort }" @click="onSort">
                     <v-icon icon="humbleicons:exchange-horizontal" />
                 </el-icon>
             </div>
         </template>
-        <div class="get-cover sort-btn" v-if="isVideo">
+        <div class="get-cover sort-btn" v-if="isVideo" title="转换">
             <IconButton @click="onGetCover" v-bind="{ loading, success, error }">
                 <EpDownload />
             </IconButton>

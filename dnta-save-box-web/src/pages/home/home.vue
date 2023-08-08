@@ -16,7 +16,7 @@ import { useRouter, useRoute } from 'vue-router';
 import jsCookie from 'js-cookie';
 import _ from 'lodash';
 import HeaderCom from './container/Header/header.vue';
-import AsideCom from './container/Aside/aside.vue';
+import AsideCom from './container/Aside/Aside.vue';
 import useMainStore from '@/store/modules/useMainStore';
 
 const store = useMainStore();

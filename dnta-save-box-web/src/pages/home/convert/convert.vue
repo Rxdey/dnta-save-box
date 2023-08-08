@@ -4,7 +4,9 @@
       <div class="video__content">
         <div class="video__upload" @drop="onDrop" @dragleave="onDragleave" @dragenter="onDragenter" @click="onClick"> click/drag to upload </div>
       </div>
-      <div class="video__timeline"></div>
+      <div class="video__timeline">
+        <TimeLine :options="timeOptions"/>
+      </div>
     </div>
   </div>
 </template>
@@ -12,6 +14,13 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useDrag } from '../upload/useDrag';
+import TimeLine from './components/timeline.vue';
+
+
+const timeOptions = {
+  totalTime: 10000,
+  
+};
 
 const vaildFile = (files) => {
   const fileList = Array.from(files);
@@ -32,7 +41,7 @@ const { uploadLoading, onDrop, onDragleave, onDragenter, onFileChange } = useDra
 }
 
 .video {
-  width: 1200px;
+  width: 100%;
   background-color: #191919;
   color: #989898;
 
@@ -43,7 +52,8 @@ const { uploadLoading, onDrop, onDragleave, onDragenter, onFileChange } = useDra
   }
 
   &__timeline {
-    height: 100px;
+    height: 80px;
+    position: relative;
   }
 
   &__upload {

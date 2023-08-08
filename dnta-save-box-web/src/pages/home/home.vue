@@ -29,9 +29,9 @@ const loadMenu = () => {
     if (!hideMenu.value && window.innerWidth < 1200) {
         store.UPDATE_HIDE_MENU(true);
     }
-    if (window.innerWidth > 1200) {
-        store.UPDATE_HIDE_MENU(false);
-    }
+    // if (window.innerWidth > 1200) {
+    //     store.UPDATE_HIDE_MENU(false);
+    // }
 };
 onMounted(async () => {
     window.addEventListener('resize', _.throttle(loadMenu, 200),);

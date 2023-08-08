@@ -10,14 +10,14 @@
         <div class="form-wrap">
           <label class="label">账号</label>
           <div class="form-input">
-            <input type="text" placeholder="请输入账号" v-model="form.userName" />
+            <input type="text" placeholder="请输入账号" v-model="form.userName" @keydown.enter="onLogin"/>
           </div>
         </div>
 
         <div class="form-wrap">
           <label class="label">密码</label>
           <div class="form-input">
-            <input type="password" placeholder="请输入密码" v-model="form.password" />
+            <input type="password" placeholder="请输入密码" v-model="form.password" @keydown.enter="onLogin"/>
           </div>
         </div>
         <div class="tip-wrap">

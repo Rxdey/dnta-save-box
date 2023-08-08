@@ -13,12 +13,17 @@ const routes = [
             {
                 path: 'collect/:tid',
                 name: 'collect',
-                component: () => import('@/pages/collect/collect.vue'),
+                component: () => import('@/pages/home/collect/collect.vue'),
             },
             {
                 path: 'upload',
                 name: 'upload',
-                component: () => import('@/pages/upload/upload.vue'),
+                component: () => import('@/pages/home/upload/upload.vue'),
+            },
+            {
+                path: 'convert',
+                name: 'convert',
+                component: () => import('@/pages/home/convert/convert.vue'),
             },
         ]
     },

@@ -31,5 +31,6 @@ onMounted(() => {
 .timeline {
     width: 100%;
     height: 100%;
+    cursor: crosshair;
 }
 </style>

@@ -52,7 +52,7 @@ class Timeline {
         const { canvas, ctx } = this.createCanvas(this.el);
         this.canvas = canvas;
         this.ctx = ctx;
-        this.drawTimeline(ctx, canvas);
+        this.drawTimeline();
         canvas.addEventListener('mousewheel', this.onMousewheel.bind(this));
         canvas.addEventListener('mousedown', this.onMouseDown.bind(this));
         canvas.addEventListener('mousemove', this.onMouseMove.bind(this));
@@ -70,33 +70,39 @@ class Timeline {
                 this.options.level -= 1;
             }
         }
-        this.drawTimeline(this.ctx, this.canvas);
+        this.drawTimeline();
     }
     /** 鼠标拖动时间轴 */
     onMouseMove(e) {
-        if (!this.canvasProp.isMouseDown) return;
-        this.canvasProp.offset = e.clientX - this.canvasProp.mouseX;
-        this.drawTimeline(this.ctx, this.canvas, this.canvasProp.offset + this.canvasProp.lastOffset);
+        if (this.canvasProp.isMouseDown) {
+            this.canvasProp.offset = e.clientX - this.canvasProp.mouseX;
+            this.drawTimeline();
+        }
+        const { left } = this.canvas.getBoundingClientRect();
+        const hoverLineX = e.clientX - left;
+        this.drawTimeline();
+        this.drawHoverLine(hoverLineX, 0);
     }
     onMouseDown(e) {
         this.canvasProp.isMouseDown = true;
         this.canvasProp.mouseX = e.clientX;
+        this.canvasProp.lastOffset = this.canvasProp.offset + this.canvasProp.lastOffset;
+        console.log(this.canvasProp.lastOffset);
     }
     onMouseOut(e) {
         if (!this.canvasProp.isMouseDown) return;
         this.canvasProp.isMouseDown = false;
-        this.canvasProp.lastOffset = this.canvasProp.offset + this.canvasProp.lastOffset;
     }
     /** 绘制时间轴 */
-    drawTimeline(ctx, canvas, offset = 0) {
+    drawTimeline() {
         const { zoom, level, lineStyle, fontStyle } = this.options;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#ffdc23';
-        ctx.fillRect(0, 0, canvas.width, 1);
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.fillStyle = '#ffdc23';
+        this.ctx.fillRect(0, 0, this.canvas.width, 1);
         // 渲染格数(同宽度固定)
-        const count = Math.floor(canvas.width / lineStyle.gap);
+        const count = Math.floor(this.canvas.width / lineStyle.gap);
         // 偏移量(用于滚动)
-        let offsetCount = 0 - Math.floor((offset) / lineStyle.gap);
+        let offsetCount = 0 - Math.floor((this.canvasProp.offset + this.canvasProp.lastOffset) / lineStyle.gap);
         // 拖拽到起始点不允许操作
         if (offsetCount <= 0) {
             offsetCount = 0;
@@ -106,22 +112,27 @@ class Timeline {
         for (let i = 0; i <= count; i++) {
             const flag = ((i + offsetCount) % 5) === 0;
             const h = flag ? lineStyle.height + 7 : lineStyle.height;
-            ctx.fillStyle = lineStyle.color;
-            ctx.fillRect(lineStyle.gap * i, 1, 1, h);
+            this.ctx.fillStyle = lineStyle.color;
+            this.ctx.fillRect(lineStyle.gap * i, 1, 1, h);
             if (flag) {
-                ctx.fillStyle = fontStyle.color;
-                ctx.font = fontStyle.font;
+                this.ctx.fillStyle = fontStyle.color;
+                this.ctx.font = fontStyle.font;
                 const fontX = lineStyle.gap * i;
-                ctx.fillText(formatTime(((i + offsetCount) * zoom[level])), fontX, h + 12);
+                this.ctx.fillText(formatTime(((i + offsetCount) * zoom[level])), fontX, h + 12);
             }
         }
+    }
+    /** 鼠标hover时间线 */
+    drawHoverLine(x = 0, y = 0) {
+        this.ctx.fillStyle = '#fff';
+        this.ctx.fillRect(x, y, 1, this.canvas.height);
     }
     createCanvas(el) {
         const { width, height } = el.getBoundingClientRect();
         const canvas = document.createElement('canvas');
         canvas.width = width;
         canvas.height = height;
-        canvas.style.backgroundColor = '#121316';
+        // el.style.backgroundColor = '#121316';
         el.appendChild(canvas);
         const ctx = canvas.getContext('2d');
         return { canvas, ctx };

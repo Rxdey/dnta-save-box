@@ -17,14 +17,12 @@ const props = defineProps({
     }
 });
 
-const timeline = ref(null);
-const width = ref(0);
 
 onMounted(() => {
-    timeline.value = new Timeline({
-        root: '#timeline'
+    const timeline = new Timeline('#timeline', {
+        totalTime: 10000
     });
-    console.log(timeline.value);
+    console.log(timeline);
 })
 
 </script>

@@ -19,13 +19,13 @@ const routes = [
                 path: 'upload',
                 name: 'upload',
                 component: () => import('@/pages/home/upload/upload.vue'),
-            },
-            {
-                path: 'convert',
-                name: 'convert',
-                component: () => import('@/pages/home/convert/convert.vue'),
-            },
+            }
         ]
+    },
+    {
+        path: '/convert',
+        name: 'convert',
+        component: () => import('@/pages/home/convert/convert.vue'),
     },
     {
         path: '/login',

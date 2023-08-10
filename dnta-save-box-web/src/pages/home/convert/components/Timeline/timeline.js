@@ -235,6 +235,10 @@ class Timeline {
         this.options = mergeObjects(options, defaultOptions);
         this.init();
     }
+    /** 销毁 */
+    destroy() {
+        this.el.removeChild(this.canvas);
+    }
 }
 
 export default Timeline;

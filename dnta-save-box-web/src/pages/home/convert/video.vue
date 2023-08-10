@@ -9,16 +9,16 @@
             </div>
             <div class="video-player__control" v-if="!!videoData">
                 <span class="control-button" @click.stop="onChangePlayStatus">
-                    <el-icon :size="60">
+                    <el-icon :size="50">
                         <v-icon icon="mdi:play" v-if="paused" />
                         <v-icon icon="mdi:pause" v-else />
                     </el-icon>
                 </span>
-                <!-- <span>
-                    <el-icon :size="40">
-                        <v-icon icon="mdi:pause" />
+                <span class="control-button" title="移除" @click="onRemove">
+                    <el-icon :size="50">
+                        <v-icon icon="mdi:close-thick" color="#f00"/>
                     </el-icon>
-                </span> -->
+                </span>
             </div>
         </div>
         <div class="video-player__timeline">
@@ -80,4 +80,11 @@ const onPlay = () => {
 const onPause = () => {
     paused.value = true;
 };
+const onRemove = () => {
+    videoData.value = null;
+    timeline.value.destroy();
+    timeline.value = null;
+    paused.value = true;
+    video.value = null;
+}
 </script>

@@ -3,7 +3,7 @@
         <div class="video-player__wrap">
             <div class="video-player__player">
                 <div v-if="!!videoData" style="background-color: #000; height: 100%;" @click="onChangePlayStatus">
-                    <video ref="video" id="video" :src="videoData.url" @loadedmetadata="onInit" @ended="onEnded" @play="onPlay" @pause="onPause" @timeupdate="onTimeupdate"></video>
+                    <video ref="video" id="video" :src="videoData.url" @loadedmetadata="onInit" @ended="onEnded" @play="onPlay" @pause="onPause" @timeupdate="onTimeupdate" muted></video>
                 </div>
                 <Upload v-else v-model="videoData" />
             </div>
@@ -17,7 +17,7 @@
                     </span>
                     <span class="control-button" @click="onVolumeChange">
                         <el-icon :size="24">
-                            <v-icon icon="mdi:volume-off" v-if="volume === 0" />
+                            <v-icon icon="mdi:volume-off" v-if="muted" />
                             <v-icon icon="mdi:volume-high" v-else />
                         </el-icon>
                         <div class="voice-line" @click.stop="onVoiceClick" :style="`--voice-width: ${volume * 100}%`"></div>
@@ -50,6 +50,7 @@ const timeline = ref(null);
 const video = ref(null);
 const paused = ref(true);
 const volume = ref(0);
+const muted = ref(true);
 
 const onChangePlayStatus = () => {
     if (video.value.paused) {
@@ -60,7 +61,8 @@ const onChangePlayStatus = () => {
     }
 };
 const onVolumeChange = () => {
-    // volume.value = volume.value ? 0 : 0.2;
+    muted.value = !muted.value;
+    video.value.muted = muted.value;
 };
 const onVoiceClick = (e) => {
     const ract = e.target.getBoundingClientRect();

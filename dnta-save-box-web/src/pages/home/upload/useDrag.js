@@ -26,6 +26,7 @@ export const useDrag = (cb = () => { }) => {
         uploadLoading,
         onDrop,
         onDragleave,
-        onDragenter
+        onDragenter,
+        onFileChange
     };
 };

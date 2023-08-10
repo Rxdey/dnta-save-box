@@ -39,9 +39,11 @@ class Timeline {
         isMouseDown: false,
         /** 点击状态，拖拽时不触发点击 */
         isMouseClick: false,
+        isMouseOut: true,
         mouseX: 0,
         offset: 0,
-        lastOffset: 0
+        lastOffset: 0,
+        hoverLineX: 0,
     };
     canvasAttr = {
         offset: 0,
@@ -54,13 +56,12 @@ class Timeline {
         }
         this.el = typeof root === 'string' ? document.querySelector(root) : root;
         this.options = mergeObjects(options, defaultOptions);
-
-        this.canvas = null;
-        this.ctx = null;
-        this.options.level = getDefaultLevel(this.options.totalTime, this.options.zoom);
         this.init();
     }
     init() {
+        this.canvas = null;
+        this.ctx = null;
+        this.options.level = getDefaultLevel(this.options.totalTime, this.options.zoom);
         const objProxy = new Proxy(player, {
             // 获取值时的捕获器
             get: (target, key) => {
@@ -78,6 +79,12 @@ class Timeline {
         this.canvas = canvas;
         this.ctx = ctx;
         this.update(0);
+        window.addEventListener('resize', () => {
+            const { width, height } = this.el.getBoundingClientRect();
+            canvas.width = width;
+            canvas.height = height;
+            this.update(0);
+        });
         canvas.addEventListener('mousewheel', this.onMousewheel.bind(this));
         canvas.addEventListener('mousedown', this.onMouseDown.bind(this));
         canvas.addEventListener('mousemove', this.onMouseMove.bind(this));
@@ -99,15 +106,15 @@ class Timeline {
     }
     /** 鼠标拖动时间轴 */
     onMouseMove(e) {
+        this.#mouseEvent.isMouseOut = false;
         this.#mouseEvent.isMouseClick = false;
         if (this.#mouseEvent.isMouseDown) {
             this.#mouseEvent.offset = e.clientX - this.#mouseEvent.mouseX;
             this.drawTimeline();
         }
         const { left } = this.canvas.getBoundingClientRect();
-        const hoverLineX = e.clientX - left;
+        this.#mouseEvent.hoverLineX = e.clientX - left;
         this.drawTimeline();
-        this.drawHoverLine(hoverLineX, 0);
     }
     onMouseDown(e) {
         this.#mouseEvent.isMouseDown = true;
@@ -118,6 +125,7 @@ class Timeline {
         this.#mouseEvent.offset = 0;
     }
     onMouseUp(e) {
+        console.log('mouseUp', this.#mouseEvent.isMouseClick);
         if (this.#mouseEvent.isMouseClick) {
             const { left } = this.canvas.getBoundingClientRect();
             this.options.onClick(...this.getCurrentTime(e.clientX - left));
@@ -125,12 +133,16 @@ class Timeline {
         this.onMouseOut(e);
     }
     onMouseOut(e) {
+        this.#mouseEvent.isMouseOut = true;
         if (!this.#mouseEvent.isMouseDown) return;
         this.#mouseEvent.isMouseDown = false;
     }
-    /** 更新/绘制 根据毫秒数 */
-    update(time = 0) {
-        this.player.currentTime = time;
+    /** 获取时间X轴坐标 */
+    getTimeX(time = 0) {
+        const { offset } = this.canvasAttr;
+        const { zoom, level, lineStyle } = this.options;
+        const sigleTime = zoom[level];
+        return ((time / sigleTime) * lineStyle.gap) - (0 - offset);
     }
     /** 绘制时间轴 */
     drawTimeline() {
@@ -150,7 +162,9 @@ class Timeline {
             this.#mouseEvent.offset = 0;
             this.#mouseEvent.lastOffset = 0;
         }
+        this.drawEndLine();
         this.drawPlayline();
+        this.drawHoverLine(this.#mouseEvent.hoverLineX);
         for (let i = 0; i <= count; i++) {
             const flag = ((i + offsetCount) % 5) === 0;
             const h = flag ? lineStyle.longerHeight : lineStyle.height;
@@ -166,19 +180,30 @@ class Timeline {
     }
     /** 鼠标hover时间线 */
     drawHoverLine(x = 0, y = 0) {
+        // this.drawTimeline();
+        if (this.#mouseEvent.isMouseOut) return;
         this.ctx.fillStyle = '#fff';
         this.ctx.fillRect(x, y, 1, this.canvas.height);
         const [timeStr] = this.getCurrentTime(x);
         this.ctx.fillText(timeStr, x + 5, this.canvas.height - 12);
     }
-    /** 绘制播放块 */
+    /** 绘制播放进度块 */
     drawPlayline() {
-        const { offset } = this.canvasAttr;
-        const { zoom, level, lineStyle } = this.options;
-        const sigleTime = zoom[level];
-        const width = ((this.player.currentTime / sigleTime) * lineStyle.gap) - (0 - offset);
-        this.ctx.fillStyle = 'rgba(117, 252, 162, .15)';
+        const width = this.getTimeX(this.player.currentTime);
+        const [timeStr] = this.getCurrentTime(width);
+        this.ctx.fillStyle = 'rgba(117, 252, 162, .3)';
         this.ctx.fillRect(0, 0, width, this.canvas.height);
+        this.ctx.fillStyle = 'rgba(117, 252, 162, .5)';
+        this.ctx.fillText(timeStr, width + 5, this.canvas.height - 28);
+    }
+    /** 绘制终点 */
+    drawEndLine() {
+        const x = this.getTimeX(this.options.totalTime);
+        const [timeStr] = this.getCurrentTime(x);
+        this.ctx.fillStyle = 'rgba(232, 0, 0, .1)';
+        this.ctx.fillRect(0, 0, x, this.canvas.height);
+        this.ctx.fillStyle = 'rgba(232, 0, 0, 1)';
+        this.ctx.fillText(timeStr, x + 5, this.canvas.height - 44);
     }
     /** 根据偏移量获取时间 */
     getCurrentTime(x = 0) {
@@ -199,6 +224,16 @@ class Timeline {
         el.appendChild(canvas);
         const ctx = canvas.getContext('2d');
         return { canvas, ctx };
+    }
+    /** 更新/绘制 根据毫秒数 */
+    update(time = 0) {
+        if (time > this.options.totalTime) time = this.options.totalTime;
+        this.player.currentTime = time;
+    }
+    /** 更新时长 */
+    reload(options) {
+        this.options = mergeObjects(options, defaultOptions);
+        this.init();
     }
 }
 

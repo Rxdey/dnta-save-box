@@ -20,7 +20,10 @@ const props = defineProps({
 
 onMounted(() => {
     const timeline = new Timeline('#timeline', {
-        totalTime: 10000
+        totalTime: 10000,
+        onClick: (str, dateTime) => {
+            console.log(str, dateTime);
+        }
     });
     console.log(timeline);
 })

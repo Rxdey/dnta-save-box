@@ -11,7 +11,8 @@ const defaultOptions = {
     level: 0,
     /** 线段配置 */
     lineStyle: {
-        height: 8,
+        height: 5,
+        longerHeight: 10,
         gap: 20,
         color: '#6c707e'
     },
@@ -19,7 +20,8 @@ const defaultOptions = {
     fontStyle: {
         color: '#e5e5e5',
         font: '12px'
-    }
+    },
+    onClick: (e) => { }
 };
 
 /**
@@ -29,11 +31,17 @@ const defaultOptions = {
  * (开发中...)
  */
 class Timeline {
-    canvasProp = {
+    #mouseEvent = {
         isMouseDown: false,
+        /** 点击状态，拖拽时不触发点击 */
+        isMouseClick: false,
         mouseX: 0,
         offset: 0,
         lastOffset: 0
+    };
+    canvasAttr = {
+        offset: 0,
+        count: 0
     };
     constructor(root, options = defaultOptions) {
         if (!root) {
@@ -57,7 +65,7 @@ class Timeline {
         canvas.addEventListener('mousedown', this.onMouseDown.bind(this));
         canvas.addEventListener('mousemove', this.onMouseMove.bind(this));
         canvas.addEventListener('mouseout', this.onMouseOut.bind(this));
-        canvas.addEventListener('mouseup', this.onMouseOut.bind(this));
+        canvas.addEventListener('mouseup', this.onMouseUp.bind(this));
     }
     /** 鼠标滚轮缩放level */
     onMousewheel(e) {
@@ -74,8 +82,9 @@ class Timeline {
     }
     /** 鼠标拖动时间轴 */
     onMouseMove(e) {
-        if (this.canvasProp.isMouseDown) {
-            this.canvasProp.offset = e.clientX - this.canvasProp.mouseX;
+        this.#mouseEvent.isMouseClick = false;
+        if (this.#mouseEvent.isMouseDown) {
+            this.#mouseEvent.offset = e.clientX - this.#mouseEvent.mouseX;
             this.drawTimeline();
         }
         const { left } = this.canvas.getBoundingClientRect();
@@ -84,14 +93,23 @@ class Timeline {
         this.drawHoverLine(hoverLineX, 0);
     }
     onMouseDown(e) {
-        this.canvasProp.isMouseDown = true;
-        this.canvasProp.mouseX = e.clientX;
-        this.canvasProp.lastOffset = this.canvasProp.offset + this.canvasProp.lastOffset;
-        console.log(this.canvasProp.lastOffset);
+        this.#mouseEvent.isMouseDown = true;
+        this.#mouseEvent.isMouseClick = true;
+        this.#mouseEvent.mouseX = e.clientX;
+        this.#mouseEvent.lastOffset = this.#mouseEvent.offset + this.#mouseEvent.lastOffset;
+        // 初始化时重置状态
+        this.#mouseEvent.offset = 0;
+    }
+    onMouseUp(e) {
+        if (this.#mouseEvent.isMouseClick) {
+            const { left } = this.canvas.getBoundingClientRect();
+            this.options.onClick(...this.getCurrentTime(e.clientX - left));
+        }
+        this.onMouseOut(e);
     }
     onMouseOut(e) {
-        if (!this.canvasProp.isMouseDown) return;
-        this.canvasProp.isMouseDown = false;
+        if (!this.#mouseEvent.isMouseDown) return;
+        this.#mouseEvent.isMouseDown = false;
     }
     /** 绘制时间轴 */
     drawTimeline() {
@@ -102,16 +120,18 @@ class Timeline {
         // 渲染格数(同宽度固定)
         const count = Math.floor(this.canvas.width / lineStyle.gap);
         // 偏移量(用于滚动)
-        let offsetCount = 0 - Math.floor((this.canvasProp.offset + this.canvasProp.lastOffset) / lineStyle.gap);
+        let offsetCount = 0 - Math.floor((this.#mouseEvent.offset + this.#mouseEvent.lastOffset) / lineStyle.gap);
+        this.canvasAttr.offset = this.#mouseEvent.offset + this.#mouseEvent.lastOffset;
+        this.canvasAttr.count = count;
         // 拖拽到起始点不允许操作
         if (offsetCount <= 0) {
             offsetCount = 0;
-            this.canvasProp.offset = 0;
-            this.canvasProp.lastOffset = 0;
+            this.#mouseEvent.offset = 0;
+            this.#mouseEvent.lastOffset = 0;
         }
         for (let i = 0; i <= count; i++) {
             const flag = ((i + offsetCount) % 5) === 0;
-            const h = flag ? lineStyle.height + 7 : lineStyle.height;
+            const h = flag ? lineStyle.longerHeight : lineStyle.height;
             this.ctx.fillStyle = lineStyle.color;
             this.ctx.fillRect(lineStyle.gap * i, 1, 1, h);
             if (flag) {
@@ -126,6 +146,16 @@ class Timeline {
     drawHoverLine(x = 0, y = 0) {
         this.ctx.fillStyle = '#fff';
         this.ctx.fillRect(x, y, 1, this.canvas.height);
+        const [timeStr] = this.getCurrentTime(x);
+        this.ctx.fillText(timeStr, x + 5, this.canvas.height - 12);
+    }
+    /** 根据偏移量获取时间 */
+    getCurrentTime(x = 0) {
+        const { offset } = this.canvasAttr;
+        const { zoom, level, lineStyle } = this.options;
+        const sigleTime = zoom[level];
+        const current = Math.floor(((x + (0 - offset)) / lineStyle.gap) * sigleTime);
+        return [formatTime(current), current];
     }
     createCanvas(el) {
         const { width, height } = el.getBoundingClientRect();

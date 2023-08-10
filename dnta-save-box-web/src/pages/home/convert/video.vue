@@ -8,7 +8,7 @@
                 <Upload v-else v-model="videoData" />
             </div>
             <div class="video-player__control" v-if="!!videoData">
-                <div class="control-left">
+                <div class="control-wrap">
                     <span class="control-button" @click.stop="onChangePlayStatus">
                         <el-icon :size="60">
                             <v-icon icon="mdi:play" v-if="paused" />
@@ -20,10 +20,11 @@
                             <v-icon icon="mdi:volume-off" v-if="volume === 0" />
                             <v-icon icon="mdi:volume-high" v-else />
                         </el-icon>
+                        <div class="voice-line" @click.stop="onVoiceClick" :style="`--voice-width: ${volume * 100}%`"></div>
                     </span>
                 </div>
 
-                <div class="control-right">
+                <div class="control-wrap">
 
                     <span class="control-button" title="移除" @click="onRemove">
                         <el-icon :size="24">
@@ -59,7 +60,12 @@ const onChangePlayStatus = () => {
     }
 };
 const onVolumeChange = () => {
-    volume.value = volume.value ? 0 : 0.2;
+    // volume.value = volume.value ? 0 : 0.2;
+};
+const onVoiceClick = (e) => {
+    const ract = e.target.getBoundingClientRect();
+    const x = e.clientX - ract.left;
+    volume.value = (x / (ract.width / 100)) / 100;
 };
 
 const onInit = () => {

@@ -24,6 +24,10 @@ const defaultOptions = {
     onClick: (e) => { }
 };
 
+const player = {
+    /**当前播放位置 */
+    currentTime: 0
+};
 /**
  * canvas时间轴
  * 支持鼠标滚轮缩放显示比例
@@ -41,7 +45,7 @@ class Timeline {
     };
     canvasAttr = {
         offset: 0,
-        count: 0
+        count: 0,
     };
     constructor(root, options = defaultOptions) {
         if (!root) {
@@ -57,10 +61,23 @@ class Timeline {
         this.init();
     }
     init() {
+        const objProxy = new Proxy(player, {
+            // 获取值时的捕获器
+            get: (target, key) => {
+                return target[key];
+            },
+            // 设置值时的捕获器
+            set: (target, key, newValue) => {
+                target[key] = newValue;
+                this.drawTimeline();
+                return true;
+            }
+        });
+        this.player = objProxy;
         const { canvas, ctx } = this.createCanvas(this.el);
         this.canvas = canvas;
         this.ctx = ctx;
-        this.drawTimeline();
+        this.update(0);
         canvas.addEventListener('mousewheel', this.onMousewheel.bind(this));
         canvas.addEventListener('mousedown', this.onMouseDown.bind(this));
         canvas.addEventListener('mousemove', this.onMouseMove.bind(this));
@@ -111,6 +128,10 @@ class Timeline {
         if (!this.#mouseEvent.isMouseDown) return;
         this.#mouseEvent.isMouseDown = false;
     }
+    /** 更新/绘制 根据毫秒数 */
+    update(time = 0) {
+        this.player.currentTime = time;
+    }
     /** 绘制时间轴 */
     drawTimeline() {
         const { zoom, level, lineStyle, fontStyle } = this.options;
@@ -129,6 +150,7 @@ class Timeline {
             this.#mouseEvent.offset = 0;
             this.#mouseEvent.lastOffset = 0;
         }
+        this.drawPlayline();
         for (let i = 0; i <= count; i++) {
             const flag = ((i + offsetCount) % 5) === 0;
             const h = flag ? lineStyle.longerHeight : lineStyle.height;
@@ -149,11 +171,22 @@ class Timeline {
         const [timeStr] = this.getCurrentTime(x);
         this.ctx.fillText(timeStr, x + 5, this.canvas.height - 12);
     }
+    /** 绘制播放块 */
+    drawPlayline() {
+        const { offset } = this.canvasAttr;
+        const { zoom, level, lineStyle } = this.options;
+        const sigleTime = zoom[level];
+        const width = ((this.player.currentTime / sigleTime) * lineStyle.gap) - (0 - offset);
+        this.ctx.fillStyle = 'rgba(117, 252, 162, .15)';
+        this.ctx.fillRect(0, 0, width, this.canvas.height);
+    }
     /** 根据偏移量获取时间 */
     getCurrentTime(x = 0) {
         const { offset } = this.canvasAttr;
         const { zoom, level, lineStyle } = this.options;
+        // 每一格代表的毫秒数
         const sigleTime = zoom[level];
+        // 当前位置的毫秒数
         const current = Math.floor(((x + (0 - offset)) / lineStyle.gap) * sigleTime);
         return [formatTime(current), current];
     }

@@ -26,6 +26,8 @@ onMounted(() => {
         }
     });
     console.log(timeline);
+    window.timeline = timeline;
+    // timeline.update(1000);
 })
 
 </script>

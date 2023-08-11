@@ -24,6 +24,10 @@ export const useVideo = () => {
         const ract = e.target.getBoundingClientRect();
         const x = e.clientX - ract.left;
         volume.value = (x / (ract.width / 100)) / 100;
+        if (video.value.muted) {
+            video.value.muted = false;
+            muted.value = false;
+        }
     };
 
     /** 跳转进度 */

@@ -42,7 +42,7 @@
 
 <script setup>
 import { ref, onMounted, nextTick, watch } from 'vue';
-import Timeline from '../Timeline/timeline';
+import Timeline from '../Timeline/timeline2';
 import Upload from '../Upload/upload.vue';
 import { useVideo } from './useVideo';
 

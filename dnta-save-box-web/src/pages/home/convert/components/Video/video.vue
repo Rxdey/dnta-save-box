@@ -3,7 +3,7 @@
         <div class="video-player__wrap">
             <div class="video-player__player">
                 <div v-if="!!videoData" style="background-color: #000; height: 100%;" @click="onChangePlayStatus">
-                    <video ref="video" id="video" :src="videoData.url" @loadedmetadata="onInit" @ended="onEnded" @play="onPlay" @pause="onPause" @timeupdate="onTimeupdate" muted></video>
+                    <video ref="video" id="video" :src="videoData.url" @loadedmetadata="onInit" @timeupdate="onTimeupdate" muted></video>
                 </div>
                 <Upload v-else v-model="videoData" />
             </div>
@@ -42,36 +42,16 @@
 
 <script setup>
 import { ref, onMounted, nextTick, watch } from 'vue';
-import Timeline from './components/Timeline/timeline';
-import Upload from './components/upload/upload.vue';
+import Timeline from '../Timeline/timeline';
+import Upload from '../Upload/upload.vue';
+import { useVideo } from './useVideo';
 
 const videoData = ref(null);
 const timeline = ref(null);
-const video = ref(null);
-const paused = ref(true);
-const volume = ref(0);
-const muted = ref(true);
+const { video, volume, paused, muted, register, onVolumeChange, onVoiceClick, onChangePlayStatus, setVideoTime } = useVideo();
 
-const onChangePlayStatus = () => {
-    if (video.value.paused) {
-        video.value.play();
-    } else {
-        video.value.pause();
-        paused.value = true;
-    }
-};
-const onVolumeChange = () => {
-    muted.value = !muted.value;
-    video.value.muted = muted.value;
-};
-const onVoiceClick = (e) => {
-    const ract = e.target.getBoundingClientRect();
-    const x = e.clientX - ract.left;
-    volume.value = (x / (ract.width / 100)) / 100;
-};
-
-const onInit = () => {
-    console.log('ready');
+const onInit = (e) => {
+    register();
     video.value.volume = volume.value;
     if (timeline.value) return;
     const { duration } = video.value;
@@ -83,28 +63,13 @@ const onInit = () => {
             setVideoTime(dateTime / 1000);
         }
     });
-    window.timeline = timeline.value;
 };
-/** 跳转进度 */
-const setVideoTime = (time = 0) => {
-    video.value.pause();
-    video.value.currentTime = time;
-    if (!paused.value) video.value.play();
-};
+
 /** 播放进度 */
 const onTimeupdate = (e) => {
-    // console.log()
     timeline.value.update(Math.floor(e.target.currentTime * 1000));
 };
-const onEnded = () => {
-    paused.value = true;
-};
-const onPlay = () => {
-    paused.value = false;
-};
-const onPause = () => {
-    paused.value = true;
-};
+
 const onRemove = () => {
     videoData.value = null;
     timeline.value.destroy();
@@ -113,9 +78,5 @@ const onRemove = () => {
     video.value = null;
 };
 
-watch(() => volume.value, (val) => {
-    if (video.value) {
-        video.value.volume = val;
-    }
-});
+
 </script>

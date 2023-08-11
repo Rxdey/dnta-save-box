@@ -8,7 +8,7 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-import videoPlayer from './video.vue';
+import videoPlayer from './components/Video/video.vue';
 import useMainStore from '@/store/modules/useMainStore';
 
 const store = useMainStore();

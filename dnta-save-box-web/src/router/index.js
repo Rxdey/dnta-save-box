@@ -33,6 +33,11 @@ const routes = [
         component: () => import('@/pages/home/convert/convert.vue'),
     },
     {
+        path: '/canvas',
+        name: 'canvas',
+        component: () => import('@/pages/canvas/canvas.vue'),
+    },
+    {
         path: '/login',
         name: 'login',
         component: () => import('@/pages/login/login.vue'),

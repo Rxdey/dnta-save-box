@@ -1,4 +1,4 @@
-import { formatTime, getDefaultLevel, mergeObjects } from './util';
+import { formatTime, getDefaultLevel, mergeObjects, draw } from '../util';
 import { fabric } from 'fabric';
 
 const defaultOptions = {
@@ -7,11 +7,14 @@ const defaultOptions = {
     /** 总时长 */
     totalTime: 10000,
     /** 绘制比例每一格时间(毫秒) */
-    zoom: [20, 100, 200, 1000, 6000, 12 * 1000, 120 * 1000, 360 * 1000, 720 * 1000,],
+    zoom: [20, 100, 200, 1000, 2000, 6000, 12 * 1000, 120 * 1000, 360 * 1000, 720 * 1000,],
     /** 默认缩放等级(会自动计算) */
     level: 0,
+    /** hover */
+    hover: false,
     /** 线段配置 */
     lineStyle: {
+        offset: 50,
         height: 5,
         longerHeight: 10,
         gap: 20,
@@ -19,41 +22,13 @@ const defaultOptions = {
     },
     /** 文本配置 */
     fontStyle: {
-        color: '#e5e5e5',
+        color: '#6c707e',
         font: 11
     },
     onClick: (e) => { }
 };
 
-const draw = {
-    ract: (x, y, width, height, color = '#fff') => {
-        return new fabric.Rect({
-            top: y, // 距离容器顶部 30px
-            left: x, // 距离容器左侧 30px
-            width: width, // 宽 100px
-            height: height, // 高 60px
-            fill: color // 填充 红色
-        });
-    },
-    line: (x, y, x2, y2, color = '#fff') => {
-        return new fabric.Line([
-            x, y, // 起始点坐标
-            x2, y2 // 结束点坐标
-        ],
-            {
-                stroke: color, // 笔触颜色
-            });
-    },
-    text: (str, x, y,  color = '#fff', size = 11) => {
-        return new fabric.Text(str, {
-            top: y,
-            left: x,
-            fontSize: parseInt(size),
-            fill: color,
-            padding: 0
-        });
-    }
-};
+
 
 const player = {
     /**当前播放位置 */
@@ -84,6 +59,7 @@ class Timeline {
         offset: 0,
         count: 0,
     };
+    canvasEl = null;
     constructor(root, options = defaultOptions) {
         if (!root) {
             console.warn('root dom can not be null');
@@ -110,8 +86,9 @@ class Timeline {
         });
         this.player = objProxy;
         const { canvas, ctx } = this.createCanvas(this.el);
+        this.canvasEl = canvas;
         // fabric接管canvas
-        this.canvas = new fabric.StaticCanvas(canvas, {
+        this.canvas = new fabric.Canvas(canvas, {
             width: canvas.width, // 画布宽度
             height: canvas.height, // 画布高度
         });
@@ -123,15 +100,18 @@ class Timeline {
         //     canvas.height = height;
         //     this.update(0);
         // });
-        const eventsList = {
-            mousewheel: this.onMousewheel.bind(this),
-            mousedown: this.onMouseDown.bind(this),
-            mousemove: this.onMouseMove.bind(this),
-            mouseout: this.onMouseOut.bind(this),
-            mouseup: this.onMouseUp.bind(this),
-        };
-        Object.keys(eventsList).forEach(e => {
-            canvas.addEventListener(e, eventsList[e]);
+        // const eventsList = {
+        //     mousewheel: this.onMousewheel.bind(this),
+        //     mousedown: this.onMouseDown.bind(this),
+        //     mousemove: this.onMouseMove.bind(this),
+        //     mouseout: this.onMouseOut.bind(this),
+        //     mouseup: this.onMouseUp.bind(this),
+        // };
+        // Object.keys(eventsList).forEach(e => {
+        //     canvas.addEventListener(e, eventsList[e]);
+        // });
+        this.canvas.on('mouse:down', options => {
+            console.log(`x轴坐标: ${options.e.clientX};    y轴坐标: ${options.e.clientY}`);
         });
     }
 
@@ -145,8 +125,30 @@ class Timeline {
     /** 绘制时间轴 */
     render() {
         this.canvas.clear();
+        const drawTimeline = this.drawTimeline();
+        // const endLine = this.drawEndLine();
+        const endLine = this.drawEndLine();
+        const drawPlayLine = this.drawPlayLine();
+        const drawLimit = this.drawLimit();
+        const obj = [
+            ...drawTimeline,
+            // ...playLine,
+            ...endLine,
+            ...drawPlayLine,
+            ...drawLimit
+        ];
+        // this.canvas.add(baseLine, ...playLine, ...endLine, ...nodeArr);
+        if (this.options.hover) {
+            const hoverLine = this.drawHoverLine(this.#mouseEvent.hoverLineX);
+            obj.push(...hoverLine);
+        }
+        this.canvas.add(...obj);
+    }
+    drawTimeline() {
+        const nodeArr = [];
         const { zoom, level, lineStyle, fontStyle } = this.options;
-        const baseLine = draw.line(0, 0, this.canvas.width, 1, '#ffdc23');
+        const baseLine = draw.line(0, lineStyle.offset, this.canvas.width, lineStyle.offset, lineStyle.color);
+        nodeArr.push(baseLine);
         // 渲染格数(同宽度固定)
         const count = Math.floor(this.canvas.width / lineStyle.gap);
         let offsetCount = 0 - Math.floor((this.#mouseEvent.offset + this.#mouseEvent.lastOffset) / lineStyle.gap);
@@ -158,23 +160,33 @@ class Timeline {
             this.#mouseEvent.offset = 0;
             this.#mouseEvent.lastOffset = 0;
         }
-        const nodeArr = [];
         for (let i = 0; i <= count; i++) {
             const flag = ((i + offsetCount) % 5) === 0;
             const h = flag ? lineStyle.longerHeight : lineStyle.height;
             const x = lineStyle.gap * i;
-            const line = draw.line(x, 1, x, h, lineStyle.color);
+            const line = draw.line(x, lineStyle.offset, x, lineStyle.offset - h, lineStyle.color);
             nodeArr.push(line);
             if (flag) {
                 const fontX = lineStyle.gap * i;
-                const text = draw.text(formatTime(((i + offsetCount) * zoom[level])), fontX, h, fontStyle.color, fontStyle.font);
+                const text = draw.text(formatTime(((i + offsetCount) * zoom[level])), fontX, lineStyle.offset - (h * 2) - 5, fontStyle.color, fontStyle.font);
                 nodeArr.push(text);
             }
         }
-        const hoverLine = this.drawHoverLine(this.#mouseEvent.hoverLineX);
-        const playLine = this.drawPlayline();
-        const endLine = this.drawEndLine();
-        this.canvas.add(baseLine, ...hoverLine, ...playLine, ...endLine, ...nodeArr);
+        return nodeArr;
+    }
+    drawLimit() {
+        const { offset } = this.options.lineStyle;
+        const startX = 0;
+        const endX = this.getTimeX(this.options.totalTime);
+        const startLine = draw.ract(startX, offset, 2, this.canvas.height, '#fba616');
+        const endLine = draw.ract(endX, offset, 2, this.canvas.height, '#fba616');
+        return [startLine, endLine];
+    }
+    /** 绘制播放进度 */
+    drawPlayLine() {
+        const x = this.getTimeX(this.player.currentTime);
+        const line = draw.line(x, 1, x, this.canvas.height, '#f00');
+        return [line];
     }
     /** 鼠标hover位置时间线 */
     drawHoverLine(x = 0) {
@@ -183,21 +195,16 @@ class Timeline {
         const text = draw.text(timeStr, x + 5, this.canvas.height - 12);
         return [line, text];
     }
-    /** 绘制播放进度色块 */
-    drawPlayline() {
-        const width = this.getTimeX(this.player.currentTime);
-        const [timeStr] = this.getCurrentTime(width);
-        const line = draw.ract(0, 0, width, this.renderHeight, 'rgba(117, 252, 162, .3)');
-        const text = draw.text(timeStr, width + 5, this.renderHeight - 14, 'rgba(117, 252, 162, .5)');
-        return [line, text];
-    }
     /** 绘制总长度色块 */
     drawEndLine() {
+        const { offset } = this.options.lineStyle;
+        const height = this.renderHeight / 2;
+        const baseLine = draw.line(0, offset + height, this.canvas.width, offset + height, 'rgba(0,0,0,.5)');
         const x = this.getTimeX(this.options.totalTime);
         const [timeStr] = this.getCurrentTime(x);
-        const line = draw.ract(0, 0, x, this.renderHeight, 'rgba(232, 0, 0, .1)');
-        const text = draw.text(timeStr, x + 5, this.renderHeight - 2, 'rgba(232, 0, 0, 1)');
-        return [line, text];
+        const line = draw.ract(0, offset, x, this.renderHeight / 2, '#11d7f4');
+        const text = draw.text(timeStr, x + 5, this.renderHeight / 2, '#11d7f4');
+        return [line, text, baseLine];
     }
     /** 根据偏移量获取时间 */
     getCurrentTime(x = 0) {
@@ -225,7 +232,8 @@ class Timeline {
     }
     /** 销毁 */
     destroy() {
-        this.el.removeChild(this.canvas);
+        this.canvas.clear();
+        this.el.removeChild(this.canvasEl);
     }
     /** 鼠标滚轮缩放level */
     onMousewheel(e) {
@@ -240,7 +248,6 @@ class Timeline {
         }
         this.render();
     }
-
     /** 鼠标拖动时间轴 */
     onMouseMove(e) {
         this.#mouseEvent.isMouseOut = false;

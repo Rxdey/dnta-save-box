@@ -23,7 +23,7 @@ export function formatTime(milliseconds) {
 /** 获取传入时间的默认比例 */
 export function getDefaultLevel(time, zoom) {
   if (!time) return 0;
-  const index = zoom.findIndex(item => (time / 30) <= item);
+  const index = zoom.findIndex(item => (time / 20) <= item);
   if (!index) return zoom.length - 1;
   if (index === 0) return 0;
   return index - 1;
@@ -47,34 +47,37 @@ export const mergeObjects = (obj1, obj2) => {
 };
 
 export const draw = {
-  ract: (x, y, width, height, color = '#fff', selectable = false) => {
+  ract: (x, y, width, height, color = '#fff', selectable = false, hoverCursor = 'default') => {
     return new fabric.Rect({
       top: y, // 距离容器顶部 30px
       left: x, // 距离容器左侧 30px
       width: width, // 宽 100px
       height: height, // 高 60px
       fill: color, // 填充 红色
-      selectable: selectable
+      selectable: selectable,
+      hoverCursor
     });
   },
-  line: (x, y, x2, y2, color = '#fff', selectable = false) => {
+  line: (x, y, x2, y2, color = '#fff', selectable = false, hoverCursor = 'default') => {
     return new fabric.Line([
       x, y, // 起始点坐标
       x2, y2 // 结束点坐标
     ],
       {
         stroke: color, // 笔触颜色
-        selectable: selectable
+        selectable: selectable,
+        hoverCursor
       });
   },
-  text: (str, x, y, color = '#fff', size = 11, selectable = false) => {
+  text: (str, x, y, color = '#fff', size = 11, selectable = false, hoverCursor = 'default') => {
     return new fabric.Text(str, {
       top: y,
       left: x,
       fontSize: parseInt(size),
       fill: color,
       padding: 0,
-      selectable: selectable
+      selectable: selectable,
+      hoverCursor
     });
   }
 };

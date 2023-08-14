@@ -42,7 +42,8 @@
 
 <script setup>
 import { ref, onMounted, nextTick, watch } from 'vue';
-import Timeline from '../Timeline/timeline2';
+import Timeline from '../Timeline/timeline';
+import Main from '../Timeline/package/Main';
 import Upload from '../Upload/upload.vue';
 import { useVideo } from './useVideo';
 
@@ -55,14 +56,18 @@ const onInit = (e) => {
     video.value.volume = volume.value;
     if (timeline.value) return;
     const { duration } = video.value;
-    timeline.value = new Timeline('#timeline', {
+    timeline.value = new Main('#timeline', {
         totalTime: duration * 1000,
-        onClick: (str, dateTime) => {
-            console.log(str);
-            timeline.value.update(dateTime);
-            setVideoTime(dateTime / 1000);
-        }
     });
+    // timeline.value = new Timeline('#timeline', {
+    //     totalTime: duration * 1000,
+    //     onClick: (str, dateTime) => {
+    //         console.log(str);
+    //         timeline.value.update(dateTime);
+    //         setVideoTime(dateTime / 1000);
+    //     }
+    // });
+
 };
 
 /** 播放进度 */
@@ -72,11 +77,15 @@ const onTimeupdate = (e) => {
 
 const onRemove = () => {
     videoData.value = null;
-    timeline.value.destroy();
-    timeline.value = null;
+    // timeline.value.destroy();
+    // timeline.value = null;
     paused.value = true;
     video.value = null;
 };
 
-
+onMounted(() => {
+    // const stage = new Main('#timeline', {
+    //     totalTime: 100 * 1000,
+    // });
+});
 </script>

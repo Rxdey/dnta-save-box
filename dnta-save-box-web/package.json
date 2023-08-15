@@ -15,6 +15,7 @@
     "axios": "^1.4.0",
     "dayjs": "^1.11.7",
     "draggable-polyfill": "^1.2.4",
+    "easeljs": "^1.0.2",
     "element-plus": "^2.3.5",
     "fabric": "^5.3.0",
     "favicon-getter": "^1.1.3",

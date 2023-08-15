@@ -11,7 +11,7 @@ const defaultOptions = {
     hover: false,
     /** 线段配置 */
     lineStyle: {
-        offset: 50,
+        offset: 40,
         height: 5,
         longerHeight: 10,
         gap: 20,

@@ -1,6 +1,7 @@
 import defaultOptions from './options';
 import { formatTime, getDefaultLevel, mergeObjects, draw } from './util';
 import { fabric } from 'fabric';
+import arrow from './narrow.png';
 
 class TimeLine {
     #mouseEvent = {
@@ -24,6 +25,7 @@ class TimeLine {
         }
         this.el = typeof root === 'string' ? document.querySelector(root) : root;
         this.options = mergeObjects(options, defaultOptions);
+        this.stage = null;
         this.init();
     }
     init() {
@@ -34,28 +36,28 @@ class TimeLine {
             height: canvas.height, // 画布高度
         });
         this.renderHeight = canvas.height / 2;
-        this.render();
-        // const eventsList = {
-        //     'mouse:wheel': this.onMousewheel.bind(this),
-        //     'mouse:down': this.onMouseDown.bind(this),
-        //     'mouse:move': this.onMouseMove.bind(this),
-        //     'mouse:out': this.onMouseOut.bind(this),
-        //     'mouse:up': this.onMouseUp.bind(this),
-        // };
-        // Object.keys(eventsList).forEach(e => {
-        //     this.canvas.on(e, eventsList[e]);
-        // });
-        // const background = new fabric.Rect({
-        //     top: 0,
-        //     left: 0,
-        //     width: this.canvas.width,
-        //     height: this.canvas.height,
-        //     fill: '#000',
-        //     lockMovementX: true,
-        //     lockMovementY: true
-        // });
 
+        fabric.Image.fromURL(arrow, (img) => {
+            img.set({
+                left: 0,
+                top: 0,
+                scaleX: 0.5,
+                scaleY: 0.5
+            });
+            this.imageInstance = img;
+            this.render();
+        });
 
+        const eventsList = {
+            'mouse:wheel': this.onMousewheel.bind(this),
+            'mouse:down': this.onMouseDown.bind(this),
+            'mouse:move': this.onMouseMove.bind(this),
+            'mouse:out': this.onMouseOut.bind(this),
+            'mouse:up': this.onMouseUp.bind(this),
+        };
+        Object.keys(eventsList).forEach(e => {
+            this.canvas.on(e, eventsList[e]);
+        });
     }
     // 渲染
     render() {
@@ -63,65 +65,58 @@ class TimeLine {
         const timeLine = this.drawTimeline();
         const drawEndLine = this.drawEndLine();
         const drawLimit = this.drawLimit();
-        const background = new fabric.Group([...drawEndLine, ...timeLine], {
-            top: 0,
-            left: 0,
-            width: this.canvas.width,
-            height: this.canvas.height,
-            selectable: false
-        });
-        const eventsList = {
-            'mousewheel': this.onMousewheel.bind(this),
-            'mousedown': this.onMouseDown.bind(this),
-            'mousemove': this.onMouseMove.bind(this),
-            'mouseout': this.onMouseOut.bind(this),
-            'mouseup': this.onMouseUp.bind(this),
-        };
-        Object.keys(eventsList).forEach(e => {
-            background.on(e, eventsList[e]);
-        });
-        this.canvas.add(background);
-        this.canvas.add(...drawLimit);
+        this.canvas.add(...drawLimit, ...timeLine);
+        if (this.imageInstance) {
+            this.canvas.add(this.imageInstance);
+        }
     }
     /** 绘制区间选择 */
     drawLimit() {
         const { offset } = this.options.lineStyle;
         const startX = 0;
         const endX = this.getTimeX(this.options.totalTime);
-        // const startLine = draw.ract(startX, offset, 2, this.canvas.height / 2, '#fba616');
-        // const endLine = draw.ract(endX, offset, 2, this.canvas.height / 2, '#fba616');
-        const startLine = new fabric.Rect({
+        const limitLine = new fabric.Rect({
             top: offset,
-            left: startX,
-            width: 5,
+            left: 0,
+            width: endX - 5,
             height: this.renderHeight / 2,
-            fill: '#fba616',
+            fill: '#11d7f4',
+            selectable: false,
+            hoverCursor: 'default'
         });
-        const endLine = new fabric.Rect({
-            top: offset,
-            left: endX - 5,
-            width: 5,
-            height: this.renderHeight / 2,
-            fill: '#fba616',
-        });
-        return [startLine, endLine];
+        if (this.imageInstance) {
+            this.imageInstance.set({
+                left: endX - 5 + (this.imageInstance.width / 2 / 2),
+                top: this.renderHeight / 2 + offset + (this.imageInstance.height / 2),
+                angle: 180
+            });
+        }
+        return [limitLine];
     }
     /** 绘制总长度色块 */
     drawEndLine() {
         const { offset } = this.options.lineStyle;
-        const height = this.renderHeight / 2;
+        const height = this.renderHeight;
         const baseLine = draw.line(0, offset + height, this.canvas.width, offset + height, 'rgba(0,0,0,.5)');
         const x = this.getTimeX(this.options.totalTime);
         const [timeStr] = this.getCurrentTime(x);
-        const line = draw.ract(0, offset, x, this.renderHeight / 2, '#11d7f4');
-        const text = draw.text(timeStr, x + 5, this.renderHeight / 2, '#11d7f4');
+        const line = draw.ract(0, offset, x, this.renderHeight, '#11d7f4');
+        const text = draw.text(timeStr, x + 5, this.renderHeight, '#11d7f4');
         return [line, text, baseLine];
     }
     /** 时间轴背景 */
     drawTimeline() {
         const nodeArr = [];
         const { zoom, level, lineStyle, fontStyle } = this.options;
-        const baseLine = draw.line(0, lineStyle.offset, this.canvas.width, lineStyle.offset, lineStyle.color);
+        const baseLine = new fabric.Line([
+            0, lineStyle.offset,
+            this.canvas.width, lineStyle.offset
+        ], {
+            stroke: lineStyle.color, // 笔触颜色
+            selectable: false,
+            hoverCursor: 'default'
+        });
+
         nodeArr.push(baseLine);
         // 渲染格数(同宽度固定)
         const count = Math.floor(this.canvas.width / lineStyle.gap);
@@ -138,11 +133,26 @@ class TimeLine {
             const flag = ((i + offsetCount) % 5) === 0;
             const h = flag ? lineStyle.longerHeight : lineStyle.height;
             const x = lineStyle.gap * i;
-            const line = draw.line(x, lineStyle.offset, x, lineStyle.offset - h, lineStyle.color);
+            const line = new fabric.Line([
+                x, lineStyle.offset,
+                x, lineStyle.offset - h
+            ], {
+                stroke: lineStyle.color, // 笔触颜色
+                selectable: false,
+                hoverCursor: 'default'
+            });
             nodeArr.push(line);
             if (flag) {
                 const fontX = lineStyle.gap * i;
-                const text = draw.text(formatTime(((i + offsetCount) * zoom[level])), fontX, lineStyle.offset - (h * 2) - 5, fontStyle.color, fontStyle.font);
+                const str = formatTime(((i + offsetCount) * zoom[level]));
+                const text = new fabric.Text(str, {
+                    top: lineStyle.offset - (h * 2) - 5,
+                    left: fontX,
+                    fontSize: fontStyle.font,
+                    fill: fontStyle.color,
+                    selectable: false,
+                    hoverCursor: 'default'
+                });
                 nodeArr.push(text);
             }
         }

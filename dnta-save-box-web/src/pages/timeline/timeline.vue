@@ -20,13 +20,16 @@ onMounted(() => {
 .timeline {
     width: 100%;
     height: 100%;
-    background-color: #000;
+    background-color: #4e4d4d;
     padding: 16px;
 }
 
 .time-line {
     width: 100%;
-    height: 200px;
-    background-color: #000;
+    height: 150px;
+    background-color: #161515;
+    // position: absolute;
+    // bottom: 0;
+    // left: 0;
 }
 </style>

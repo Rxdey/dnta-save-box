@@ -832,6 +832,11 @@ draggable-polyfill@^1.2.4:
   resolved "https://registry.npmmirror.com/draggable-polyfill/-/draggable-polyfill-1.2.4.tgz#ff1e3f1c66d7e5e55b26e39693b8c095ffaa5b8e"
   integrity sha512-JqhOoxMWI74TUL1zjFwUfHDS/CcAS53V4g1aiMDKG+38KWCBedrM52d7zBGmXDxiz0lLskWyN+RqeLk/9P0L+g==
 
+easeljs@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.npmmirror.com/easeljs/-/easeljs-1.0.2.tgz#68fdcc69d0f217394e2ebf51ae047428a81240de"
+  integrity sha512-PQTsiud32vrUIqZCbynjOJjCzoEp0xH+MRusRCdsZ1MzL4LCE2vp4Sa5cr6aShB3mK4vMZ8LFPnts4xuFhjEmg==
+
 ecc-jsbn@~0.1.1:
   version "0.1.2"
   resolved "https://registry.npmmirror.com/ecc-jsbn/-/ecc-jsbn-0.1.2.tgz#3a83a904e54353287874c564b7549386849a98c9"

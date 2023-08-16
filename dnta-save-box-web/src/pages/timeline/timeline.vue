@@ -28,8 +28,9 @@ onMounted(() => {
     width: 100%;
     height: 150px;
     background-color: #161515;
-    // position: absolute;
-    // bottom: 0;
-    // left: 0;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    color: rgb(244, 81, 16);
 }
 </style>

@@ -11,7 +11,7 @@ const defaultOptions = {
     hover: false,
     /** 线段配置 */
     lineStyle: {
-        offset: 40,
+        offset: 10,
         height: 5,
         longerHeight: 10,
         gap: 20,
@@ -22,6 +22,7 @@ const defaultOptions = {
         color: '#6c707e',
         font: 11
     },
+    limitWidth: 10,
     onClick: (e) => { }
 };
 

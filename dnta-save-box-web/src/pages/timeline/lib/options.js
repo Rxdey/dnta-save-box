@@ -23,7 +23,18 @@ const defaultOptions = {
         font: 11
     },
     limitWidth: 10,
-    onClick: (e) => { }
+    limit: {
+        start: {
+            time: 3000,
+            left: 0
+        },
+        end: {
+            time: 5000,
+            left: 0
+        },
+    },
+    onClick: (e) => { },
+    onLimitUpdate: (e) => {}
 };
 
 export default defaultOptions;

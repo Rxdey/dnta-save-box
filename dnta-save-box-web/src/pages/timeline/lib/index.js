@@ -14,14 +14,6 @@ class TimeLine {
         lastOffset: 0,
         count: 0
     };
-    limit = {
-        start: {
-            left: 0
-        },
-        end: {
-            left: 0
-        }
-    };
     constructor(root, options = defaultOptions) {
         if (!root) {
             console.warn('root dom can not be null');
@@ -34,6 +26,7 @@ class TimeLine {
     }
     init() {
         this.options.level = getDefaultLevel(this.options.totalTime, this.options.zoom);
+
         const { canvas, ctx } = this.createCanvas(this.el);
         this.canvas = new fabric.Canvas(canvas, {
             width: canvas.width, // 画布宽度
@@ -41,18 +34,26 @@ class TimeLine {
             selection: false
         });
         this.renderHeight = canvas.height / 2;
-        this.limit.end.left = this.getTimeX(this.options.totalTime / 2) - this.options.limitWidth;
-        this.canvas.on('mouse:wheel', this.onMousewheel.bind(this));
+        this.options.limit.end.time = this.options.totalTime / 2;
+        this.options.limit.end.left = this.getTimeX(this.options.limit.end.time) - this.options.limitWidth;
+        this.options.limit.start.left = this.getTimeX(this.options.limit.start.time);
+
         this.mouseEvent = new MouseMoveEvent({
             el: this.canvas,
             mouseMove: (e, mouse) => {
                 this.mouse = mouse;
+                let offsetCount = 0 - (this.mouse.offset + this.mouse.lastOffset) / this.options.lineStyle.gap;
                 this.render();
             },
             mouseOut: (e) => { },
             onClick: (e) => {
                 const { left } = this.canvas._offset;
                 this.options.onClick(...this.getCurrentTime(e - left));
+            },
+            mouseUp: (e, mouse) => {
+                // 归位
+                const count = Math.floor(mouse.offset / this.options.lineStyle.gap);
+                this.mouseEvent.onMouseMove({ e: { clientX: (count * this.options.lineStyle.gap) + mouse.mouseX } });
             }
         });
         this.mouse = this.mouseEvent.mouseEvent;
@@ -61,11 +62,11 @@ class TimeLine {
     }
     draw() {
         this.render();
-        this.limitRact = this.drawLimit();
         this.totleRact = this.drawTotle();
         this.startBar = this.drawStart();
         this.endBar = this.drawEnd();
-        this.canvas.add(this.totleRact, this.limitRact, this.startBar, this.endBar);
+        this.reDrawLimit();
+        this.canvas.add(this.totleRact, this.startBar, this.endBar);
     }
     // 更新绘制
     render() {
@@ -74,26 +75,44 @@ class TimeLine {
         }
         this.background = this.drawBackground();
         this.canvas.add(this.background);
+        this.canvas.sendToBack(this.background);
         if (this.totleRact) {
             this.totleRact.set({
                 width: this.getTimeX(this.options.totalTime)
             });
         }
+        if (this.startBar && this.endBar) {
+            // 笨比了，明明直接用时间来定位啥都不用处理，结果还搞了老半天
+            this.startBar.set({
+                // left: this.options.limit.start.left + this.canvasAttr.offset
+                left: this.getTimeX(this.options.limit.start.time)
+            });
+            this.endBar.set({
+                // left: this.options.limit.end.left + this.canvasAttr.offset
+                left: this.getTimeX(this.options.limit.end.time) - this.options.limitWidth
+            });
+            this.startBar.setCoords();
+            this.endBar.setCoords();
+            this.canvas.renderAll();
+            this.reDrawLimit();
+        }
     }
     drawStart() {
         const { offset } = this.options.lineStyle;
         const ract = new fabric.Rect({
-            left: this.limit.start.left,
+            left: this.options.limit.start.left,
             top: offset + this.background.height,
             width: this.options.limitWidth,
             height: this.renderHeight / 2,
-            fill: 'rgba(244, 81, 16, .3)',
+            fill: 'rgba(244, 81, 16, .5)',
             // selectable: false,
-            // hoverCursor: 'default'
+            hoverCursor: 'pointer',
             lockMovementY: true,
             hasBorders: false,
-            hasControls: false
+            hasControls: false,
+            name: 'startBar'
         });
+
         ract.on('moving', (options) => {
             this.mouseEvent.disabled(true);
             const { pointer } = options;
@@ -107,25 +126,30 @@ class TimeLine {
                     left: this.endBar.left - this.options.lineStyle.gap - this.options.limitWidth
                 });
             }
-            this.limit.start.left = this.startBar.left;
-            this.limitRact.set({
-                left: this.limit.start.left,
-                width: this.limit.end.left - this.limit.start.left + this.options.limitWidth
+            this.options.limit.start.left = this.startBar.left - this.canvasAttr.offset;
+            this.options.limit.start.time = this.getCurrentTime(this.startBar.left)[1];
+            if(this.options.onLimitUpdate) this.options.onLimitUpdate({
+                start: this.options.limit.start.time,
+                end: this.options.limit.end.time,
+                type: 'startChange'
             });
+            this.reDrawLimit();
         });
         return ract;
     }
     drawEnd() {
         const { offset } = this.options.lineStyle;
         const ract = new fabric.Rect({
-            left: this.limit.end.left,
+            left: this.options.limit.end.left,
             top: offset + this.background.height,
             width: this.options.limitWidth,
             height: this.renderHeight / 2,
-            fill: 'rgba(244, 81, 16, .3)',
+            fill: 'rgba(244, 81, 16, .5)',
+            hoverCursor: 'pointer',
             lockMovementY: true,
             hasBorders: false,
-            hasControls: false
+            hasControls: false,
+            name: 'endBar'
         });
         ract.on('moving', (options) => {
             this.mouseEvent.disabled(true);
@@ -137,15 +161,43 @@ class TimeLine {
             }
             if (pointer.x - this.startBar.left - this.options.limitWidth <= this.options.lineStyle.gap) {
                 ract.set({
-                    left: this.startBar.left + this.options.lineStyle.gap + this.options.limitWidth 
+                    left: this.startBar.left + this.options.lineStyle.gap + this.options.limitWidth
                 });
             }
-            this.limit.end.left = this.endBar.left;
-            this.limitRact.set({
-                width: this.limit.end.left - this.limit.start.left + this.options.limitWidth
+            this.options.limit.end.left = this.endBar.left - this.canvasAttr.offset;
+            this.options.limit.end.time = this.getCurrentTime(this.endBar.left + this.options.limitWidth)[1];
+            if(this.options.onLimitUpdate) this.options.onLimitUpdate({
+                start: this.options.limit.start.time,
+                end: this.options.limit.end.time,
+                type: 'endChange'
             });
-            this.limitRact.setCoords();
-            this.canvas.renderAll();
+            this.reDrawLimit();
+        });
+        return ract;
+    }
+    reDrawLimit() {
+        if (this.limitRact) {
+            this.canvas.remove(this.limitRact);
+        }
+        this.limitRact = this.drawLimit();
+        this.canvas.add(this.limitRact);
+        this.canvas.sendToBack(this.limitRact);
+    }
+    /** 绘制已选中区间 */
+    drawLimit() {
+        const { offset } = this.options.lineStyle;
+        const ract = new fabric.Rect({
+            left: this.getTimeX(this.options.limit.start.time),
+            // left: this.options.limit.start.left + this.canvasAttr.offset,
+            top: offset + this.background.height,
+            width: this.endBar.left - this.startBar.left + this.options.limitWidth,
+            height: this.renderHeight / 2,
+            fill: 'rgb(16, 210, 244)',
+            selectable: false,
+            hoverCursor: 'default'
+        });
+        ract.on('mousedown', () => {
+            this.mouseEvent.disabled(true);
         });
         return ract;
     }
@@ -209,25 +261,6 @@ class TimeLine {
         return group;
 
     }
-    /** 绘制已选中区间 */
-    drawLimit() {
-        const { offset } = this.options.lineStyle;
-        const startX = this.getTimeX(0);
-        const endX = this.getTimeX(this.options.totalTime / 2);
-        const ract = new fabric.Rect({
-            left: startX,
-            top: offset + this.background.height,
-            width: endX,
-            height: this.renderHeight / 2,
-            fill: 'rgb(16, 210, 244)',
-            selectable: false,
-            hoverCursor: 'default'
-        });
-        ract.on('mousedown', () => {
-            this.mouseEvent.disabled(true);
-        });
-        return ract;
-    }
     /** 绘制总长度 */
     drawTotle() {
         const { offset } = this.options.lineStyle;
@@ -257,7 +290,8 @@ class TimeLine {
         const { offset } = this.canvasAttr;
         const { zoom, level, lineStyle } = this.options;
         const sigleTime = zoom[level];
-        return ((time / sigleTime) * lineStyle.gap) - (0 - offset);
+        const temp = ((time / sigleTime) * lineStyle.gap) - (0 - offset);
+        return temp;
     }
     /** 根据偏移量获取时间 */
     getCurrentTime(x = 0) {
@@ -280,6 +314,7 @@ class TimeLine {
                 this.options.level -= 1;
             }
         }
+        console.log(this.options.level);
         this.render();
     }
 }

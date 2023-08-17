@@ -9,8 +9,11 @@ import { ref, onMounted, computed, watch } from 'vue';
 import TimeLine from './lib';
 
 onMounted(() => {
-    new TimeLine('#timeline', {
+    window.timeline = new TimeLine('#timeline', {
         totalTime: 10000,
+        onLimitUpdate: (limit) => {
+            console.log(limit)
+        }
     });
 });
 

@@ -56,9 +56,9 @@ const onInit = (e) => {
     video.value.volume = volume.value;
     if (timeline.value) return;
     const { duration } = video.value;
-    timeline.value = new Main('#timeline', {
-        totalTime: duration * 1000,
-    });
+    // timeline.value = new Main('#timeline', {
+    //     totalTime: duration * 1000,
+    // });
     // timeline.value = new Timeline('#timeline', {
     //     totalTime: duration * 1000,
     //     onClick: (str, dateTime) => {
@@ -72,7 +72,7 @@ const onInit = (e) => {
 
 /** 播放进度 */
 const onTimeupdate = (e) => {
-    timeline.value.update(Math.floor(e.target.currentTime * 1000));
+    // timeline.value.update(Math.floor(e.target.currentTime * 1000));
 };
 
 const onRemove = () => {

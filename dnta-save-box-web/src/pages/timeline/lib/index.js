@@ -2,7 +2,7 @@ import defaultOptions from './options';
 import MouseMoveEvent from './Mouse';
 import { formatTime, getDefaultLevel, mergeObjects, draw } from './util';
 import { fabric } from 'fabric';
-import arrow from './narrow.png';
+// import arrow from './narrow.png';
 
 class TimeLine {
     canvasAttr = {

@@ -29,4 +29,5 @@ app.use(VueLazyload, {
     error: defaultImg,
     loading: defaultImg,
 });
+
 app.mount('#app');

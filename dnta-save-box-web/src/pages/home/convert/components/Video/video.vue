@@ -37,7 +37,9 @@
                     </div>
                 </div>
             </div>
-
+            <div class="video-player__list">
+                <List />
+            </div>
         </div>
         <div class="video-player__timeline">
             <div id="timeline"></div>
@@ -49,6 +51,7 @@
 import { ref, onMounted, nextTick, watch } from 'vue';
 import Upload from '../Upload/upload.vue';
 import MenuCom from './Menu.vue';
+import List from './List.vue';
 import { useVideo } from './useVideo';
 import Timeline from '@/lib/timeline';
 

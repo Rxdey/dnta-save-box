@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ffmpeg/ffmpeg": "^0.12.4",
+    "@ffmpeg/util": "^0.12.0",
     "@iconify-json/ep": "^1.1.11",
     "@iconify/vue": "^4.1.1",
     "axios": "^1.4.0",

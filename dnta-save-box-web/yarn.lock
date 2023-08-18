@@ -140,6 +140,23 @@
   resolved "https://registry.npmmirror.com/@esbuild/win32-x64/-/win32-x64-0.17.19.tgz#8cfaf2ff603e9aabb910e9c0558c26cf32744061"
   integrity sha512-lAhycmKnVOuRYNtRtatQR1LPQf2oYCkRGkSFnseDAKPl8lu5SOsK/e1sXe5a0Pc5kHIHe6P2I/ilntNv2xf3cA==
 
+"@ffmpeg/ffmpeg@^0.12.4":
+  version "0.12.4"
+  resolved "https://registry.npmmirror.com/@ffmpeg/ffmpeg/-/ffmpeg-0.12.4.tgz#38ce7a131960e23a939b624558916883b97c8703"
+  integrity sha512-YwdnZFxtKncEbg2ybJOZ8di7kxtVo6DP3FkWWn5E0MiXHXxCjgiIJNq5I+/04+OGC1nMvF3hdvGuRFxuogh/mQ==
+  dependencies:
+    "@ffmpeg/types" "^0.12.0"
+
+"@ffmpeg/types@^0.12.0":
+  version "0.12.0"
+  resolved "https://registry.npmmirror.com/@ffmpeg/types/-/types-0.12.0.tgz#fe6affeea2d599d6d2d57e2c57eb8ca384c7b2a2"
+  integrity sha512-AuR4K+L6v1/9hVOsikU4rGGT5nKulQa8HrtYhpgBEq0HojoWB1c9bq3TTkNBpEvS/gC17WDMVJrqIGgXOj1DXA==
+
+"@ffmpeg/util@^0.12.0":
+  version "0.12.0"
+  resolved "https://registry.npmmirror.com/@ffmpeg/util/-/util-0.12.0.tgz#62dacd3b402b5fd0849e8542a6c977c7a7e04694"
+  integrity sha512-8sHCW8H/ngqVhbRvCCX4e4uDNgZVoz8uNRry1zphIyzdX6flfBa2TmVwJ4g9/Qw//eAubEnuHaSxDGWWxcOTjg==
+
 "@floating-ui/core@^1.2.6":
   version "1.2.6"
   resolved "https://registry.npmmirror.com/@floating-ui/core/-/core-1.2.6.tgz#d21ace437cc919cdd8f1640302fa8851e65e75c0"

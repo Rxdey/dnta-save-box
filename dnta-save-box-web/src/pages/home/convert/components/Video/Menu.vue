@@ -1,6 +1,6 @@
 <template>
     <div class="Menu">
-        <div class="menu-button" title="格式转换">
+        <div class="menu-button" title="格式转换" @click="onTransformat">
             <el-icon :size="24">
                 <v-icon icon="ic:outline-transform" />
             </el-icon>
@@ -15,7 +15,11 @@
 
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue';
+import { FFmpeg } from '@ffmpeg/ffmpeg';
 
+const onTransformat = () => {
+    console.log(FFmpeg);
+}
 
 </script>
 

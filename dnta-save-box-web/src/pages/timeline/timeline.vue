@@ -10,7 +10,6 @@ import TimeLine from './lib';
 
 onMounted(() => {
     window.timeline = new TimeLine('#timeline', {
-        totalTime: 10000,
         onLimitUpdate: (limit) => {
             console.log(limit)
         }

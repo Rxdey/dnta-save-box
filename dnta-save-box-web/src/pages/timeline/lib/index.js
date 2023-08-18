@@ -1,18 +1,19 @@
 import defaultOptions from './options';
 import MouseMoveEvent from './Mouse';
-import { formatTime, getDefaultLevel, mergeObjects, draw } from './util';
+import { formatTime, getDefaultLevel, mergeObjects, getMaxLevel } from './util';
 import { fabric } from 'fabric';
 // import arrow from './narrow.png';
 
+const player = {
+    /**当前播放位置 */
+    currentTime: 0
+};
+
 class TimeLine {
+    #maxLevel = 0;
     canvasAttr = {
         offset: 0,
         count: 0,
-    };
-    mouse = {
-        offset: 0,
-        lastOffset: 0,
-        count: 0
     };
     constructor(root, options = defaultOptions) {
         if (!root) {
@@ -25,8 +26,26 @@ class TimeLine {
         this.init();
     }
     init() {
-        this.options.level = getDefaultLevel(this.options.totalTime, this.options.zoom);
+        // 动态监听播放位置
+        const objProxy = new Proxy(player, {
+            get: (target, key) => {
+                return target[key];
+            },
+            set: (target, key, newValue) => {
+                target[key] = newValue;
+                this.currentLine.set({
+                    left: this.getTimeX(newValue)
+                });
+                this.currentLine.getObjects()[1].set('text', formatTime(newValue))
+                this.currentLine.setCoords();
+                this.canvas.renderAll();
+                return true;
+            }
+        });
+        this.player = objProxy;
 
+        this.options.level = getDefaultLevel(this.options.totalTime, this.options.zoom);
+        this.#maxLevel = getMaxLevel(this.options.totalTime, this.options.zoom);
         const { canvas, ctx } = this.createCanvas(this.el);
         this.canvas = new fabric.Canvas(canvas, {
             width: canvas.width, // 画布宽度
@@ -42,7 +61,9 @@ class TimeLine {
             el: this.canvas,
             mouseMove: (e, mouse) => {
                 this.mouse = mouse;
-                let offsetCount = 0 - (this.mouse.offset + this.mouse.lastOffset) / this.options.lineStyle.gap;
+                // let offsetCount = 0 - (this.mouse.offset + this.mouse.lastOffset) / this.options.lineStyle.gap;
+                const { left } = this.canvas._offset;
+                this.mouse.hoverLineX = e.clientX - left;
                 this.render();
             },
             mouseOut: (e) => { },
@@ -65,8 +86,10 @@ class TimeLine {
         this.totleRact = this.drawTotle();
         this.startBar = this.drawStart();
         this.endBar = this.drawEnd();
+        this.currentLine = this.drawCurrent();
         this.reDrawLimit();
-        this.canvas.add(this.totleRact, this.startBar, this.endBar);
+
+        this.canvas.add(this.totleRact, this.startBar, this.endBar, this.currentLine);
     }
     // 更新绘制
     render() {
@@ -128,7 +151,7 @@ class TimeLine {
             }
             this.options.limit.start.left = this.startBar.left - this.canvasAttr.offset;
             this.options.limit.start.time = this.getCurrentTime(this.startBar.left)[1];
-            if(this.options.onLimitUpdate) this.options.onLimitUpdate({
+            if (this.options.onLimitUpdate) this.options.onLimitUpdate({
                 start: this.options.limit.start.time,
                 end: this.options.limit.end.time,
                 type: 'startChange'
@@ -166,7 +189,7 @@ class TimeLine {
             }
             this.options.limit.end.left = this.endBar.left - this.canvasAttr.offset;
             this.options.limit.end.time = this.getCurrentTime(this.endBar.left + this.options.limitWidth)[1];
-            if(this.options.onLimitUpdate) this.options.onLimitUpdate({
+            if (this.options.onLimitUpdate) this.options.onLimitUpdate({
                 start: this.options.limit.start.time,
                 end: this.options.limit.end.time,
                 type: 'endChange'
@@ -200,6 +223,33 @@ class TimeLine {
             this.mouseEvent.disabled(true);
         });
         return ract;
+    }
+    drawCurrent() {
+        const width = this.getTimeX(this.player.currentTime);
+        const [timeStr] = this.getCurrentTime(width);
+        const line = new fabric.Line([
+            0, 0,
+            0, this.canvas.height
+        ], {
+            stroke: '#f00', // 笔触颜色
+            selectable: false,
+            hoverCursor: 'default'
+        });
+        const text = new fabric.Text(timeStr, {
+            // top: this.canvas.height - 24,
+            top: this.canvas.height - 18,
+            left: width + 5,
+            fontSize: 11,
+            fill: '#f00',
+            selectable: false
+        });
+        const group = new fabric.Group([line, text], {
+            top: 0,
+            left: width,
+            selectable: false,
+            hoverCursor: 'default'
+        });
+        return group;
     }
     /** 绘制背景  */
     drawBackground() {
@@ -305,8 +355,9 @@ class TimeLine {
     }
     /** 鼠标滚轮缩放level */
     onMousewheel({ e }) {
+        const scrollCenter = this.getCurrentTime(this.mouse.hoverLineX)[1];
         if (e.wheelDelta > 0) {
-            if (this.options.level < this.options.zoom.length - 1) {
+            if (this.options.level < (this.#maxLevel || this.options.zoom.length - 1)) {
                 this.options.level += 1;
             }
         } else {
@@ -314,8 +365,9 @@ class TimeLine {
                 this.options.level -= 1;
             }
         }
-        console.log(this.options.level);
         this.render();
+        // console.log(this.getTimeX(scrollCenter));
+        // this.mouseEvent.onMouseMove({ e: { clientX: this.getTimeX(scrollCenter) } });
     }
 }
 

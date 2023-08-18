@@ -9,21 +9,7 @@
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue';
 // import DxCanvas from './canvas/canvas';
-import TimeLine from '../home/convert/components/Timeline/timeline';
-import TimeLine2 from '../home/convert/components/Timeline/timeline2';
 
-onMounted(() => {
-    new TimeLine2('#timeline2', {
-        totalTime: 10000,
-        // onClick: (str, dateTime) => {
-        // }
-    });
-    new TimeLine('#timeline', {
-        totalTime: 10000,
-        // onClick: (str, dateTime) => {
-        // }
-    });
-});
 </script>
 
 <style lang="less" scoped>

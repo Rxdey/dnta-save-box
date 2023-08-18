@@ -36,9 +36,9 @@ class TimeLine {
                 this.currentLine.set({
                     left: this.getTimeX(newValue)
                 });
-                this.currentLine.getObjects()[1].set('text', formatTime(newValue))
+                this.currentLine.getObjects()[1].set('text', formatTime(newValue));
                 this.currentLine.setCoords();
-                this.canvas.renderAll();
+                this.canvas.requestRenderAll();
                 return true;
             }
         });
@@ -54,23 +54,23 @@ class TimeLine {
         });
         this.renderHeight = canvas.height / 2;
         this.options.limit.end.time = this.options.totalTime / 2;
-        this.options.limit.end.left = this.getTimeX(this.options.limit.end.time) - this.options.limitWidth;
+        this.options.limit.end.left = this.getTimeX(this.options.limit.end.time) - this.options.limit.width;
         this.options.limit.start.left = this.getTimeX(this.options.limit.start.time);
 
         this.mouseEvent = new MouseMoveEvent({
             el: this.canvas,
             mouseMove: (e, mouse) => {
+                if (this.getTimeX(this.options.totalTime) * 2 < this.canvas.width) {
+                    this.mouseEvent.disabled(true);
+                } else {
+                    this.mouseEvent.disabled(false);
+                }
                 this.mouse = mouse;
-                // let offsetCount = 0 - (this.mouse.offset + this.mouse.lastOffset) / this.options.lineStyle.gap;
                 const { left } = this.canvas._offset;
                 this.mouse.hoverLineX = e.clientX - left;
                 this.render();
             },
             mouseOut: (e) => { },
-            onClick: (e) => {
-                const { left } = this.canvas._offset;
-                this.options.onClick(...this.getCurrentTime(e - left));
-            },
             mouseUp: (e, mouse) => {
                 // 归位
                 const count = Math.floor(mouse.offset / this.options.lineStyle.gap);
@@ -83,51 +83,53 @@ class TimeLine {
     }
     draw() {
         this.render();
-        this.totleRact = this.drawTotle();
+        // this.totleRact = this.drawTotle();
         this.startBar = this.drawStart();
         this.endBar = this.drawEnd();
         this.currentLine = this.drawCurrent();
-        this.reDrawLimit();
-
-        this.canvas.add(this.totleRact, this.startBar, this.endBar, this.currentLine);
+        this.rederLimitRact();
+        this.canvas.add(this.currentLine, this.startBar, this.endBar);
     }
     // 更新绘制
     render() {
         if (this.background) {
             this.canvas.remove(this.background);
         }
-        this.background = this.drawBackground();
-        this.canvas.add(this.background);
-        this.canvas.sendToBack(this.background);
         if (this.totleRact) {
-            this.totleRact.set({
-                width: this.getTimeX(this.options.totalTime)
+            this.canvas.remove(this.totleRact);
+        }
+        this.background = this.drawBackground();
+        this.totleRact = this.drawTotle();
+        this.canvas.add(this.background, this.totleRact);
+        this.canvas.sendToBack(this.totleRact);
+        this.canvas.sendToBack(this.background);
+        if (this.currentLine) {
+            this.currentLine.set({
+                left: this.getTimeX(this.player.currentTime)
             });
         }
         if (this.startBar && this.endBar) {
-            // 笨比了，明明直接用时间来定位啥都不用处理，结果还搞了老半天
             this.startBar.set({
-                // left: this.options.limit.start.left + this.canvasAttr.offset
                 left: this.getTimeX(this.options.limit.start.time)
             });
             this.endBar.set({
-                // left: this.options.limit.end.left + this.canvasAttr.offset
-                left: this.getTimeX(this.options.limit.end.time) - this.options.limitWidth
+                left: this.getTimeX(this.options.limit.end.time) - this.options.limit.width
             });
             this.startBar.setCoords();
             this.endBar.setCoords();
-            this.canvas.renderAll();
-            this.reDrawLimit();
+            this.canvas.requestRenderAll();
+            this.rederLimitRact();
         }
     }
+    /** 绘制截取起始 */
     drawStart() {
         const { offset } = this.options.lineStyle;
         const ract = new fabric.Rect({
             left: this.options.limit.start.left,
-            top: offset + this.background.height,
-            width: this.options.limitWidth,
-            height: this.renderHeight / 2,
-            fill: 'rgba(244, 81, 16, .5)',
+            top: (this.canvas.height / 2) - 10,
+            width: this.options.limit.width,
+            height: this.options.limit.height,
+            fill: this.options.limit.start.color,
             // selectable: false,
             hoverCursor: 'pointer',
             lockMovementY: true,
@@ -139,14 +141,19 @@ class TimeLine {
         ract.on('moving', (options) => {
             this.mouseEvent.disabled(true);
             const { pointer } = options;
-            if (pointer.x > this.getTimeX(this.options.totalTime) + this.options.limitWidth) {
+            if (pointer.x < 0) {
+                ract.set({
+                    left: 0
+                });
+            }
+            if (pointer.x > this.getTimeX(this.options.totalTime) + this.options.limit.width) {
                 ract.set({
                     left: this.getTimeX(this.options.totalTime)
                 });
             }
-            if (pointer.x >= this.endBar.left - this.options.lineStyle.gap - this.options.limitWidth) {
+            if (pointer.x >= this.endBar.left - this.options.lineStyle.gap - this.options.limit.width) {
                 ract.set({
-                    left: this.endBar.left - this.options.lineStyle.gap - this.options.limitWidth
+                    left: this.endBar.left - this.options.lineStyle.gap - this.options.limit.width
                 });
             }
             this.options.limit.start.left = this.startBar.left - this.canvasAttr.offset;
@@ -156,18 +163,19 @@ class TimeLine {
                 end: this.options.limit.end.time,
                 type: 'startChange'
             });
-            this.reDrawLimit();
+            this.rederLimitRact();
         });
         return ract;
     }
+    /** 绘制截取终止 */
     drawEnd() {
         const { offset } = this.options.lineStyle;
         const ract = new fabric.Rect({
             left: this.options.limit.end.left,
-            top: offset + this.background.height,
-            width: this.options.limitWidth,
-            height: this.renderHeight / 2,
-            fill: 'rgba(244, 81, 16, .5)',
+            top: (this.canvas.height / 2) - 10,
+            width: this.options.limit.width,
+            height: this.options.limit.height,
+            fill: this.options.limit.end.color,
             hoverCursor: 'pointer',
             lockMovementY: true,
             hasBorders: false,
@@ -177,28 +185,28 @@ class TimeLine {
         ract.on('moving', (options) => {
             this.mouseEvent.disabled(true);
             const { pointer } = options;
-            if (pointer.x > this.getTimeX(this.options.totalTime) + this.options.limitWidth) {
+            if (pointer.x > this.getTimeX(this.options.totalTime) + this.options.limit.width) {
                 ract.set({
-                    left: this.getTimeX(this.options.totalTime) - this.options.limitWidth
+                    left: this.getTimeX(this.options.totalTime) - this.options.limit.width
                 });
             }
-            if (pointer.x - this.startBar.left - this.options.limitWidth <= this.options.lineStyle.gap) {
+            if (pointer.x - this.startBar.left - this.options.limit.width <= this.options.lineStyle.gap) {
                 ract.set({
-                    left: this.startBar.left + this.options.lineStyle.gap + this.options.limitWidth
+                    left: this.startBar.left + this.options.lineStyle.gap + this.options.limit.width
                 });
             }
             this.options.limit.end.left = this.endBar.left - this.canvasAttr.offset;
-            this.options.limit.end.time = this.getCurrentTime(this.endBar.left + this.options.limitWidth)[1];
+            this.options.limit.end.time = this.getCurrentTime(this.endBar.left + this.options.limit.width)[1];
             if (this.options.onLimitUpdate) this.options.onLimitUpdate({
                 start: this.options.limit.start.time,
                 end: this.options.limit.end.time,
                 type: 'endChange'
             });
-            this.reDrawLimit();
+            this.rederLimitRact();
         });
         return ract;
     }
-    reDrawLimit() {
+    rederLimitRact() {
         if (this.limitRact) {
             this.canvas.remove(this.limitRact);
         }
@@ -211,11 +219,10 @@ class TimeLine {
         const { offset } = this.options.lineStyle;
         const ract = new fabric.Rect({
             left: this.getTimeX(this.options.limit.start.time),
-            // left: this.options.limit.start.left + this.canvasAttr.offset,
-            top: offset + this.background.height,
-            width: this.endBar.left - this.startBar.left + this.options.limitWidth,
-            height: this.renderHeight / 2,
-            fill: 'rgb(16, 210, 244)',
+            top: this.canvas.height / 2,
+            width: this.endBar.left - this.startBar.left + this.options.limit.width,
+            height: this.options.limit.ract.height,
+            fill: this.options.limit.ract.color,
             selectable: false,
             hoverCursor: 'default'
         });
@@ -224,6 +231,7 @@ class TimeLine {
         });
         return ract;
     }
+    /** 绘制播放进度 */
     drawCurrent() {
         const width = this.getTimeX(this.player.currentTime);
         const [timeStr] = this.getCurrentTime(width);
@@ -247,7 +255,9 @@ class TimeLine {
             top: 0,
             left: width,
             selectable: false,
-            hoverCursor: 'default'
+            hoverCursor: 'default',
+            evented: false,
+            'pointer-events': 'none'
         });
         return group;
     }
@@ -321,10 +331,32 @@ class TimeLine {
             width: endX,
             height: this.renderHeight / 2,
             fill: 'rgba(16, 191, 244, .2)',
-            selectable: false,
-            hoverCursor: 'default'
+            selectable: false
         });
-        return ract;
+        const text = new fabric.Text(formatTime(this.options.totalTime), {
+            top: offset + this.background.height,
+            left: endX + 5,
+            fontSize: 11,
+            fill: 'rgba(16, 191, 244, 1)',
+            selectable: false,
+        });
+        const group = new fabric.Group([ract, text], {
+            top: offset + this.background.height,
+            left: 0,
+            selectable: false,
+            hoverCursor: 'default',
+            subTargetCheck: true
+            // evented: false,
+            // 'pointer-events': 'none'
+        });
+        ract.on('mousedown', ({ e }) => {
+            const { left } = this.canvas._offset;
+            this.options.onClick(...this.getCurrentTime(e.clientX - left));
+        });
+        return group;
+    }
+    play(time = 0) {
+        this.player.currentTime = time;
     }
     createCanvas(el) {
         const { width, height } = el.getBoundingClientRect();
@@ -368,6 +400,9 @@ class TimeLine {
         this.render();
         // console.log(this.getTimeX(scrollCenter));
         // this.mouseEvent.onMouseMove({ e: { clientX: this.getTimeX(scrollCenter) } });
+    }
+    destory() {
+        this.el.removeChild(document.querySelector('.canvas-container'));
     }
 }
 

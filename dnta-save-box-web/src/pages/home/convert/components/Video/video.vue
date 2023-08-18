@@ -1,38 +1,43 @@
 <template>
     <div class="video-player">
         <div class="video-player__wrap">
+            <div class="video-player__menu">
+                <MenuCom />
+            </div>
             <div class="video-player__player">
                 <div v-if="!!videoData" style="background-color: #000; height: 100%;" @click="onChangePlayStatus">
                     <video ref="video" id="video" :src="videoData.url" @loadedmetadata="onInit" @timeupdate="onTimeupdate" muted></video>
                 </div>
                 <Upload v-else v-model="videoData" />
-            </div>
-            <div class="video-player__control" v-if="!!videoData">
-                <div class="control-wrap">
-                    <span class="control-button" @click.stop="onChangePlayStatus">
-                        <el-icon :size="60">
-                            <v-icon icon="mdi:play" v-if="paused" />
-                            <v-icon icon="mdi:pause" v-else />
-                        </el-icon>
-                    </span>
-                    <span class="control-button" @click="onVolumeChange">
-                        <el-icon :size="24">
-                            <v-icon icon="mdi:volume-off" v-if="muted" />
-                            <v-icon icon="mdi:volume-high" v-else />
-                        </el-icon>
-                        <div class="voice-line" @click.stop="onVoiceClick" :style="`--voice-width: ${volume * 100}%`"></div>
-                    </span>
-                </div>
 
-                <div class="control-wrap">
+                <div class="video-player--control" v-if="!!videoData">
+                    <div class="control-wrap">
+                        <span class="control-button" @click.stop="onChangePlayStatus">
+                            <el-icon :size="60">
+                                <v-icon icon="mdi:play" v-if="paused" />
+                                <v-icon icon="mdi:pause" v-else />
+                            </el-icon>
+                        </span>
+                        <span class="control-button" @click="onVolumeChange">
+                            <el-icon :size="24">
+                                <v-icon icon="mdi:volume-off" v-if="muted" />
+                                <v-icon icon="mdi:volume-high" v-else />
+                            </el-icon>
+                            <div class="voice-line" @click.stop="onVoiceClick" :style="`--voice-width: ${volume * 100}%`"></div>
+                        </span>
+                    </div>
 
-                    <span class="control-button" title="移除" @click="onRemove">
-                        <el-icon :size="24">
-                            <v-icon icon="mdi:close" />
-                        </el-icon>
-                    </span>
+                    <div class="control-wrap">
+
+                        <span class="control-button" title="移除" @click="onRemove">
+                            <el-icon :size="24">
+                                <v-icon icon="mdi:close" />
+                            </el-icon>
+                        </span>
+                    </div>
                 </div>
             </div>
+
         </div>
         <div class="video-player__timeline">
             <div id="timeline"></div>
@@ -42,10 +47,10 @@
 
 <script setup>
 import { ref, onMounted, nextTick, watch } from 'vue';
-import Timeline from '../Timeline/timeline';
-import Main from '../Timeline/package/Main';
 import Upload from '../Upload/upload.vue';
+import MenuCom from './Menu.vue';
 import { useVideo } from './useVideo';
+import Timeline from '@/lib/timeline';
 
 const videoData = ref(null);
 const timeline = ref(null);
@@ -56,36 +61,35 @@ const onInit = (e) => {
     video.value.volume = volume.value;
     if (timeline.value) return;
     const { duration } = video.value;
-    // timeline.value = new Main('#timeline', {
-    //     totalTime: duration * 1000,
-    // });
-    // timeline.value = new Timeline('#timeline', {
-    //     totalTime: duration * 1000,
-    //     onClick: (str, dateTime) => {
-    //         console.log(str);
-    //         timeline.value.update(dateTime);
-    //         setVideoTime(dateTime / 1000);
-    //     }
-    // });
+    timeline.value = new Timeline('#timeline', {
+        totalTime: duration * 1000,
+        onClick: (str, time) => {
+            console.log(time);
+            // 注意video是time时间单位是秒
+            setVideoTime(time / 1000);
+        },
+        onLimitUpdate: (e) => {
+
+        }
+    });
+    window.timeline = timeline.value;
 
 };
 
 /** 播放进度 */
 const onTimeupdate = (e) => {
-    // timeline.value.update(Math.floor(e.target.currentTime * 1000));
+    timeline.value.play(Math.floor(e.target.currentTime * 1000));
 };
 
 const onRemove = () => {
     videoData.value = null;
-    // timeline.value.destroy();
-    // timeline.value = null;
+    timeline.value.destory();
+    timeline.value = null;
     paused.value = true;
     video.value = null;
 };
 
 onMounted(() => {
-    // const stage = new Main('#timeline', {
-    //     totalTime: 100 * 1000,
-    // });
+
 });
 </script>

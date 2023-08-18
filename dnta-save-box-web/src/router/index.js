@@ -38,11 +38,6 @@ const routes = [
         component: () => import('@/pages/canvas/canvas.vue'),
     },
     {
-        path: '/timeline',
-        name: 'timeline',
-        component: () => import('@/pages/timeline/timeline.vue'),
-    },
-    {
         path: '/login',
         name: 'login',
         component: () => import('@/pages/login/login.vue'),

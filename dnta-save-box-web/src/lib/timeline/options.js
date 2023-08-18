@@ -22,16 +22,23 @@ const defaultOptions = {
         color: '#6c707e',
         font: 11
     },
-    limitWidth: 10,
     limit: {
+        width: 10,
+        height: 30,
         start: {
-            time: 3000,
-            left: 0
+            time: 0,
+            left: 0,
+            color: 'rgba(244, 81, 16, 1)',
         },
         end: {
-            time: 5000,
-            left: 0
+            time: 0,
+            left: 0,
+            color: 'rgba(244, 81, 16, 1)',
         },
+        ract: {
+            height: 10,
+            color: 'rgb(16, 210, 244)'
+        }
     },
     onClick: (e) => { },
     onLimitUpdate: (e) => {}

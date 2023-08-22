@@ -7,13 +7,6 @@
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue';
 
-// const dragConfig = computed(() => [
-//     {
-//         dragBorder: "left",
-//         setCssProperty: "width",
-//         log: true
-//     },
-// ])
 
 </script>
 

@@ -2,7 +2,7 @@ import defaultOptions from './options';
 import MouseMoveEvent from './Mouse';
 import { formatTime, getDefaultLevel, mergeObjects, getMaxLevel } from './util';
 import { fabric } from 'fabric';
-// import arrow from './narrow.png';
+import arrow from './arrow.png';
 
 const player = {
     /**当前播放位置 */
@@ -53,6 +53,7 @@ class TimeLine {
             selection: false
         });
         this.renderHeight = canvas.height / 2;
+        this.options.limit.height = this.renderHeight / 2;
         this.options.limit.end.time = this.options.totalTime / 2;
         this.options.limit.end.left = this.getTimeX(this.options.limit.end.time) - this.options.limit.width;
         this.options.limit.start.left = this.getTimeX(this.options.limit.start.time);
@@ -60,11 +61,11 @@ class TimeLine {
         this.mouseEvent = new MouseMoveEvent({
             el: this.canvas,
             mouseMove: (e, mouse) => {
-                if (this.getTimeX(this.options.totalTime) * 2 < this.canvas.width) {
-                    this.mouseEvent.disabled(true);
-                } else {
-                    this.mouseEvent.disabled(false);
-                }
+                // if (this.getTimeX(this.options.totalTime) * 2 < this.canvas.width) {
+                //     this.mouseEvent.disabled(true);
+                // } else {
+                //     this.mouseEvent.disabled(false);
+                // }
                 this.mouse = mouse;
                 const { left } = this.canvas._offset;
                 this.mouse.hoverLineX = e.clientX - left;
@@ -79,16 +80,24 @@ class TimeLine {
         });
         this.mouse = this.mouseEvent.mouseEvent;
         this.canvas.on('mouse:wheel', this.onMousewheel.bind(this));
-        this.draw();
+        // 预加载图片
+        this.ARROW_IMG = new Image();
+        this.ARROW_IMG.src = arrow;
+        this.ARROW_IMG.onload = () => {
+            this.draw();
+        };
+
     }
     draw() {
         this.render();
-        // this.totleRact = this.drawTotle();
+        const nodes = [];
         this.startBar = this.drawStart();
         this.endBar = this.drawEnd();
-        this.currentLine = this.drawCurrent();
         this.rederLimitRact();
-        this.canvas.add(this.currentLine, this.startBar, this.endBar);
+        nodes.push(this.startBar, this.endBar);
+        this.currentLine = this.drawCurrent();
+        nodes.push(this.currentLine);
+        this.canvas.add(...nodes);
     }
     // 更新绘制
     render() {
@@ -124,21 +133,21 @@ class TimeLine {
     /** 绘制截取起始 */
     drawStart() {
         const { offset } = this.options.lineStyle;
-        const ract = new fabric.Rect({
-            left: this.options.limit.start.left,
-            top: (this.canvas.height / 2) - 10,
+        const ract = new fabric.Image(this.ARROW_IMG, {
             width: this.options.limit.width,
             height: this.options.limit.height,
-            fill: this.options.limit.start.color,
-            // selectable: false,
+        });
+
+        const group = new fabric.Group([ract], {
+            left: this.options.limit.start.left,
+            top: this.background.height + offset,
             hoverCursor: 'pointer',
             lockMovementY: true,
             hasBorders: false,
             hasControls: false,
-            name: 'startBar'
         });
 
-        ract.on('moving', (options) => {
+        group.on('moving', (options) => {
             this.mouseEvent.disabled(true);
             const { pointer } = options;
             if (pointer.x < 0) {
@@ -165,24 +174,27 @@ class TimeLine {
             });
             this.rederLimitRact();
         });
-        return ract;
+        return group;
     }
     /** 绘制截取终止 */
     drawEnd() {
         const { offset } = this.options.lineStyle;
-        const ract = new fabric.Rect({
-            left: this.options.limit.end.left,
-            top: (this.canvas.height / 2) - 10,
+        // const ract = new fabric.Rect({
+        const ract = new fabric.Image(this.ARROW_IMG, {
             width: this.options.limit.width,
             height: this.options.limit.height,
-            fill: this.options.limit.end.color,
+            angle: 180,
+            selectable: false
+        });
+        const group = new fabric.Group([ract], {
+            left: this.options.limit.end.left,
+            top: this.background.height + offset,
             hoverCursor: 'pointer',
             lockMovementY: true,
             hasBorders: false,
             hasControls: false,
-            name: 'endBar'
         });
-        ract.on('moving', (options) => {
+        group.on('moving', (options) => {
             this.mouseEvent.disabled(true);
             const { pointer } = options;
             if (pointer.x > this.getTimeX(this.options.totalTime) + this.options.limit.width) {
@@ -204,7 +216,7 @@ class TimeLine {
             });
             this.rederLimitRact();
         });
-        return ract;
+        return group;
     }
     rederLimitRact() {
         if (this.limitRact) {
@@ -213,18 +225,21 @@ class TimeLine {
         this.limitRact = this.drawLimit();
         this.canvas.add(this.limitRact);
         this.canvas.sendToBack(this.limitRact);
+        this.canvas.sendToBack(this.totleRact);
     }
     /** 绘制已选中区间 */
     drawLimit() {
         const { offset } = this.options.lineStyle;
         const ract = new fabric.Rect({
             left: this.getTimeX(this.options.limit.start.time),
-            top: this.canvas.height / 2,
+            top: this.background.height + offset,
             width: this.endBar.left - this.startBar.left + this.options.limit.width,
-            height: this.options.limit.ract.height,
+            height: this.renderHeight / 2,
             fill: this.options.limit.ract.color,
             selectable: false,
-            hoverCursor: 'default'
+            hoverCursor: 'default',
+            evented: false
+
         });
         ract.on('mousedown', () => {
             this.mouseEvent.disabled(true);
@@ -330,14 +345,14 @@ class TimeLine {
             top: offset + this.background.height,
             width: endX,
             height: this.renderHeight / 2,
-            fill: 'rgba(16, 191, 244, .2)',
+            fill: 'rgba(85, 240, 214, 0.178)',
             selectable: false
         });
         const text = new fabric.Text(formatTime(this.options.totalTime), {
             top: offset + this.background.height,
             left: endX + 5,
             fontSize: 11,
-            fill: 'rgba(16, 191, 244, 1)',
+            fill: 'rgba(119, 245, 69, 1)',
             selectable: false,
         });
         const group = new fabric.Group([ract, text], {

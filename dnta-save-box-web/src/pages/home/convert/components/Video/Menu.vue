@@ -6,7 +6,7 @@
             </el-icon>
         </div>
         <div class="menu-button" title="gif制作">
-            <el-icon :size="24">
+            <el-icon :size="24" @click="emit('gif')">
                 <v-icon icon="ic:baseline-gif" />
             </el-icon>
         </div>
@@ -17,8 +17,8 @@
 import { ref, onMounted, computed, watch } from 'vue';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 
+const emit = defineEmits(['gif']);
 const onTransformat = () => {
-    console.log(FFmpeg);
 }
 
 </script>

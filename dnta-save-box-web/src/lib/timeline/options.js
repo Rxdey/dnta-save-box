@@ -23,8 +23,7 @@ const defaultOptions = {
         font: 11
     },
     limit: {
-        width: 10,
-        height: 30,
+        width: 16,
         start: {
             time: 0,
             left: 0,
@@ -37,7 +36,7 @@ const defaultOptions = {
         },
         ract: {
             height: 10,
-            color: 'rgb(16, 210, 244)'
+            color: 'rgba(0, 0, 0, .5)'
         }
     },
     onClick: (e) => { },

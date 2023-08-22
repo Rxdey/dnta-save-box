@@ -2,39 +2,43 @@
     <div class="video-player">
         <div class="video-player__wrap">
             <div class="video-player__menu">
-                <MenuCom />
+                <MenuCom @gif="onGif" />
             </div>
             <div class="video-player__player">
-                <div v-if="!!videoData" style="background-color: #000; height: 100%;" @click="onChangePlayStatus">
+                <div class="video-player--video" v-if="!!videoData" style="background-color: #000; height: 100%;" @click="onChangePlayStatus">
                     <video ref="video" id="video" :src="videoData.url" @loadedmetadata="onInit" @timeupdate="onTimeupdate" muted></video>
+                    <div class="control" v-if="!!videoData">
+                        <div class="control-wrap">
+                            <span class="control-button" @click.stop="onChangePlayStatus">
+                                <el-icon :size="60">
+                                    <v-icon icon="mdi:play" v-if="paused" />
+                                    <v-icon icon="mdi:pause" v-else />
+                                </el-icon>
+                            </span>
+                            <span class="control-button" @click="onVolumeChange">
+                                <el-icon :size="24">
+                                    <v-icon icon="mdi:volume-off" v-if="muted" />
+                                    <v-icon icon="mdi:volume-high" v-else />
+                                </el-icon>
+                                <div class="voice-line" @click.stop="onVoiceClick" :style="`--voice-width: ${volume * 100}%`"></div>
+                            </span>
+                        </div>
+
+                        <div class="control-wrap">
+
+                            <span class="control-button" title="移除" @click="onRemove">
+                                <el-icon :size="24">
+                                    <v-icon icon="mdi:close" />
+                                </el-icon>
+                            </span>
+                        </div>
+                    </div>
                 </div>
                 <Upload v-else v-model="videoData" />
 
-                <div class="video-player--control" v-if="!!videoData">
-                    <div class="control-wrap">
-                        <span class="control-button" @click.stop="onChangePlayStatus">
-                            <el-icon :size="60">
-                                <v-icon icon="mdi:play" v-if="paused" />
-                                <v-icon icon="mdi:pause" v-else />
-                            </el-icon>
-                        </span>
-                        <span class="control-button" @click="onVolumeChange">
-                            <el-icon :size="24">
-                                <v-icon icon="mdi:volume-off" v-if="muted" />
-                                <v-icon icon="mdi:volume-high" v-else />
-                            </el-icon>
-                            <div class="voice-line" @click.stop="onVoiceClick" :style="`--voice-width: ${volume * 100}%`"></div>
-                        </span>
-                    </div>
 
-                    <div class="control-wrap">
-
-                        <span class="control-button" title="移除" @click="onRemove">
-                            <el-icon :size="24">
-                                <v-icon icon="mdi:close" />
-                            </el-icon>
-                        </span>
-                    </div>
+                <div class="video-player--gif">
+                    <div class="keyframe"></div>
                 </div>
             </div>
             <div class="video-player__list">
@@ -76,6 +80,10 @@ const onInit = (e) => {
         }
     });
     window.timeline = timeline.value;
+
+};
+
+const onGif = () => {
 
 };
 

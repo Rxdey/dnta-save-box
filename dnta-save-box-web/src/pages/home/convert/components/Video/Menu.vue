@@ -16,9 +16,31 @@
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
+import { fetchFile } from '@ffmpeg/util';
+
+const ffmpegRef = new FFmpeg();
+
+const load = async () => {
+    const baseURL = '@/lib/ffmpeg/core/esm';
+    const ffmpeg = ffmpegRef.current;
+    ffmpeg.on('log', ({ message }) => {
+        console.log(message);
+    });
+    await ffmpeg.load({
+        coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
+        wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
+    });
+};
+
+// const ffmpeg = createFFmpeg({
+//   log: true,
+//   corePath: '/path/to/@ffmpeg/ffmpeg-core.js', // 替换为正确的路径
+//   wasmPath: '/path/to/@ffmpeg/ffmpeg.wasm', // 替换为正确的路径
+// });
 
 const emit = defineEmits(['gif']);
 const onTransformat = () => {
+    load();
 }
 
 </script>
@@ -32,6 +54,7 @@ const onTransformat = () => {
     align-items: center;
     justify-content: center;
     position: relative;
+
     &::after {
         content: '';
         position: absolute;
@@ -41,6 +64,7 @@ const onTransformat = () => {
         height: 1px;
         background-color: rgb(41, 45, 58);
     }
+
     &:hover {
         background-color: #333;
     }

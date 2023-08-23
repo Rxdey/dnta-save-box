@@ -151,17 +151,17 @@ class TimeLine {
             this.mouseEvent.disabled(true);
             const { pointer } = options;
             if (pointer.x < 0) {
-                ract.set({
+                group.set({
                     left: 0
                 });
             }
             if (pointer.x > this.getTimeX(this.options.totalTime) + this.options.limit.width) {
-                ract.set({
+                group.set({
                     left: this.getTimeX(this.options.totalTime)
                 });
             }
             if (pointer.x >= this.endBar.left - this.options.lineStyle.gap - this.options.limit.width) {
-                ract.set({
+                group.set({
                     left: this.endBar.left - this.options.lineStyle.gap - this.options.limit.width
                 });
             }
@@ -198,12 +198,12 @@ class TimeLine {
             this.mouseEvent.disabled(true);
             const { pointer } = options;
             if (pointer.x > this.getTimeX(this.options.totalTime) + this.options.limit.width) {
-                ract.set({
+                group.set({
                     left: this.getTimeX(this.options.totalTime) - this.options.limit.width
                 });
             }
             if (pointer.x - this.startBar.left - this.options.limit.width <= this.options.lineStyle.gap) {
-                ract.set({
+                group.set({
                     left: this.startBar.left + this.options.lineStyle.gap + this.options.limit.width
                 });
             }

@@ -38,7 +38,7 @@
             </div>
         </el-aside>
     </transition>
-    <editModal ref="edit" />
+    <editModal ref="edit" @del="onDel"/>
 </template>
 
 <script setup>
@@ -67,6 +67,11 @@ const hideMenu = computed(() => store.hideMenu);
 const onEdit = (data) => {
     edit.value.onEdit(data);
 };
+/** 删除回调 */
+const onDel = (id) => {
+    console.log(id)
+    menuList.value[0].children = menuList.value[0].children.filter(item => item.id !== id)
+};
 /** 新增标签 */
 const onAddTag = async () => {
     if (!tagName.value || !tagName.value.trim()) return;
@@ -79,11 +84,16 @@ const onAddTag = async () => {
         message: '已添加',
         type: 'success',
     });
-    targetList.value = [...targetList.value, {
+    menuList.value[0].children.splice(menuList.value[0].children.length - 1, 0, {
         id: res,
         name: tagName.value,
-        key: res
-    }];
+        key: res,
+        edit: true,
+        url: `/home/collect/${res}`,
+        drag: true,
+        nsfw: 0
+    });
+    tagName.value = '';
 };
 
 const onSelect = ({ id, url }) => {

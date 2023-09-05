@@ -1,8 +1,8 @@
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useFetch } from '@/hooks/useFetch';
 import * as Server from '@/service/model/api';
 
-export const useEdit = (store) => {
+export const useEdit = (store, emit) => {
     const { loading, fetch } = useFetch();
     // 编辑弹窗
     const dialogVisible = ref(false);
@@ -20,13 +20,12 @@ export const useEdit = (store) => {
                 id: selectTag.value.id,
             });
             if (!res) return;
-            // if (props.tagList[active.value].id === selectTag.value.id) store.UPDATE_ACTIVE(-1);
-            // emit('del', selectTag.value.id);
             ElNotification({
                 title: '操作成功',
                 message: '已删除',
                 type: 'success',
             });
+            emit('del', selectTag.value.id);
         }).catch(() => {
             dialogVisible.value = true;
         });

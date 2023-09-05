@@ -24,10 +24,11 @@ import { useRouter, useRoute } from 'vue-router';
 import { useEdit } from './useEdit';
 import useMainStore from '@/store/modules/useMainStore';
 
+const emit = defineEmits(['del']);
 const store = useMainStore();
 
 /** 编辑操作 */
-const { loading, onDel, onUpdateTag, onEdit, handleClose, selectTag, dialogVisible } = useEdit(store);
+const { loading, onDel, onUpdateTag, onEdit, handleClose, selectTag, dialogVisible } = useEdit(store, emit);
 
 defineExpose({
     onEdit,

@@ -42,5 +42,6 @@ export default defineConfig({
   server: {
     port: 7888,
     host: '0.0.0.0',
-  }
+  },
+  optimizeDeps: { exclude: ["@ffmpeg/ffmpeg", "@ffmpeg/util", "ffmpeg"], },
 });

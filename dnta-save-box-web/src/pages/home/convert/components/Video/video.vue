@@ -1,8 +1,8 @@
 <template>
-    <div class="video-player">
+    <div class="video-player" v-loading="loading">
         <div class="video-player__wrap">
             <div class="video-player__menu">
-                <MenuCom @gif="onGif" />
+                <MenuCom @gif="onGif" :videoData="videoData"/>
             </div>
             <div class="video-player__player">
                 <div class="video-player--video" v-if="!!videoData" style="background-color: #000; height: 100%;" @click="onChangePlayStatus">
@@ -59,6 +59,7 @@ import List from './List.vue';
 import { useVideo } from './useVideo';
 import Timeline from '@/lib/timeline';
 
+const loading = ref(false);
 const videoData = ref(null);
 const timeline = ref(null);
 const { video, volume, paused, muted, register, onVolumeChange, onVoiceClick, onChangePlayStatus, setVideoTime } = useVideo();

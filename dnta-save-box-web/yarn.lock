@@ -145,10 +145,10 @@
   resolved "https://registry.npmmirror.com/@ffmpeg/core/-/core-0.12.2.tgz#5aa58a10632895fc1c4c0201324843ec5e50fc48"
   integrity sha512-UnzHvuNFbzmVZERSDtWGQvna01eKMfOWGG6SUn+s8mnKm5aH2zcrEIMgOMYpc6yJqrdRt0LBtT3ijF65rWlxIA==
 
-"@ffmpeg/ffmpeg@^0.12.4":
-  version "0.12.4"
-  resolved "https://registry.npmmirror.com/@ffmpeg/ffmpeg/-/ffmpeg-0.12.4.tgz#38ce7a131960e23a939b624558916883b97c8703"
-  integrity sha512-YwdnZFxtKncEbg2ybJOZ8di7kxtVo6DP3FkWWn5E0MiXHXxCjgiIJNq5I+/04+OGC1nMvF3hdvGuRFxuogh/mQ==
+"@ffmpeg/ffmpeg@0.12.5":
+  version "0.12.5"
+  resolved "https://registry.npmmirror.com/@ffmpeg/ffmpeg/-/ffmpeg-0.12.5.tgz#7f8c78ba0a015df08cab9503d7d3ff2b1520f0b0"
+  integrity sha512-grDWTaYSm0g/LEtpwkJtw0Kp1Iix/WF3KmtUo0Fm0V5GqKMUVzj1yzyaILg83o96wHSc8Y2d9Q3C37pYAF2wxQ==
   dependencies:
     "@ffmpeg/types" "^0.12.0"
 

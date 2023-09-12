@@ -123,3 +123,10 @@ export function moveObjectElement(array, elementId, targetId, position) {
     return array;
 }
 
+export const downLoadFile = (href = '', fileName = '') => {
+    if (!href) return;
+    const a = document.createElement('a');
+    a.href = href;
+    a.download = fileName;
+    a.click();
+}

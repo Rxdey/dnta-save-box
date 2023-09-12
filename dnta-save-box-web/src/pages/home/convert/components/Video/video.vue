@@ -1,13 +1,13 @@
 <template>
-    <div class="video-player" v-loading="loading">
+    <div class="video-player" v-loading="loading" element-loading-background="rgba(0, 0, 0, 0.2)">
         <div class="video-player__wrap">
             <div class="video-player__menu">
-                <MenuCom @gif="onGif" :videoData="videoData"/>
+                <MenuCom :videoData="videoData" @loading="onLoading"/>
             </div>
             <div class="video-player__player">
                 <div class="video-player--video" v-if="!!videoData" style="background-color: #000; height: 100%;" @click="onChangePlayStatus">
                     <video ref="video" id="video" :src="videoData.url" @loadedmetadata="onInit" @timeupdate="onTimeupdate" muted></video>
-                    <div class="control" v-if="!!videoData">
+                    <div class="control" v-if="!!videoData" @click.stop>
                         <div class="control-wrap">
                             <span class="control-button" @click.stop="onChangePlayStatus">
                                 <el-icon :size="60">
@@ -15,7 +15,7 @@
                                     <v-icon icon="mdi:pause" v-else />
                                 </el-icon>
                             </span>
-                            <span class="control-button" @click="onVolumeChange">
+                            <span class="control-button" @click.stop="onVolumeChange">
                                 <el-icon :size="24">
                                     <v-icon icon="mdi:volume-off" v-if="muted" />
                                     <v-icon icon="mdi:volume-high" v-else />
@@ -84,10 +84,6 @@ const onInit = (e) => {
 
 };
 
-const onGif = () => {
-
-};
-
 /** 播放进度 */
 const onTimeupdate = (e) => {
     timeline.value.play(Math.floor(e.target.currentTime * 1000));
@@ -100,6 +96,10 @@ const onRemove = () => {
     paused.value = true;
     video.value = null;
 };
+
+const onLoading = (e) => {
+    loading.value = e;
+}
 
 onMounted(() => {
 

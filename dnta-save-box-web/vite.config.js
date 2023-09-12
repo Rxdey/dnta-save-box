@@ -42,6 +42,10 @@ export default defineConfig({
   server: {
     port: 7888,
     host: '0.0.0.0',
+    headers: {
+      "Cross-Origin-Embedder-Policy": "require-corp",
+      "Cross-Origin-Opener-Policy": "same-origin",
+    }
   },
   optimizeDeps: { exclude: ["@ffmpeg/ffmpeg", "@ffmpeg/util", "ffmpeg"], },
 });

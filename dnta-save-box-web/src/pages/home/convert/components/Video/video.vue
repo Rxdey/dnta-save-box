@@ -1,5 +1,5 @@
 <template>
-    <div class="video-player" v-loading="loading" element-loading-background="rgba(0, 0, 0, 0.2)">
+    <div class="video-player">
         <div class="video-player__wrap">
             <div class="video-player__menu">
                 <MenuCom :videoData="videoData" @loading="onLoading"/>

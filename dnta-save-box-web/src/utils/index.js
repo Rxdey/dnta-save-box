@@ -122,11 +122,11 @@ export function moveObjectElement(array, elementId, targetId, position) {
 
     return array;
 }
-
+/** 下载文件 */
 export const downLoadFile = (href = '', fileName = '') => {
     if (!href) return;
     const a = document.createElement('a');
     a.href = href;
     a.download = fileName;
     a.click();
-}
+};
